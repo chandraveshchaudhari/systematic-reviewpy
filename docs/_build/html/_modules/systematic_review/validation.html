@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>systematic_review.validation &mdash; systematic-reviewpy  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> systematic-reviewpy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../systematic_review.html">systematic_review package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">systematic-reviewpy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>systematic_review.validation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for systematic_review.validation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module: validation</span>
+<span class="sd">This module contains functions related validating our downloaded articles if they&#39;re same as ones we require. It also</span>
+<span class="sd">contains functions to get articles source name and create list of missed or duplicate articles.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">SequenceMatcher</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">string_manipulation</span>
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">converter</span>
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">os_utils</span>
+
+
+<div class="viewcode-block" id="get_dataframe_column_as_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.get_dataframe_column_as_list">[docs]</a><span class="k">def</span> <span class="nf">get_dataframe_column_as_list</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;primary_title&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get pandas dataframe column values as list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe : pd.DataFrame</span>
+<span class="sd">        This is the dataframe which contains column whose details we want as list.</span>
+<span class="sd">    column_name : str</span>
+<span class="sd">        This is the name of the column.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This is the list containing the dataframe one column values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">column_values_list</span> <span class="o">=</span> <span class="n">dataframe</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">column_values_list</span></div>
+
+
+<div class="viewcode-block" id="get_missed_articles_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.get_missed_articles_list">[docs]</a><span class="k">def</span> <span class="nf">get_missed_articles_list</span><span class="p">(</span><span class="n">original_article_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">downloaded_article_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="n">missed_articles_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">article_name</span> <span class="ow">in</span> <span class="n">original_article_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">article_name</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">downloaded_article_list</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">missed_articles_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">missed_articles_list</span></div>
+
+
+<div class="viewcode-block" id="similarity_sequence_matcher"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.similarity_sequence_matcher">[docs]</a><span class="k">def</span> <span class="nf">similarity_sequence_matcher</span><span class="p">(</span><span class="n">string_a</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string_b</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Shows the percentage similarity between two strings like 0.9836065573770492 that means 98.35%</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string_a : str</span>
+<span class="sd">        This is first string</span>
+<span class="sd">    string_b : str</span>
+<span class="sd">        This is second string</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        This is the result of SequenceMatcher Example 0.9836065573770492 that means 98.35%</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">SequenceMatcher</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">string_a</span><span class="p">,</span> <span class="n">string_b</span><span class="p">)</span><span class="o">.</span><span class="n">ratio</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="calculate_percentage"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.calculate_percentage">[docs]</a><span class="k">def</span> <span class="nf">calculate_percentage</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;calculate percentage of value in total.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value : float</span>
+<span class="sd">        It is input number, normally smaller than total.</span>
+<span class="sd">    total : float</span>
+<span class="sd">        It is the larger number from which we want to know percentage</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        This is calculated percentage. Example 98.36065573770492 that means 98.35%</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">percentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="k">return</span> <span class="n">percentage</span></div>
+
+
+<div class="viewcode-block" id="add_dict_element_with_count"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.add_dict_element_with_count">[docs]</a><span class="k">def</span> <span class="nf">add_dict_element_with_count</span><span class="p">(</span><span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;It increase the value by checking the key of dictionary or initialise new key with value 1. Works as collections</span>
+<span class="sd">    module default dict with value 1.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dictionary : dict</span>
+<span class="sd">        This is the dictionary where we want to add element.</span>
+<span class="sd">    key : str</span>
+<span class="sd">        This is the key of dictionary {key: value}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        This is the edited dict with new elements counts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">dictionary</span></div>
+
+
+<div class="viewcode-block" id="dict_from_list_with_element_count"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.dict_from_list_with_element_count">[docs]</a><span class="k">def</span> <span class="nf">dict_from_list_with_element_count</span><span class="p">(</span><span class="n">input_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Put input list elements into dictionary with count.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_list : list</span>
+<span class="sd">        This is the list with elements with some duplicates present.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        This is dictionary key as list elements and value as list each element count</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">input_list</span><span class="p">:</span>
+        <span class="n">add_dict_element_with_count</span><span class="p">(</span><span class="n">output_dict</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_dict</span></div>
+
+
+<div class="viewcode-block" id="compare_two_dict_members_via_percent_similarity"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.compare_two_dict_members_via_percent_similarity">[docs]</a><span class="k">def</span> <span class="nf">compare_two_dict_members_via_percent_similarity</span><span class="p">(</span><span class="n">first_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">second_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Compare elements in 2 dictionaries and return percentage similarity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    first_dict : dict</span>
+<span class="sd">        Example - first_dict = {&#39;mixed&#39;:1, &#39;modified&#39;:1, &#39;fruit&#39;:1, &#39;fly&#39;:1, &#39;optimization&#39;:1}</span>
+<span class="sd">    second_dict : dict</span>
+<span class="sd">        Example - second_dict = {&#39;mixed&#39;:1, &#39;modified&#39;:1, &#39;fruit&#39;:1, &#39;fly&#39;:1, &#39;optimization&#39;:1, &#39;algorithm&#39;: 1}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        This is percentage represented as decimal number. Example 98.36065573770492 that means 98.35%</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">similar_dict_keys_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_dict_keys_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_dict_keys</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">first_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">second_dict</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">all_dict_keys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">first_dict</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">second_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">second_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="n">same_values_in_dict</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">first_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="n">similar_dict_keys_count</span> <span class="o">+=</span> <span class="n">same_values_in_dict</span>
+                <span class="n">total_dict_keys_count</span> <span class="o">+=</span> <span class="n">same_values_in_dict</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">first_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="n">second_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="n">same_values_in_dict</span> <span class="o">=</span> <span class="n">first_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">if</span> <span class="n">first_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">second_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">else</span> <span class="n">second_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">similar_dict_keys_count</span> <span class="o">+=</span> <span class="n">same_values_in_dict</span>
+                <span class="n">total_dict_keys_count</span> <span class="o">+=</span> <span class="p">(</span><span class="n">diff</span> <span class="o">+</span> <span class="n">same_values_in_dict</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">total_dict_keys_count</span> <span class="o">+=</span> <span class="n">all_dict_keys</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="n">percent_similarity</span> <span class="o">=</span> <span class="n">calculate_percentage</span><span class="p">(</span><span class="n">similar_dict_keys_count</span><span class="p">,</span> <span class="n">total_dict_keys_count</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">percent_similarity</span></div>
+
+
+<div class="viewcode-block" id="compare_two_list_members_via_percent_similarity"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.compare_two_list_members_via_percent_similarity">[docs]</a><span class="k">def</span> <span class="nf">compare_two_list_members_via_percent_similarity</span><span class="p">(</span><span class="n">words_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">boolean_membership_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Compare elements in 2 lists and return percentage similarity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    words_list : list</span>
+<span class="sd">        This contains elements whose elements to be checked for similarity.</span>
+<span class="sd">    boolean_membership_list : list</span>
+<span class="sd">        This list contains True and False values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        This is percentage represented as decimal number. Example 98.36065573770492 that means 98.35%</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">words_found_in_boolean_membership_list</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">length_of_words_list</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">words_list</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">word_indicator</span> <span class="ow">in</span> <span class="n">boolean_membership_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word_indicator</span><span class="p">:</span>
+            <span class="n">words_found_in_boolean_membership_list</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">percent_similarity</span> <span class="o">=</span> <span class="n">calculate_percentage</span><span class="p">(</span><span class="n">words_found_in_boolean_membership_list</span><span class="p">,</span> <span class="n">length_of_words_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">percent_similarity</span></div>
+
+
+<div class="viewcode-block" id="exact_words_checker_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.exact_words_checker_in_text">[docs]</a><span class="k">def</span> <span class="nf">exact_words_checker_in_text</span><span class="p">(</span><span class="n">words_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This checks for exact match of substring in string and return True or False based on success.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    words_string : str</span>
+<span class="sd">        This is the word we are searching for.</span>
+<span class="sd">    text_string : str</span>
+<span class="sd">        This is query string or lengthy text.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        This returns True if exact words_string found in text_string else False.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">words_list</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">words_string</span><span class="p">)</span>
+    <span class="n">words_list_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">words_list</span><span class="p">)</span>
+    <span class="n">words_list_end_element_index</span> <span class="o">=</span> <span class="n">words_list_length</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="n">words_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">words_list</span><span class="p">)</span>
+    <span class="c1"># words_dict_membership = dict_from_list_with_element_count(words_list)</span>
+
+    <span class="n">text_list</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">text_string</span><span class="p">)</span>
+
+    <span class="n">validation_bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">searching_flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">for</span> <span class="n">word_of_text</span> <span class="ow">in</span> <span class="n">text_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">searching_flag</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">word_of_text</span> <span class="o">==</span> <span class="n">words_list</span><span class="p">[</span><span class="n">searching_index</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">searching_index</span> <span class="o">==</span> <span class="n">words_list_end_element_index</span><span class="p">:</span>
+                    <span class="n">validation_bool</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">return</span> <span class="n">validation_bool</span>
+                <span class="n">searching_index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">searching_flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">word_of_text</span> <span class="ow">in</span> <span class="n">words_set</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">word_of_text</span> <span class="o">==</span> <span class="n">words_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="c1"># starting_index = words_list.index(word_of_text)</span>
+                <span class="n">searching_flag</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">searching_index</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">validation_bool</span></div>
+
+
+<div class="viewcode-block" id="words_percentage_checker_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.words_percentage_checker_in_text">[docs]</a><span class="k">def</span> <span class="nf">words_percentage_checker_in_text</span><span class="p">(</span><span class="n">words_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">validation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This  checks for exact match of substring in string and return True or False based on success. It also returns</span>
+<span class="sd">    matched word percentage.</span>
+<span class="sd">    Limit: this doesn&#39;t work properly if words_string have duplicate words.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    words_string : str</span>
+<span class="sd">        This is the word we are searching for.</span>
+<span class="sd">    text_string : str</span>
+<span class="sd">        This is query string or lengthy text.</span>
+<span class="sd">    validation_limit : float</span>
+<span class="sd">        This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found same.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        This returns True if exact words_string found in text_string else False.</span>
+<span class="sd">        This also returns matched substring percentage.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">words_list</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">words_string</span><span class="p">)</span>
+    <span class="n">words_list_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">words_list</span><span class="p">)</span>
+    <span class="c1"># words_list_end_element_index = words_list_length - 1</span>
+
+    <span class="n">words_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">words_list</span><span class="p">)</span>
+    <span class="c1"># words_dict_membership = dict_from_list_with_element_count(words_list)</span>
+
+    <span class="n">text_list</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">text_string</span><span class="p">)</span>
+
+    <span class="n">temp_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">words_list_length</span>
+    <span class="n">validation_bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># searching_flag = False</span>
+    <span class="n">word_list_element_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">percentage_matched</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">word_of_text</span> <span class="ow">in</span> <span class="n">text_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word_of_text</span> <span class="ow">in</span> <span class="n">words_set</span><span class="p">:</span>
+            <span class="n">word_of_text_index_in_words_list</span> <span class="o">=</span> <span class="n">words_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">word_of_text</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">word_of_text_index_in_words_list</span> <span class="o">&gt;</span> <span class="n">word_list_element_index</span><span class="p">:</span>
+                <span class="n">word_list_element_index</span> <span class="o">=</span> <span class="n">word_of_text_index_in_words_list</span>
+                <span class="n">temp_list</span><span class="p">[</span><span class="n">word_of_text_index_in_words_list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">compare_two_list_members_via_percent_similarity</span><span class="p">(</span><span class="n">words_list</span><span class="p">,</span> <span class="n">temp_list</span><span class="p">)</span>
+                <span class="n">validation_bool</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">percentage_matched</span> <span class="o">&gt;</span> <span class="n">validation_limit</span> <span class="k">else</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">temp_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">words_list_length</span>
+                <span class="n">temp_list</span><span class="p">[</span><span class="n">word_of_text_index_in_words_list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">temp_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">words_list_length</span>
+            <span class="n">word_list_element_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span></div>
+
+
+<div class="viewcode-block" id="jumbled_words_percentage_checker_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.jumbled_words_percentage_checker_in_text">[docs]</a><span class="k">def</span> <span class="nf">jumbled_words_percentage_checker_in_text</span><span class="p">(</span><span class="n">words_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">validation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
+                                             <span class="n">wrong_word_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;start calculating percentage if half of words are found in sequence. This also takes in consideration of words</span>
+<span class="sd">    which got jumbled up due to pdf reading operation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    words_string : str</span>
+<span class="sd">        This is the word we are searching for.</span>
+<span class="sd">    text_string : str</span>
+<span class="sd">        This is query string or lengthy text.</span>
+<span class="sd">    validation_limit : float</span>
+<span class="sd">        This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found same.</span>
+<span class="sd">    wrong_word_limit : int</span>
+<span class="sd">        This is the limit unto which algorithm ignore the wrong word in sequence.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        This returns True if exact words_string found in text_string else False.</span>
+<span class="sd">        This also returns matched substring percentage.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">words_list</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">words_string</span><span class="p">)</span>
+    <span class="c1"># words_list_length = len(words_list)</span>
+    <span class="c1"># words_list_end_element_index = words_list_length - 1</span>
+
+    <span class="n">words_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">words_list</span><span class="p">)</span>
+    <span class="n">words_dict_membership</span> <span class="o">=</span> <span class="n">dict_from_list_with_element_count</span><span class="p">(</span><span class="n">words_list</span><span class="p">)</span>
+
+    <span class="n">text_list</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">text_string</span><span class="p">)</span>
+
+    <span class="n">validation_bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">percentage_matched</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">skipped_words</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">temp_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">word_of_text</span> <span class="ow">in</span> <span class="n">text_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word_of_text</span> <span class="ow">in</span> <span class="n">words_set</span><span class="p">:</span>
+            <span class="n">skipped_words</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">add_dict_element_with_count</span><span class="p">(</span><span class="n">temp_dict</span><span class="p">,</span> <span class="n">word_of_text</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">skipped_words</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">skipped_words</span> <span class="o">&gt;=</span> <span class="n">wrong_word_limit</span><span class="p">:</span>
+                <span class="n">temp_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+                <span class="k">continue</span>
+            <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">compare_two_dict_members_via_percent_similarity</span><span class="p">(</span><span class="n">words_dict_membership</span><span class="p">,</span> <span class="n">temp_dict</span><span class="p">)</span>
+            <span class="n">validation_bool</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">percentage_matched</span> <span class="o">&gt;</span> <span class="n">validation_limit</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span>
+            <span class="n">temp_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span></div>
+
+
+<div class="viewcode-block" id="validating_pdf_via_filename"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.validating_pdf_via_filename">[docs]</a><span class="k">def</span> <span class="nf">validating_pdf_via_filename</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;exact_words&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is</span>
+<span class="sd">    validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pdf_file_path : str</span>
+<span class="sd">        the path of the pdf file.</span>
+<span class="sd">    pages : str</span>
+<span class="sd">        This could be &#39;all&#39; to get full text of pdf and &#39;first&#39; for first page of pdf.</span>
+<span class="sd">    method : str</span>
+<span class="sd">        This is the switch option to select method from exact_words, words_percentage, jumbled_words_percentage.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True and False value depicting validated article with True value.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">)</span>
+    <span class="c1"># print(text)</span>
+    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_pdf_filename_from_path</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">)</span>
+    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">strip_string_from_right_side</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;exact_words&quot;</span><span class="p">:</span>
+        <span class="n">validation_bool</span> <span class="o">=</span> <span class="n">exact_words_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;words_percentage&quot;</span><span class="p">:</span>
+        <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">words_percentage_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;jumbled_words_percentage&quot;</span><span class="p">:</span>
+        <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">jumbled_words_percentage_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">validation_bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please properly write the method name, as method name is not available&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">validation_bool</span></div>
+
+
+<div class="viewcode-block" id="multiple_methods_validating_pdf_via_filename"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.multiple_methods_validating_pdf_via_filename">[docs]</a><span class="k">def</span> <span class="nf">multiple_methods_validating_pdf_via_filename</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is</span>
+<span class="sd">    validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pdf_file_path : str</span>
+<span class="sd">        the path of the pdf file.</span>
+<span class="sd">    pages : str</span>
+<span class="sd">        This could be &#39;all&#39; to get full text of pdf and &#39;first&#39; for first page of pdf.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        True and False value depicting validated article with True value.</span>
+<span class="sd">        This also shows percentage matched</span>
+<span class="sd">        Last it shows the method used. like exact_words, words_percentage, jumbled_words_percentage, all if every method</span>
+<span class="sd">        is executed to validate.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># percentage_matched = 0</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">)</span>
+    <span class="c1"># print(text)</span>
+    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_pdf_filename_from_path</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">)</span>
+
+    <span class="n">validation_bool</span> <span class="o">=</span> <span class="n">exact_words_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;exact_words&quot;</span>
+    <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">words_percentage_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;words_percentage&quot;</span>
+    <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">jumbled_words_percentage_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;jumbled_words_percentage&quot;</span>
+
+    <span class="c1"># print(validation_bool)</span>
+    <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span></div>
+
+
+<div class="viewcode-block" id="validating_multiple_pdfs_via_filenames"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.validating_multiple_pdfs_via_filenames">[docs]</a><span class="k">def</span> <span class="nf">validating_multiple_pdfs_via_filenames</span><span class="p">(</span><span class="n">list_of_pdf_files_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function checks pdf files in list_of_pdf_files_path and validate them with function named</span>
+<span class="sd">    &#39;validating_pdf_via_filename&#39;. Example - multiple pdf file name -&gt; check in -&gt; text of pdf file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_of_pdf_files_path : list</span>
+<span class="sd">        the list of the path of the pdf file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        validated_pdf_list - contains name of pdf files whose filename is in the pdf text</span>
+<span class="sd">        invalidated_pdf_list - list of name of files which can&#39;t be included in validated_pdf_list</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">validated_pdf_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">invalidated_pdf_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">manual_pdf_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">article_name_path</span> <span class="ow">in</span> <span class="n">list_of_pdf_files_path</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="n">multiple_methods_validating_pdf_via_filename</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                <span class="c1"># print(&quot;validated&quot;)</span>
+                <span class="n">validated_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+                <span class="c1"># print(&quot;invalidated&quot;)</span>
+                <span class="n">invalidated_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">manual_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">validated_pdf_list</span><span class="p">,</span> <span class="n">invalidated_pdf_list</span><span class="p">,</span> <span class="n">manual_pdf_list</span></div>
+
+
+<div class="viewcode-block" id="multiple_methods_validating_words_string_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.multiple_methods_validating_words_string_in_text">[docs]</a><span class="k">def</span> <span class="nf">multiple_methods_validating_words_string_in_text</span><span class="p">(</span><span class="n">article_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This method uses different methods to validate the article_name(substring) in text. Example - exact_words,</span>
+<span class="sd">    words_percentage, jumbled_words_percentage.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    article_name : str</span>
+<span class="sd">        This is input string which we want to validate in text.</span>
+<span class="sd">    text : str</span>
+<span class="sd">        This is query string or lengthy text.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        True and False value depicting validated article with True value.</span>
+<span class="sd">        This also shows percentage matched</span>
+<span class="sd">        Last it shows the method used. like exact_words, words_percentage, jumbled_words_percentage, all if every method</span>
+<span class="sd">        is executed to validate.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># percentage_matched = 0</span>
+    <span class="n">validation_bool</span> <span class="o">=</span> <span class="n">exact_words_checker_in_text</span><span class="p">(</span><span class="n">article_name</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;exact_words&quot;</span>
+    <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">words_percentage_checker_in_text</span><span class="p">(</span><span class="n">article_name</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;words_percentage&quot;</span>
+    <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">jumbled_words_percentage_checker_in_text</span><span class="p">(</span><span class="n">article_name</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;jumbled_words_percentage&quot;</span>
+
+    <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span></div>
+
+
+<div class="viewcode-block" id="finding_missed_articles_from_downloading"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.finding_missed_articles_from_downloading">[docs]</a><span class="k">def</span> <span class="nf">finding_missed_articles_from_downloading</span><span class="p">(</span><span class="n">validated_pdf_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">original_articles_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Checks how many articles are not downloaded yet from original list of articles.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    validated_pdf_list : list</span>
+<span class="sd">        Contains name of pdf files whose filename is in the pdf text.</span>
+<span class="sd">    original_articles_list : list</span>
+<span class="sd">        This is original list from where we started downloading the articles.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Missing_articles - these are the articles which are missed from downloading.</span>
+<span class="sd">        Validated_articles - This is list of validated downloaded articles list.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">validated_pdf_text</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">list_to_string</span><span class="p">(</span><span class="n">validated_pdf_list</span><span class="p">)</span>
+    <span class="n">original_articles_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">original_articles_list</span><span class="p">)</span>
+
+    <span class="n">missing_articles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">downloaded_articles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">article_name</span> <span class="ow">in</span> <span class="n">original_articles_set</span><span class="p">:</span>
+        <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="n">multiple_methods_validating_words_string_in_text</span><span class="p">(</span>
+            <span class="n">article_name</span><span class="p">,</span> <span class="n">validated_pdf_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">validation_bool</span><span class="p">:</span>
+            <span class="n">missing_articles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">validation_bool</span><span class="p">:</span>
+            <span class="n">downloaded_articles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">missing_articles</span><span class="p">,</span> <span class="n">downloaded_articles</span></div>
+
+
+<div class="viewcode-block" id="manual_validating_of_pdf"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.manual_validating_of_pdf">[docs]</a><span class="k">def</span> <span class="nf">manual_validating_of_pdf</span><span class="p">(</span><span class="n">articles_path_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">manual_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This is mostly a manually used function to validate some pdfs at the end of validation process. It makes it easy</span>
+<span class="sd">    to search and validate pdf and store in a list.</span>
+<span class="sd">    Advice: convert these lists as text file using function in converter module to avoid data loss.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    articles_path_list : list</span>
+<span class="sd">        These are the list of articles which skipped our automated screening and validation algorithms. mostly due to</span>
+<span class="sd">        pdf to text conversions errors.</span>
+<span class="sd">    manual_index : list</span>
+<span class="sd">        This is the index from where you will start checking in article_path_list. Normally in many tries.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        external_validation_list - This is the list to be saved externally for validated articles.</span>
+<span class="sd">        external_invalidated_list - This is the list to be saved externally for invalidated articles.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">external_validation_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">external_invalidated_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">article_path</span> <span class="o">=</span> <span class="n">articles_path_list</span><span class="p">[</span><span class="n">manual_index</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">article_path</span><span class="p">)</span>
+    <span class="n">instructions</span> <span class="o">=</span> <span class="s2">&quot;Please provide &#39;y&#39; to validate or &#39;n&#39; to invalidate&quot;</span>
+    <span class="n">manual_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="n">instructions</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">manual_input</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+        <span class="n">external_validation_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_path</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">manual_input</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;n&quot;</span><span class="p">:</span>
+        <span class="n">external_invalidated_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;input should be &#39;y&#39; or &#39;n&#39;&quot;</span><span class="p">)</span>
+    <span class="n">manual_index</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">external_validation_list</span><span class="p">,</span> <span class="n">external_invalidated_list</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chandravesh chaudhari.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

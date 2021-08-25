@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>systematic_review.filter_sort &mdash; systematic-reviewpy  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> systematic-reviewpy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../systematic_review.html">systematic_review package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">systematic-reviewpy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>systematic_review.filter_sort</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for systematic_review.filter_sort</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module: filter_sort</span>
+<span class="sd">Description for filter: we have 3 types of keywords and I want to include all those with same kind of condition such as</span>
+<span class="sd">keywords &gt;= some values and filter them until I have required number of articles that I can manually read and filter.</span>
+
+<span class="sd">Description for sort: This converts the data into sorted manner so it is easier for humans to understand.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">converter</span>
+
+
+<div class="viewcode-block" id="get_pd_df_columns_names_with_prefix_suffix"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.get_pd_df_columns_names_with_prefix_suffix">[docs]</a><span class="k">def</span> <span class="nf">get_pd_df_columns_names_with_prefix_suffix</span><span class="p">(</span><span class="n">input_pandas_dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">common_word</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_count&quot;</span><span class="p">,</span>
+                                               <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;suffix&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Provide the columns name from pandas dataframe which contains given prefix or suffix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_pandas_dataframe : pd.DataFrame</span>
+<span class="sd">        This dataframe contains many columns some of which contains the common word we are looking for.</span>
+<span class="sd">    common_word : str</span>
+<span class="sd">        This is the similar word string in many column names.</span>
+<span class="sd">    method : str</span>
+<span class="sd">        This is to specify if we are looking for prefix or suffix in column names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This list contains the name of columns which follow above criteria.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;prefix&quot;</span><span class="p">:</span>
+        <span class="n">columns_name_df_index</span> <span class="o">=</span> <span class="n">input_pandas_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">input_pandas_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">common_word</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;suffix&quot;</span><span class="p">:</span>
+        <span class="n">columns_name_df_index</span> <span class="o">=</span> <span class="n">input_pandas_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">input_pandas_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">common_word</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">columns_name_df_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;method is not available. Please input &#39;prefix&#39; or &#39;suffix&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">columns_name_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_name</span> <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">columns_name_df_index</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">columns_name_list</span></div>
+
+
+<div class="viewcode-block" id="filter_dataframe_on_keywords_group_name_count"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.filter_dataframe_on_keywords_group_name_count">[docs]</a><span class="k">def</span> <span class="nf">filter_dataframe_on_keywords_group_name_count</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">min_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                  <span class="n">common_word</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_count&quot;</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;suffix&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function gets  columns name from pandas dataframe which contains given prefix or suffix. It then filter</span>
+<span class="sd">    dataframe to the point where all prefix and suffix column name have values more than min_limit.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_grouped_keywords_counts_df : pd.DataFrame</span>
+<span class="sd">        This is input dataframe which contains some columns which have prefix or suffix in names.</span>
+<span class="sd">    min_limit : int</span>
+<span class="sd">        This is the least value we want in all keywords group names.</span>
+<span class="sd">    common_word : str</span>
+<span class="sd">        This is the similar word string in many column names.</span>
+<span class="sd">    method : str</span>
+<span class="sd">        This is to specify if we are looking for prefix or suffix in column names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This is the filtered citations list based on min_limit of grouped_keywords_counts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filtered_list_of_dict</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">keyword_group_name_list</span> <span class="o">=</span> <span class="n">get_pd_df_columns_names_with_prefix_suffix</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">,</span>
+                                                                         <span class="n">common_word</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+    <span class="n">citations_grouped_keywords_count_list</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_dataframe_to_list_of_dicts</span><span class="p">(</span>
+        <span class="n">citations_grouped_keywords_counts_df</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">citation_dict</span> <span class="ow">in</span> <span class="n">citations_grouped_keywords_count_list</span><span class="p">:</span>
+        <span class="n">more</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">keyword_group_name</span> <span class="ow">in</span> <span class="n">keyword_group_name_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">more</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">citation_dict</span><span class="p">[</span><span class="n">keyword_group_name</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_limit</span><span class="p">:</span>
+                    <span class="n">more</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="n">more</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="p">(</span><span class="n">keyword_group_name</span> <span class="o">==</span> <span class="n">keyword_group_name_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">filtered_list_of_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">citation_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filtered_list_of_dict</span></div>
+
+
+<div class="viewcode-block" id="finding_required_article_by_changing_min_limit_recursively"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.finding_required_article_by_changing_min_limit_recursively">[docs]</a><span class="k">def</span> <span class="nf">finding_required_article_by_changing_min_limit_recursively</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                                                               <span class="n">required_number_of_articles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                               <span class="n">addition</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">search</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                                               <span class="n">prev_lower_total_articles_rows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function increases the min_limit value to reach up to required_number_of_articles. this function return the</span>
+<span class="sd">    min_limit value of exact required_number_of_articles can be extracted from dataframe else it provide the lower and</span>
+<span class="sd">    upper limit of min_limit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_grouped_keywords_counts_df : pd.DataFrame</span>
+<span class="sd">        This is input dataframe which contains some columns which have prefix or suffix in names.</span>
+<span class="sd">    required_number_of_articles : int</span>
+<span class="sd">        This is the number of articles you want after filtration process.</span>
+<span class="sd">    addition : int</span>
+<span class="sd">        This is the number by which you want to increase the min_limit on grouped keyword count.</span>
+<span class="sd">    search : bool</span>
+<span class="sd">        This signify the status of searching for best value of min_limit</span>
+<span class="sd">    prev_lower_total_articles_rows : int</span>
+<span class="sd">        This is the previous lower total articles rows</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        This prints the values rather than returning the values. It return search which is of no use.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">search</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">search</span>
+    <span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">min_limit</span> <span class="o">=</span> <span class="n">addition</span> <span class="o">+</span> <span class="n">iteration</span>
+
+    <span class="k">while</span> <span class="n">search</span><span class="p">:</span>
+        <span class="n">prev_min_limit</span> <span class="o">=</span> <span class="n">min_limit</span>
+        <span class="n">min_limit</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">iteration</span>
+
+        <span class="n">filtered_list_of_dict</span> <span class="o">=</span> <span class="n">filter_dataframe_on_keywords_group_name_count</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">,</span>
+                                                                              <span class="n">min_limit</span><span class="p">,</span> <span class="s2">&quot;_count&quot;</span><span class="p">,</span> <span class="s2">&quot;suffix&quot;</span><span class="p">)</span>
+
+        <span class="n">total_articles_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_list_of_dict</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;min_limit: &quot;</span><span class="p">,</span> <span class="n">min_limit</span><span class="p">,</span> <span class="s2">&quot;total_articles_rows: &quot;</span><span class="p">,</span> <span class="n">total_articles_rows</span><span class="p">)</span>
+        <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">total_articles_rows</span> <span class="o">==</span> <span class="n">required_number_of_articles</span><span class="p">:</span>
+            <span class="n">search</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="n">search</span>
+
+        <span class="k">elif</span> <span class="n">total_articles_rows</span> <span class="o">&gt;</span> <span class="n">required_number_of_articles</span><span class="p">:</span>
+            <span class="n">upper_total_articles_rows</span> <span class="o">=</span> <span class="n">total_articles_rows</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;upper_total_articles_rows: &quot;</span><span class="p">,</span> <span class="n">upper_total_articles_rows</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">addition</span> <span class="o">=</span> <span class="n">prev_min_limit</span>
+
+            <span class="n">lower_total_articles_rows</span> <span class="o">=</span> <span class="n">total_articles_rows</span>
+            <span class="k">if</span> <span class="n">prev_lower_total_articles_rows</span> <span class="o">==</span> <span class="n">lower_total_articles_rows</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lower_total_articles_rows: &quot;</span><span class="p">,</span> <span class="n">lower_total_articles_rows</span><span class="p">)</span>
+                <span class="n">search</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">return</span> <span class="n">search</span>
+            <span class="k">return</span> <span class="n">finding_required_article_by_changing_min_limit_recursively</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">,</span>
+                                                                              <span class="n">required_number_of_articles</span><span class="p">,</span> <span class="n">addition</span><span class="p">,</span>
+                                                                              <span class="n">search</span><span class="p">,</span> <span class="n">lower_total_articles_rows</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="return_finding_required_article_by_changing_min_limit_recursively"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.return_finding_required_article_by_changing_min_limit_recursively">[docs]</a><span class="k">def</span> <span class="nf">return_finding_required_article_by_changing_min_limit_recursively</span><span class="p">(</span>
+        <span class="n">citations_grouped_keywords_counts_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">required_number_of_articles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">addition</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">search</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">prev_lower_total_articles_rows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">upper_info</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;This function increases the min_limit value to reach unto required_number_of_articles. this function return the</span>
+<span class="sd">    min_limit value of exact required_number_of_articles can be extracted from dataframe else it provide the lower and</span>
+<span class="sd">    upper limit of min_limit</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_grouped_keywords_counts_df : pd.DataFrame</span>
+<span class="sd">        This is input dataframe which contains some columns which have prefix or suffix in names.</span>
+<span class="sd">    required_number_of_articles : int</span>
+<span class="sd">        This is the number of articles you want after filtration process.</span>
+<span class="sd">    addition : int</span>
+<span class="sd">        This is the number by which you want to increase the min_limit on grouped keyword count.</span>
+<span class="sd">    search : bool</span>
+<span class="sd">        This signify the status of searching for best value of min_limit</span>
+<span class="sd">    prev_lower_total_articles_rows : int</span>
+<span class="sd">        This is the previous lower total articles rows</span>
+<span class="sd">    upper_info : list</span>
+<span class="sd">        This is list consists of [min_limit, upper_total_articles_rows]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        This tuple consists of following values in same order</span>
+<span class="sd">        searching flag: True or False</span>
+<span class="sd">        exact match values: min_limit, total_articles_rows</span>
+<span class="sd">        lower_info : min_limit, lower_total_articles_rows</span>
+<span class="sd">        upper_info : min_limit, upper_total_articles_rows</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">search</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">search</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">min_limit</span> <span class="o">=</span> <span class="n">addition</span> <span class="o">+</span> <span class="n">iteration</span>
+
+    <span class="k">while</span> <span class="n">search</span><span class="p">:</span>
+        <span class="n">prev_min_limit</span> <span class="o">=</span> <span class="n">min_limit</span>
+        <span class="n">min_limit</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">iteration</span>
+        <span class="n">filtered_list_of_dict</span> <span class="o">=</span> <span class="n">filter_dataframe_on_keywords_group_name_count</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">,</span>
+                                                                              <span class="n">min_limit</span><span class="p">,</span> <span class="s2">&quot;_count&quot;</span><span class="p">,</span> <span class="s2">&quot;suffix&quot;</span><span class="p">)</span>
+        <span class="n">total_articles_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_list_of_dict</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;min_limit: &quot;</span><span class="p">,</span> <span class="n">min_limit</span><span class="p">,</span> <span class="s2">&quot;total_articles_rows: &quot;</span><span class="p">,</span> <span class="n">total_articles_rows</span><span class="p">)</span>
+        <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">total_articles_rows</span> <span class="o">==</span> <span class="n">required_number_of_articles</span><span class="p">:</span>
+            <span class="n">search</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">exact_info</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_limit</span><span class="p">,</span> <span class="n">total_articles_rows</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">search</span><span class="p">,</span> <span class="n">exact_info</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="k">elif</span> <span class="n">total_articles_rows</span> <span class="o">&gt;</span> <span class="n">required_number_of_articles</span><span class="p">:</span>
+            <span class="n">upper_total_articles_rows</span> <span class="o">=</span> <span class="n">total_articles_rows</span>
+            <span class="n">upper_info</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_limit</span><span class="p">,</span> <span class="n">upper_total_articles_rows</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;upper_total_articles_rows: &quot;</span><span class="p">,</span> <span class="n">upper_total_articles_rows</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">addition</span> <span class="o">=</span> <span class="n">prev_min_limit</span>
+            <span class="n">lower_total_articles_rows</span> <span class="o">=</span> <span class="n">total_articles_rows</span>
+            <span class="k">if</span> <span class="n">prev_lower_total_articles_rows</span> <span class="o">==</span> <span class="n">lower_total_articles_rows</span><span class="p">:</span>
+                <span class="n">lower_info</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_limit</span><span class="p">,</span> <span class="n">lower_total_articles_rows</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lower_total_articles_rows: &quot;</span><span class="p">,</span> <span class="n">lower_total_articles_rows</span><span class="p">)</span>
+                <span class="n">search</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">return</span> <span class="n">search</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lower_info</span><span class="p">,</span> <span class="n">upper_info</span>
+            <span class="k">return</span> <span class="n">return_finding_required_article_by_changing_min_limit_recursively</span><span class="p">(</span>
+                <span class="n">citations_grouped_keywords_counts_df</span><span class="p">,</span>
+                <span class="n">required_number_of_articles</span><span class="p">,</span>
+                <span class="n">addition</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span>
+                <span class="n">lower_total_articles_rows</span><span class="p">,</span>
+                <span class="n">upper_info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="manually_check_filter_by_min_limit_changes"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.manually_check_filter_by_min_limit_changes">[docs]</a><span class="k">def</span> <span class="nf">manually_check_filter_by_min_limit_changes</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                                               <span class="n">required_number_of_articles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                               <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">addition</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_grouped_keywords_counts_df : pd.DataFrame</span>
+<span class="sd">        This is input dataframe which contains some columns which have prefix or suffix in names.</span>
+<span class="sd">    required_number_of_articles : int</span>
+<span class="sd">        This is the number of articles you want after filtration process.</span>
+<span class="sd">    min_limit : int</span>
+<span class="sd">        This is the least value we want in all keywords group names.</span>
+<span class="sd">    iterations : int</span>
+<span class="sd">        This is the number of iterations in for underling loop.</span>
+<span class="sd">    addition : int</span>
+<span class="sd">        This is the number by which you want to increase the min_limit on grouped keyword count.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        This prints the values rather than returning the values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="n">filtered_list_of_dict</span> <span class="o">=</span> <span class="n">filter_dataframe_on_keywords_group_name_count</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">,</span>
+                                                                              <span class="n">min_limit</span><span class="p">,</span> <span class="s2">&quot;_count&quot;</span><span class="p">,</span> <span class="s2">&quot;suffix&quot;</span><span class="p">)</span>
+        <span class="n">total_articles_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_list_of_dict</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;min_limit: &quot;</span><span class="p">,</span> <span class="n">min_limit</span><span class="p">,</span> <span class="s2">&quot;total_articles_rows: &quot;</span><span class="p">,</span> <span class="n">total_articles_rows</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">total_articles_rows</span> <span class="o">&lt;=</span> <span class="n">required_number_of_articles</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_limit</span> <span class="o">+=</span> <span class="n">addition</span></div>
+
+
+<div class="viewcode-block" id="get_sorting_criterion_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.get_sorting_criterion_list">[docs]</a><span class="k">def</span> <span class="nf">get_sorting_criterion_list</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">,</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This sorting criteria list is based on the keywords got from the main input keywords. It contains total_keywords,</span>
+<span class="sd">    group_keywords_counts, keywords_counts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_grouped_keywords_counts_df : pd.DataFrame</span>
+<span class="sd">        This dataframe contains all columns with counts of keywords.</span>
+<span class="sd">    unique_preprocessed_clean_grouped_keywords_dict : dict</span>
+<span class="sd">        his is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword</span>
+<span class="sd">        group can not be found in any other keyword group.</span>
+<span class="sd">        Example - {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;], &#39;keyword_group_2&#39;:</span>
+<span class="sd">        [&quot;corporate&quot;, &quot;pricing&quot;],...}.</span>
+<span class="sd">        &#39;risk&#39; is removed from keyword_group_2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This is the sorting criterion list which contains column in logical manner we desire. It contains</span>
+<span class="sd">        total_keywords, group_keywords_counts, and keywords_counts in the last.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorting_criterion_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;total_keywords&quot;</span><span class="p">]</span>
+    <span class="n">group_name_counter_list</span> <span class="o">=</span> <span class="n">get_pd_df_columns_names_with_prefix_suffix</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">)</span>
+    <span class="n">sorting_criterion_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group_name_counter_list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">keywords_list</span> <span class="ow">in</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">sorting_criterion_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">keywords_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sorting_criterion_list</span></div>
+
+
+<div class="viewcode-block" id="sort_citations_grouped_keywords_counts_df"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.sort_citations_grouped_keywords_counts_df">[docs]</a><span class="k">def</span> <span class="nf">sort_citations_grouped_keywords_counts_df</span><span class="p">(</span><span class="n">citations_grouped_keywords_counts_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                                              <span class="n">sorting_criterion_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function sort the dataframe based on the sorting criterion list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_grouped_keywords_counts_df : pd.DataFrame</span>
+<span class="sd">        This dataframe contains all columns with counts of keywords.</span>
+<span class="sd">    sorting_criterion_list : list</span>
+<span class="sd">        This is the sorting criterion list which contains column in logical manner we desire.It contains</span>
+<span class="sd">        total_keywords, group_keywords_counts, and keywords_counts in the last.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        This is the sorted dataframe which contains columns in this sequential manner. It contains total_keywords,</span>
+<span class="sd">    group_keywords_counts, and keywords_counts in the last.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorted_df</span> <span class="o">=</span> <span class="n">citations_grouped_keywords_counts_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">sorting_criterion_list</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sorted_df</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chandravesh chaudhari.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
