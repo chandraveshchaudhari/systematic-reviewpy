@@ -15,6 +15,6 @@ could be beneficial to other users as well.
 - browser-automationpy https://github.com/chandraveshchaudhari/browser-automationpy/
 - rispy https://pypi.org/project/rispy/
 
-### Project Author
+### Project Authors
 - Chandravesh chaudhari, Doctoral candidate at christ university, Bangalore.
-- Dr. Geetanjali purswani, Assistant professor at christ university, Bangalore.
+- Dr. Geetanjali purswani, PhD Supervisor at christ university, Bangalore.
