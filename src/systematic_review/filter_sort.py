@@ -1,6 +1,6 @@
 """Module: filter_sort
-Description for filter: we have 3 types of keywords and I want to include all those with same kind of condition such as
-keywords >= some values and filter them until I have required number of articles that I can manually read and filter.
+Description for filter: each searched keywords group can be used to filter using conditions such as 
+searched keywords >= some count values and filter them until you have required number of articles that can be manually read and filter.
 
 Description for sort: This converts the data into sorted manner so it is easier for humans to understand.
 """
