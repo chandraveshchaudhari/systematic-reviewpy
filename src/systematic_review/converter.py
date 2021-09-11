@@ -239,8 +239,9 @@ def ris_to_dict_list(ris_file_path):
     """
     with open(ris_file_path, 'r') as bibliography_file:
         ris_list_of_dict = rispy.load(bibliography_file)
+        source_name = os_utils.get_filename_from_path(ris_file_path)
         for dictionary in ris_list_of_dict:
-            dictionary["source"] = os_utils.get_filename_from_path(ris_file_path)
+            dictionary["source"] = source_name
 
     return ris_list_of_dict
 
