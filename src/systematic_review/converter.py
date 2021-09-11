@@ -11,7 +11,6 @@ import rispy
 import fitz
 
 from systematic_review import os_utils
-from systematic_review.os_utils import get_filename_from_path
 
 
 def ris_file_to_pandas_dataframe(ris_file_path: str) -> pd.DataFrame:
@@ -241,7 +240,7 @@ def ris_to_dict_list(ris_file_path):
     with open(ris_file_path, 'r') as bibliography_file:
         ris_list_of_dict = rispy.load(bibliography_file)
         for dictionary in ris_list_of_dict:
-            dictionary["source"] = get_filename_from_path(ris_file_path)
+            dictionary["source"] = os_utils.get_filename_from_path(ris_file_path)
 
     return ris_list_of_dict
 
