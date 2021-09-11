@@ -372,7 +372,7 @@ def validating_pdf_via_filename(pdf_file_path: str, pages: str = "first", method
     """
     text = converter.get_text_from_pdf(pdf_file_path, pages)
     # print(text)
-    pdf_filename = os_utils.get_pdf_filename_from_path(pdf_file_path)
+    pdf_filename = os_utils.get_filename_from_path(pdf_file_path)
     pdf_filename = string_manipulation.strip_string_from_right_side(pdf_filename)
 
     if method == "exact_words":
@@ -411,7 +411,7 @@ def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str 
     # percentage_matched = 0
     text = converter.get_text_from_pdf(pdf_file_path, pages)
     # print(text)
-    pdf_filename = os_utils.get_pdf_filename_from_path(pdf_file_path)
+    pdf_filename = os_utils.get_filename_from_path(pdf_file_path)
 
     validation_bool = exact_words_checker_in_text(pdf_filename, text)
     if validation_bool:

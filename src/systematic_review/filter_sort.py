@@ -29,7 +29,8 @@ def get_pd_df_columns_names_with_prefix_suffix(input_pandas_dataframe: pd.DataFr
 
     """
     if method.lower() == "prefix":
-        columns_name_df_index = input_pandas_dataframe.loc[:, input_pandas_dataframe.columns.str.startswith(common_word)]
+        columns_name_df_index = input_pandas_dataframe.loc[:,
+                                input_pandas_dataframe.columns.str.startswith(common_word)]
     elif method.lower() == "suffix":
         columns_name_df_index = input_pandas_dataframe.loc[:, input_pandas_dataframe.columns.str.endswith(common_word)]
     else:
@@ -299,5 +300,14 @@ def sort_citations_grouped_keywords_counts_df(citations_grouped_keywords_counts_
     group_keywords_counts, and keywords_counts in the last.
 
     """
-    sorted_df = citations_grouped_keywords_counts_df.sort_values(by=sorting_criterion_list, ascending=False)
-    return sorted_df
+    available_sorting_criterion_list = []
+    for word in sorting_criterion_list:
+        if word in citations_grouped_keywords_counts_df.columns:
+            available_sorting_criterion_list.append(word)
+
+    sorted_df = citations_grouped_keywords_counts_df.sort_values(by=available_sorting_criterion_list, ascending=False)
+    print(available_sorting_criterion_list)
+    arranged_df = sorted_df[available_sorting_criterion_list]
+    print(arranged_df)
+
+    return arranged_df

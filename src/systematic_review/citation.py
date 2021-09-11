@@ -18,7 +18,7 @@ def csv_citations_to_ris_converter(input_file_path: str, output_filename: str = 
     input_file_path : str
         this is the path of input file
     output_filename : str
-        this is the name of the output ris file with extension.
+        this is the name of the output ris file with extension. output file path is also valid choice.
     input_file_type : str
         this function default is csv but excel is also supported by putting 'excel'
 
@@ -31,9 +31,11 @@ def csv_citations_to_ris_converter(input_file_path: str, output_filename: str = 
         df = pd.read_excel(input_file_path)
     else:
         df = pd.read_csv(input_file_path)
-    print(df)
+
+    pd.set_option("display.max_columns", None)
+    print(df.head())
     print("please specify columns of following in input file:")
-    article_type = input("specify the type of given citations, if it's journal article input :JOUR")
+    article_type = input("specify the type of given citations. if it's journal article, input :JOUR")
     authors = input("provide name of authors column")
     publication_year = input("provide name of Publication Year column")
     item_title = input("provide name of Item Title column")
@@ -58,6 +60,7 @@ def csv_citations_to_ris_converter(input_file_path: str, output_filename: str = 
         output_file.write("ER -" + "\n")
         # \n is placed to indicate EOL (End of Line)
     output_file.close()
+    print("ris file has been generated")
 
 
 def remove_empty_lines(input_file_path: str, output_filename: str = "output_file.ris") -> None:
@@ -119,31 +122,38 @@ def edit_ris_citation_paste_values_after_regex_pattern(input_file_path: str, out
     output_file.close()
 
 
-def get_citation_text_from_dataframe(dataframe_object: pd.DataFrame) -> pd.DataFrame:
-    """
-    This takes dataframe of citations and return the full text comprises of "primary_title", "notes_abstract",
-    "keywords"
+def get_citation_text_from_dataframe(dataframe_object: pd.DataFrame, title_column_name: str = "title",
+                                     abstract_column_name: str = "abstract",
+                                     keyword_column_name: str = "keywords") -> pd.DataFrame:
+    """This takes dataframe of citations and return the full text comprises of "title", "abstract", "keywords"
 
     Parameters
     ----------
     dataframe_object : pandas.DataFrame object
         this is the object of famous python library pandas. for more lemma_info: https://pandas.pydata.org/docs/
+    title_column_name : str
+        This is the name of column which contain citation title
+    abstract_column_name : str
+        This is the name of column which contain citation abstract
+    keyword_column_name : str
+        This is the name of column which contain citation keywords
 
     Returns
     -------
     pd.DataFrame
-        this is dataframe comprises of full text
+        this is dataframe_object comprises of full text column.
 
     """
-    fulltext_df = dataframe_object[["primary_title", "notes_abstract", "keywords"]].copy()
-    fulltext_df["full_text"] = fulltext_df["primary_title"].astype(str) + " " + fulltext_df["notes_abstract"].astype(
-        str) + " " + fulltext_df["keywords"].astype(str)
-    fulltext_df = fulltext_df[["primary_title", "full_text"]].copy()
-    return fulltext_df
+
+    fulltext_df = dataframe_object[[title_column_name, abstract_column_name, keyword_column_name]].copy()
+    fulltext_df["full_text"] = fulltext_df[title_column_name].astype(str) + " " + fulltext_df[abstract_column_name].astype(str) + " " + fulltext_df[keyword_column_name].astype(str)
+    result = pd.concat([dataframe_object, fulltext_df], axis=1)
+
+    return result
 
 
 def get_details_via_article_name_from_citations(article_name: str, sources_name_citations_path_list_of_dict: list,
-                                                doi_url: bool = False) -> dict:
+                                                doi_url: bool = False, title_column_name: str = "title") -> dict:
     """Iterate through citations and find article_name and put source_name in column, with doi and url being optional
 
     Parameters
@@ -155,6 +165,8 @@ def get_details_via_article_name_from_citations(article_name: str, sources_name_
         Examples - {'sources_name': 'all source articles citations', ...}
     doi_url : bool
         This signify if we want to get the value of url and doi from citation
+    title_column_name : str
+        This is the name of column which contain citation title
 
     Returns
     -------
@@ -163,7 +175,7 @@ def get_details_via_article_name_from_citations(article_name: str, sources_name_
 
     """
     for citations in sources_name_citations_path_list_of_dict[1]:
-        if article_name == string_manipulation.preprocess_string(citations["title"]):
+        if article_name == string_manipulation.preprocess_string(citations[title_column_name]):
             article_title_source_name_dict = {"article_name": article_name,
                                               "source_name": sources_name_citations_path_list_of_dict[0]}
             if doi_url:
@@ -180,7 +192,7 @@ def get_details_via_article_name_from_citations(article_name: str, sources_name_
 
 def get_details_of_all_article_name_from_citations(filtered_list_of_dict: list,
                                                    sources_name_citations_path_list_of_dict: list,
-                                                   doi_url: bool = False):
+                                                   doi_url: bool = False, title_column_name: str = "title"):
     """This function searches source names, doi, and url for all articles in filtered_list_of_dict.
 
     Parameters
@@ -192,6 +204,8 @@ def get_details_of_all_article_name_from_citations(filtered_list_of_dict: list,
         Examples - {'sources_name': 'all source articles citations', ...}
     doi_url : bool
         This signify if we want to get the value of url and doi from citation
+    title_column_name : str
+        This is the name of column which contain citation title
 
     Returns
     -------
@@ -202,7 +216,7 @@ def get_details_of_all_article_name_from_citations(filtered_list_of_dict: list,
     all_articles_title_source_name_list_of_dict = []
 
     for article_details in filtered_list_of_dict:
-        article_name = article_details['primary_title']
+        article_name = article_details[title_column_name]
         print("article: ", article_name)
         articles_title_source_name_dict = get_details_via_article_name_from_citations(
             article_name, sources_name_citations_path_list_of_dict, doi_url)
@@ -241,3 +255,34 @@ def get_missed_articles_source_names(missed_articles_list: list, all_articles_ti
                 {"article_name": dict_element[article_column_name], "source_name": dict_element[source_column_name]})
 
     return missed_article_name_and_source_name_list
+
+
+def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ['title', 'year'], keep: str = 'last',
+                              index_reset: bool = True):
+    """Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time
+    indexes are ignored.
+
+    Parameters
+    ----------
+    index_reset : bool
+        It
+    citation_dataframe : pandas.DataFrame object
+        Input dataset which contains duplicate rows
+    subset : list
+        column label or sequence of labels, optional Only consider certain columns for identifying duplicates, by
+        default use all of the columns.
+    keep : str
+        options includes {'first', 'last', False}, default 'first'. Determines which duplicates (if any) to keep.
+        - ``first`` : Drop duplicates except for the first occurrence.
+        - ``last`` : Drop duplicates except for the last occurrence.
+        - False : Drop all duplicates.
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with duplicates removed
+
+    """
+            
+    clean_df = citation_dataframe.drop_duplicates(subset=subset, keep=keep).reset_index(drop=index_reset)
+    return clean_df

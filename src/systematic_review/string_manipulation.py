@@ -188,7 +188,7 @@ def cleaned_pdf_filename_from_filepath(article_path: str) -> str:
         This is the cleaned filename of the pdf. It contains no symbols and uppercase characters.
 
     """
-    article_filename = os_utils.get_pdf_filename_from_path(article_path)
+    article_filename = os_utils.get_filename_from_path(article_path)
     article_name = strip_string_from_right_side(article_filename)
     article_name = preprocess_string(article_name)
     return article_name

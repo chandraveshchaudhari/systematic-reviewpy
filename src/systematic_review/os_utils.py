@@ -47,12 +47,12 @@ def get_path_leaf(file_path: str) -> str:
     return tail or ntpath.basename(head)
 
 
-def get_pdf_filename_from_path(pdf_file_path: str) -> str:
+def get_filename_from_path(file_path: str) -> str:
     """Returns the pdf filename from pdf filepath.
 
     Parameters
     ----------
-    pdf_file_path : str
+    file_path : str
         This is the file path of the pdf file.
 
     Returns
@@ -61,8 +61,9 @@ def get_pdf_filename_from_path(pdf_file_path: str) -> str:
         Filename of the pdf file.
 
     """
-    pdf_file_name = get_path_leaf(pdf_file_path)
-    return pdf_file_name
+    file_name = get_path_leaf(file_path)
+    file_name = file_name.split(".")[0]
+    return file_name
 
 
 def get_all_filenames_in_dir(dir_path: str) -> list:

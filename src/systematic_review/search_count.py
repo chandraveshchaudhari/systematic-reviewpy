@@ -215,7 +215,8 @@ def adding_dict_key_or_increasing_value(input_dict: dict, dict_key: str, step: i
 
 
 def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.DataFrame,
-                                          unique_preprocessed_clean_grouped_keywords_dict: dict) -> list:
+                                          unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                          title_column_name: str = "title") -> list:
     """Loop over articles to calculate keywords counts
 
     Parameters
@@ -226,6 +227,8 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     unique_preprocessed_clean_grouped_keywords_dict : dict
         looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
                   'keyword_group_2': ["corporate", "pricing"],...}
+    title_column_name : str
+        This is the name of column which contain citation title
 
     Returns
     -------
@@ -239,8 +242,8 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     final_list_of_full_keywords_counts_citations_dict = []
     # iterating through each citation details one by one.
     for _, row in dataframe_citations_with_fulltext.iterrows():
-        print(f"article: {row['primary_title']}")
-        full_keywords_counts_dict = {'primary_title': str(row['primary_title'])}
+        print(f"article: {row[title_column_name]}")
+        full_keywords_counts_dict = {title_column_name: str(row[title_column_name])}
         total_keywords_counts = 0
         # taking words one by one from full_text of citation.
         for searched_word in string_manipulation.split_preprocess_string(row['full_text']):

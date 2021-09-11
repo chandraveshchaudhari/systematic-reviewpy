@@ -8,7 +8,7 @@ https://github.com/navdeep-G/samplemod
 """
 
 # Always prefer setuptools over distutils
-# from setuptools import setup, find_packages
+from setuptools import setup, find_packages
 # import pathlib
 # here = pathlib.Path(__file__).parent.resolve()
 import setuptools
@@ -43,7 +43,7 @@ setuptools.setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.1',  # Required
+    version='0.0.5',  # Required
 
     # version="0.0.14",
     # This is a one-line description or tagline of what your project does. This
@@ -157,14 +157,14 @@ setuptools.setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['numpy>=1.21.2',
-                      'pandas>=1.3.2',
-                      'pdftotext>=2.2.0',
-                      'PyMuPDF>=1.18.17',
-                      'python-dateutil>=2.8.2',
-                      'pytz>=2021.1',
-                      'rispy>=0.7.1',
-                      'six>=1.16.0',
+    install_requires=['numpy',
+                      'pandas',
+                      'pdftotext',
+                      'PyMuPDF',
+                      'python-dateutil',
+                      'pytz',
+                      'rispy',
+                      'six',
                       ],  # Optional
 
     # List additional groups of dependencies here (e.g. development

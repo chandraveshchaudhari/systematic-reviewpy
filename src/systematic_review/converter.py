@@ -2,12 +2,16 @@
 This module contains functions related to files and data type conversion. such as list to txt file, pandas df to list of
 dicts and many more.
 """
+from collections import defaultdict
 from typing import Union
 
 import pandas as pd
 import pdftotext
 import rispy
 import fitz
+
+from systematic_review import os_utils
+from systematic_review.os_utils import get_filename_from_path
 
 
 def ris_file_to_pandas_dataframe(ris_file_path: str) -> pd.DataFrame:
@@ -69,7 +73,7 @@ def convert_dataframe_to_list_of_dicts(dataframe: pd.DataFrame) -> list:
     return list_of_dicts
 
 
-def convert_list_of_dicts_to_dataframe(list_of_dicts: list) -> pd.DataFrame:
+def list_of_dicts_to_dataframe(list_of_dicts: list) -> pd.DataFrame:
     """converts the list of dictionaries to pandas dataframe.
 
     Parameters
@@ -236,8 +240,33 @@ def ris_to_dict_list(ris_file_path):
     """
     with open(ris_file_path, 'r') as bibliography_file:
         ris_list_of_dict = rispy.load(bibliography_file)
+        for dictionary in ris_list_of_dict:
+            dictionary["source"] = get_filename_from_path(ris_file_path)
 
     return ris_list_of_dict
+
+
+def load_multiple_ris_citations_files(citations_files_parent_folder_path: str) -> list:
+    """This function loads all ris citations files from folder
+
+    Parameters
+    ----------
+    citations_files_parent_folder_path : str
+        this is the path of parent folder of where citations files exists.
+
+    Returns
+    -------
+    list
+        this is list of citations dicts inclusive of all citation files.
+
+    """
+    citations_path_lists = os_utils.extract_files_path_from_directories_or_subdirectories(
+        citations_files_parent_folder_path)
+    citations_list = []
+    for path in citations_path_lists:
+        if path.endswith(".ris"):
+            citations_list += ris_to_dict_list(path)
+    return citations_list
 
 
 def list_to_text_file(filename: str, list_name: str, permission: str = "w"):
@@ -282,3 +311,46 @@ def list_to_string(list_name):
         text_string += str(item)
         text_string += "\n"
     return text_string
+
+
+def unpack_list_of_lists(list_of_lists):
+    """unpack list consisting of other list to output list which will include all elements from other lists.
+
+    Parameters
+    ----------
+    list_of_lists : list
+        this is list consisting of elements and lists. example ["first_element", ["second_element"]]
+
+    Returns
+    -------
+    list
+        This is the resultant list consisting of only elements. example ["first_element", "second_element"]
+
+    """
+    unpacked_list = []
+    for element in list_of_lists:
+        if type(element) is list:
+            unpacked_list += element
+        else:
+            unpacked_list.append(element)
+    return unpacked_list
+
+
+def data_type_of_dict_values(dictionary):
+    """This provide the data type of dictionary values by outputting dictionary.
+
+    Parameters
+    ----------
+    dictionary : dict
+        This is the dictionary which contains different types of object in values. Example - {"first": [2, 5], "sec": 3}
+
+    Returns
+    -------
+    dict
+        This will output {"<class 'list'>": ["first"], "<class 'int'>": ["sec"]}
+
+    """
+    dictionary_info = defaultdict(list)
+    for key, value in dictionary.items():
+        dictionary_info[str(type(value))].append(key)
+    return dictionary_info
