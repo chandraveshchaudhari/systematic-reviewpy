@@ -424,7 +424,7 @@ def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str 
         return validation_bool, percentage_matched, "jumbled_words_percentage"
 
     # print(validation_bool)
-    return validation_bool, percentage_matched, "all"
+    return False, percentage_matched, "all"
 
 
 def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list) -> tuple:

@@ -1,8 +1,0 @@
-numpy
-pandas
-pdftotext
-PyMuPDF
-python-dateutil
-pytz
-rispy
-six
