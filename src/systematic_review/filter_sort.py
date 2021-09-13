@@ -301,9 +301,16 @@ def sort_citations_grouped_keywords_counts_df(citations_grouped_keywords_counts_
 
     """
     available_sorting_criterion_list = []
+    leftover_columns = []
     for word in sorting_criterion_list:
         if word in citations_grouped_keywords_counts_df.columns:
             available_sorting_criterion_list.append(word)
+    for leftover in citations_grouped_keywords_counts_df.columns:
+        if leftover in available_sorting_criterion_list:
+            pass
+        else:
+            leftover_columns.append(leftover)
+    available_sorting_criterion_list += leftover_columns
 
     sorted_df = citations_grouped_keywords_counts_df.sort_values(by=available_sorting_criterion_list, ascending=False)
     print(available_sorting_criterion_list)

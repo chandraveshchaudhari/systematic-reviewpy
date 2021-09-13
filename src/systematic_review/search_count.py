@@ -265,11 +265,14 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
 
 
 def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
-                                    unique_preprocessed_clean_grouped_keywords_dict: dict) -> list:
+                                    unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                    title_column_name: str = "title") -> list:
     """Loop over articles pdf files to calculate keywords counts.
 
     Parameters
     ----------
+    title_column_name : str
+        This is the name of column which contain citation title
     list_of_downloaded_articles_path : list
         This list contains path of all the pdf files contained in directory_path.
     unique_preprocessed_clean_grouped_keywords_dict : dict
@@ -290,7 +293,7 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
     for pdf_path in list_of_downloaded_articles_path:
         article_name = string_manipulation.cleaned_pdf_filename_from_filepath(pdf_path)
         print("article: ", article_name)
-        full_keywords_counts_dict = {'article': str(article_name)}
+        full_keywords_counts_dict = {title_column_name: str(article_name)}
         total_keywords_counts = 0
 
         try:
