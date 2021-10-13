@@ -26,3 +26,8 @@ could be beneficial to other users as well.
 ### Project Authors
 - Chandravesh chaudhari, Doctoral candidate at christ university, Bangalore.
 - Dr. Geetanjali purswani, PhD Supervisor at christ university, Bangalore.
+
+# Pending work:
+- convert nlp.py to ai.py and provide support for asreview
+- analysis.py for automated tables and diagrams
+- support for automated systematic review process diagram
