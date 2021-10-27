@@ -154,7 +154,10 @@ def unique_keywords_in_preprocessed_clean_keywords_dict(preprocessed_clean_group
 
 
 def remove_duplicates_keywords_from_next_groups(preprocessed_clean_grouped_keywords_dict: dict) -> dict:
-    """Remove duplicate instances of keywords in other keywords groups.
+    """Execute keywords step.
+    This takes keywords from {keyword_group_name: keywords,...} dict and remove symbols with spaces. it then convert
+    them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:
+    [clean_keywords],...} and then Remove duplicate instances of keywords in other keywords groups.
 
     Parameters
     ----------
@@ -173,17 +176,41 @@ def remove_duplicates_keywords_from_next_groups(preprocessed_clean_grouped_keywo
         'risk' is removed from keyword_group_2.
 
     """
-    unique_preprocessed_clean_grouped_keywords_dict = preprocessed_clean_grouped_keywords_dict
     temp_set = set()
 
-    for keyword_group_name, grouped_unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
+    for keyword_group_name, grouped_unique_keywords in preprocessed_clean_grouped_keywords_dict.items():
         # appending new keywords in temp_set
         for keywords in grouped_unique_keywords:
             if keywords not in temp_set:
                 temp_set.add(keywords)
             else:
-                unique_preprocessed_clean_grouped_keywords_dict[keyword_group_name].remove(keywords)
-    return unique_preprocessed_clean_grouped_keywords_dict
+                preprocessed_clean_grouped_keywords_dict[keyword_group_name].remove(keywords)
+    return preprocessed_clean_grouped_keywords_dict
+
+
+def preprocess_searched_keywords(grouped_keywords_dictionary: dict) -> dict:
+    """Remove duplicate instances of keywords in other keywords groups.
+
+    Parameters
+    ----------
+    grouped_keywords_dictionary : dict
+        This is the input dictionary of keywords used for systematic review.
+        Example - {'keyword_group_name': "Management investing corporate pricing risk Risk Pre-process",...}
+
+    Returns
+    -------
+    dict
+        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+        group can not be found in any other keyword group.
+        Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
+        ["corporate", "pricing"],...}
+        'risk' is removed from keyword_group_2.
+
+    """
+    preprocessed_keywords = preprocess_search_keywords_dictionary(grouped_keywords_dictionary)
+    preprocessed_clean_grouped_keywords_dict = remove_duplicates_keywords_from_next_groups(preprocessed_keywords)
+    return preprocessed_clean_grouped_keywords_dict
+
 
 
 def adding_dict_key_or_increasing_value(input_dict: dict, dict_key: str, step: int = 1, default_dict_value: int = 1):

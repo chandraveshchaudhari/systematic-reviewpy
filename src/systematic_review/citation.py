@@ -312,7 +312,8 @@ def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list
 
 
 def complete_citations_dataframe(citations_files_parent_folder_path):
-    """This function load all the citations from path, add required columns for next steps, and remove duplicates.
+    """Executes citation step.
+    This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
     Parameters
     ----------
