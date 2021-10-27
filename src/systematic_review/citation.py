@@ -6,6 +6,7 @@ typos.
 import re
 import pandas as pd
 from systematic_review import string_manipulation
+from systematic_review import converter
 
 
 def csv_citations_to_ris_converter(input_file_path: str, output_filename: str = "output_ris_file.ris",
@@ -89,7 +90,7 @@ def remove_empty_lines(input_file_path: str, output_filename: str = "output_file
 
 
 def edit_ris_citation_paste_values_after_regex_pattern(input_file_path: str, output_filename: str = "output_file.ris",
-                                                       edit_line_regex: str = r'^DO ', paste_value: str = "ER  - ")\
+                                                       edit_line_regex: str = r'^DO ', paste_value: str = "ER  - ") \
         -> None:
     """
     This is created to edit ris files which doesn't specify ER for 'end of citations' and paste ER after end point of
@@ -122,9 +123,9 @@ def edit_ris_citation_paste_values_after_regex_pattern(input_file_path: str, out
     output_file.close()
 
 
-def get_citation_text_from_dataframe(dataframe_object: pd.DataFrame, title_column_name: str = "title",
-                                     abstract_column_name: str = "abstract",
-                                     keyword_column_name: str = "keywords") -> pd.DataFrame:
+def add_citation_text_column(dataframe_object: pd.DataFrame, title_column_name: str = "title",
+                             abstract_column_name: str = "abstract",
+                             keyword_column_name: str = "keywords") -> pd.DataFrame:
     """This takes dataframe of citations and return the full text comprises of "title", "abstract", "keywords"
 
     Parameters
@@ -144,12 +145,10 @@ def get_citation_text_from_dataframe(dataframe_object: pd.DataFrame, title_colum
         this is dataframe_object comprises of full text column.
 
     """
+    dataframe_object["full_text"] = dataframe_object[title_column_name].astype(str) + " " + dataframe_object[
+        abstract_column_name].astype(str) + " " + dataframe_object[keyword_column_name].astype(str)
 
-    fulltext_df = dataframe_object[[title_column_name, abstract_column_name, keyword_column_name]].copy()
-    fulltext_df["full_text"] = fulltext_df[title_column_name].astype(str) + " " + fulltext_df[abstract_column_name].astype(str) + " " + fulltext_df[keyword_column_name].astype(str)
-    result = pd.concat([dataframe_object, fulltext_df], axis=1)
-
-    return result
+    return dataframe_object
 
 
 def get_details_via_article_name_from_citations(article_name: str, sources_name_citations_path_list_of_dict: list,
@@ -283,6 +282,53 @@ def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = [
         DataFrame with duplicates removed
 
     """
-            
+
     clean_df = citation_dataframe.drop_duplicates(subset=subset, keep=keep).reset_index(drop=index_reset)
     return clean_df
+
+
+def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list = ['title', 'year']):
+    """This function check if citations or article title is available at more than one sources and add column named
+    'multiple_sources' to the dataframe with list of name of sources names.
+
+    Parameters
+    ----------
+    citation_dataframe : pandas.DataFrame object
+        Input dataset which contains citations or article title with sources more than one.
+    group_by : list
+        column label or sequence of labels, optional Only consider certain columns for citations or article title with
+        sources more than one, by default use all of the columns.
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with additional column with list of sources names
+
+    """
+    df = citation_dataframe.groupby(group_by)['source'].apply(list).reset_index()
+    df = df.rename(columns={"source": "multiple_sources"})
+    citation_dataframe_with_multiple_sources_column = citation_dataframe.merge(df, how='left', on=group_by)
+    return citation_dataframe_with_multiple_sources_column
+
+
+def complete_citations_dataframe(citations_files_parent_folder_path):
+    """This function load all the citations from path, add required columns for next steps, and remove duplicates.
+
+    Parameters
+    ----------
+    citations_files_parent_folder_path : str
+        this is the path of parent folder of where citations files exists.
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with additional columns needed for next steps of systematic review and duplicates are removed
+
+    """
+    full_list = converter.load_multiple_ris_citations_files(citations_files_parent_folder_path)
+    full_list_df = converter.list_of_dicts_to_dataframe(full_list)
+    complete_df = add_multiple_sources_column(full_list_df)
+    complete_df = add_citation_text_column(complete_df)
+    complete_citations_df = drop_duplicates_citations(complete_df)
+    return complete_citations_df
+

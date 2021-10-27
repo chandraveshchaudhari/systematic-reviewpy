@@ -3,6 +3,7 @@ MANIFEST.in
 README.md
 setup.py
 src/systematic_review/__init__.py
+src/systematic_review/analysis.py
 src/systematic_review/citation.py
 src/systematic_review/converter.py
 src/systematic_review/filter_sort.py
