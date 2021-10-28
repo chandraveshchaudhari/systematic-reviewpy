@@ -290,9 +290,35 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     return final_list_of_full_keywords_counts_citations_dict
 
 
+def citation_search_count_dataframe(citations_df, keywords):
+    """Loop over articles to calculate keywords counts and return dataframe.
+
+    Parameters
+    ----------
+    citations_df : pandas.DataFrame object
+        DataFrame with additional columns needed for next steps of systematic review and duplicates are removed
+    keywords : dict
+        This is output dictionary which contains processed non-duplicate keywords dict.
+        Example - {'keyword_group_name': ["management", "investing", "corporate", "pricing", "risk", "pre",
+        "process"],...}
+
+    Returns
+    -------
+    pandas.DataFrame object
+        This is pandas object of all citations search result which contains our all keywords count.
+        Examples - [{'primary_title': 'name', 'total_keywords': count, 'keyword_group_1_count': count,
+        "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
+        "pricing": count,...}]
+
+    """
+    citations_keywords_count_list = count_keywords_in_citations_full_text(citations_df, keywords)
+    citation_search_count_df = converter.list_of_dicts_to_dataframe(citations_keywords_count_list)
+    return citation_search_count_df
+
+
 def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
                                     unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                    title_column_name: str = "title") -> list:
+                                    title_column_name: str = "cleaned_title") -> list:
     """Loop over articles pdf files to calculate keywords counts.
 
     Parameters

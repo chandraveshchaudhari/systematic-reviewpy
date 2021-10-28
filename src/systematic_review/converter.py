@@ -184,12 +184,9 @@ def get_text_from_pdf(pdf_file_path: str, pages: str = 'all') -> Union[str, bool
     try:
         pdf_text = get_text_from_pdf_pdftotext(pdf_file_path, pages)
         return pdf_text
-    except:
-        try:
-            pdf_text = get_text_from_pdf_pymupdf(pdf_file_path, pages)
-            return pdf_text
-        except:
-            raise FileNotFoundError
+    except pdftotext.Error:
+        pdf_text = get_text_from_pdf_pymupdf(pdf_file_path, pages)
+        return pdf_text
 
 
 def extract_pandas_df_column1_row_values_based_on_column2_value(pandas_dataframe, column2_value,

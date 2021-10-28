@@ -5,6 +5,8 @@ contains functions to get articles source name and create list of missed or dupl
 
 from difflib import SequenceMatcher
 import pandas as pd
+import pdftotext
+
 from systematic_review import string_manipulation
 from systematic_review import converter
 from systematic_review import os_utils
@@ -237,7 +239,7 @@ def exact_words_checker_in_text(words_string: str, text_string: str) -> bool:
     return validation_bool
 
 
-def words_percentage_checker_in_text(words_string: str, text_string: str, validation_limit: float = 0.7) -> tuple:
+def words_percentage_checker_in_text(words_string: str, text_string: str, validation_limit: float = 70) -> tuple:
     """This  checks for exact match of substring in string and return True or False based on success. It also returns
     matched word percentage.
     Limit: this doesn't work properly if words_string have duplicate words.
@@ -296,7 +298,7 @@ def words_percentage_checker_in_text(words_string: str, text_string: str, valida
     return validation_bool, percentage_matched
 
 
-def jumbled_words_percentage_checker_in_text(words_string: str, text_string: str, validation_limit: float = 0.7,
+def jumbled_words_percentage_checker_in_text(words_string: str, text_string: str, validation_limit: float = 70,
                                              wrong_word_limit: int = 2) -> tuple:
     """start calculating percentage if half of words are found in sequence. This also takes in consideration of words
     which got jumbled up due to pdf reading operation.
@@ -452,11 +454,11 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list) -> tupl
             value, percentage_matched, methods = multiple_methods_validating_pdf_via_filename(article_name_path)
             if value:
                 # print("validated")
-                validated_pdf_list.append(article_name_path)
+                validated_pdf_list.append([article_name_path, percentage_matched, methods])
             elif not value:
                 # print("invalidated")
-                invalidated_pdf_list.append(article_name_path)
-        except:
+                invalidated_pdf_list.append([article_name_path, percentage_matched, methods])
+        except pdftotext.Error:
             manual_pdf_list.append(article_name_path)
 
     return validated_pdf_list, invalidated_pdf_list, manual_pdf_list
