@@ -212,7 +212,6 @@ def preprocess_searched_keywords(grouped_keywords_dictionary: dict) -> dict:
     return preprocessed_clean_grouped_keywords_dict
 
 
-
 def adding_dict_key_or_increasing_value(input_dict: dict, dict_key: str, step: int = 1, default_dict_value: int = 1):
     """Increase the value of dict(key:value) by step using key. If key not present then it get initialised with default
     dict value
@@ -269,8 +268,8 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     final_list_of_full_keywords_counts_citations_dict = []
     # iterating through each citation details one by one.
     for _, row in dataframe_citations_with_fulltext.iterrows():
-        print(f"article: {row[title_column_name][0]}")
-        full_keywords_counts_dict = {title_column_name: str(row[title_column_name][0])}
+        print(f"article: {row[title_column_name]}")
+        full_keywords_counts_dict = {title_column_name: str(row[title_column_name])}
         total_keywords_counts = 0
         # taking words one by one from full_text of citation.
         for searched_word in string_manipulation.split_preprocess_string(row['full_text']):

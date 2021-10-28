@@ -219,7 +219,7 @@ def return_finding_required_article_by_changing_min_limit_recursively(
 def manually_check_filter_by_min_limit_changes(citations_grouped_keywords_counts_df: pd.DataFrame,
                                                required_number_of_articles: int, min_limit: int = 1,
                                                iterations: int = 20, addition: int = 20):
-    """
+    """manual method to check number of articles based on changing min_limit.
 
     Parameters
     ----------
@@ -273,7 +273,7 @@ def get_sorting_criterion_list(citations_grouped_keywords_counts_df, unique_prep
         total_keywords, group_keywords_counts, and keywords_counts in the last.
 
     """
-    sorting_criterion_list = ["total_keywords"]
+    sorting_criterion_list = ["title", "total_keywords"]
     group_name_counter_list = get_pd_df_columns_names_with_prefix_suffix(citations_grouped_keywords_counts_df)
     sorting_criterion_list.append(group_name_counter_list)
     for keywords_list in unique_preprocessed_clean_grouped_keywords_dict.values():
@@ -313,8 +313,45 @@ def sort_citations_grouped_keywords_counts_df(citations_grouped_keywords_counts_
     available_sorting_criterion_list += leftover_columns
 
     sorted_df = citations_grouped_keywords_counts_df.sort_values(by=available_sorting_criterion_list, ascending=False)
-    print(available_sorting_criterion_list)
+    # print(available_sorting_criterion_list)
     arranged_df = sorted_df[available_sorting_criterion_list]
-    print(arranged_df)
+    # print(arranged_df)
 
     return arranged_df
+
+
+def filter_and_sort(complete_citations_df: pd.DataFrame, citations_grouped_keywords_counts_df: pd.DataFrame,
+                    preprocessed_clean_grouped_keywords_dict: dict, min_limit) -> pd.DataFrame:
+    """Execute filter and sort step.
+    creates sorting criterion list, sort the dataframe based on the sorting criterion list.
+
+    Parameters
+    ----------
+    complete_citations_df : pandas.DataFrame object
+        DataFrame with citation details and no duplicates.
+    min_limit : int
+        This is the least value we want in all keywords group names.
+    citations_grouped_keywords_counts_df : pd.DataFrame
+        This dataframe contains all columns with counts of keywords.
+    preprocessed_clean_grouped_keywords_dict : dict
+        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+        group can not be found in any other keyword group.
+        Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
+        ["corporate", "pricing"],...}
+
+    Returns
+    -------
+    pd.DataFrame
+        This is the sorted dataframe which contains columns in this sequential manner. It contains citation df,
+         total_keywords, group_keywords_counts, and keywords_counts in the last.
+
+    """
+    criteria_list = get_sorting_criterion_list(citations_grouped_keywords_counts_df,
+                                               preprocessed_clean_grouped_keywords_dict)
+    criteria_list = converter.unpack_list_of_lists(criteria_list)
+    sorted_df = sort_citations_grouped_keywords_counts_df(citations_grouped_keywords_counts_df, criteria_list)
+    filtered_sorted_list = filter_dataframe_on_keywords_group_name_count(sorted_df, min_limit)
+    filtered_sorted_df = converter.list_of_dicts_to_dataframe(filtered_sorted_list)
+    complete_filtered_sorted_df = pd.merge(complete_citations_df, filtered_sorted_df, on=["title"])
+
+    return complete_filtered_sorted_df
