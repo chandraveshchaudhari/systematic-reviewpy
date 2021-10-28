@@ -355,7 +355,8 @@ def jumbled_words_percentage_checker_in_text(words_string: str, text_string: str
 
 def validating_pdf_via_filename(pdf_file_path: str, pages: str = "first", method: str = "exact_words") -> bool:
     """This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is
-    validated as downloaded else not downloaded. Example - pdf file name -> check in -> text of pdf file
+    validated as downloaded else not downloaded. Example - pdf file name -> check in -> text of pdf file. pdf_reader
+    options are pdftotext or pymupdf.
 
     Parameters
     ----------
@@ -390,12 +391,16 @@ def validating_pdf_via_filename(pdf_file_path: str, pages: str = "first", method
     return validation_bool
 
 
-def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str = "first") -> tuple:
+def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str = "first",
+                                                 pdf_reader: str = 'pdftotext') -> tuple:
     """This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is
-    validated as downloaded else not downloaded. Example - pdf file name -> check in -> text of pdf file
+    validated as downloaded else not downloaded. Example - pdf file name -> check in -> text of pdf file. pdf_reader
+    options are pdftotext or pymupdf.
 
     Parameters
     ----------
+    pdf_reader : str
+        This is python pdf reader package which convert pdf to text.
     pdf_file_path : str
         the path of the pdf file.
     pages : str
@@ -411,7 +416,7 @@ def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str 
 
     """
     # percentage_matched = 0
-    text = converter.get_text_from_pdf(pdf_file_path, pages)
+    text = converter.get_text_from_pdf(pdf_file_path, pages, pdf_reader)
     # print(text)
     pdf_filename = os_utils.get_filename_from_path(pdf_file_path)
 
@@ -429,12 +434,18 @@ def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str 
     return False, percentage_matched, "all"
 
 
-def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list) -> tuple:
+def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: str = "first",
+                                           pdf_reader: str = 'pdftotext') -> tuple:
     """This function checks pdf files in list_of_pdf_files_path and validate them with function named
-    'validating_pdf_via_filename'. Example - multiple pdf file name -> check in -> text of pdf file
+    'validating_pdf_via_filename'. Example - multiple pdf file name -> check in -> text of pdf file.
+    pdf_reader options are pdftotext or pymupdf.
 
     Parameters
     ----------
+    pages : str
+        This could be 'all' to get full text of pdf and 'first' for first page of pdf.
+    pdf_reader : str
+        This is python pdf reader package which convert pdf to text.
     list_of_pdf_files_path : list
         the list of the path of the pdf file.
 
@@ -451,7 +462,8 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list) -> tupl
 
     for article_name_path in list_of_pdf_files_path:
         try:
-            value, percentage_matched, methods = multiple_methods_validating_pdf_via_filename(article_name_path)
+            value, percentage_matched, methods = multiple_methods_validating_pdf_via_filename(article_name_path,
+                                                                                              pages, pdf_reader)
             if value:
                 # print("validated")
                 validated_pdf_list.append([article_name_path, percentage_matched, methods])

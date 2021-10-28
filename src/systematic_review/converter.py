@@ -165,11 +165,13 @@ def get_text_from_pdf_pymupdf(pdf_file_path: str, pages: str = 'all') -> str:
     return text
 
 
-def get_text_from_pdf(pdf_file_path: str, pages: str = 'all') -> Union[str, bool]:
-    """This Function try to get text from pdf files using pdftotext or pymupdf. It raises no exception.
+def get_text_from_pdf(pdf_file_path: str, pages: str = 'all', pdf_reader: str = 'pdftotext') -> Union[str, bool]:
+    """This Function get text from pdf files using pdftotext or pymupdf.
 
     Parameters
     ----------
+    pdf_reader : str
+        This is python pdf reader package which convert pdf to text.
     pdf_file_path : str
         This is the path of pdf file.
     pages : str
@@ -181,12 +183,14 @@ def get_text_from_pdf(pdf_file_path: str, pages: str = 'all') -> Union[str, bool
         This is the required text from pdf file.
 
     """
-    try:
+    if pdf_reader == 'pdftotext':
         pdf_text = get_text_from_pdf_pdftotext(pdf_file_path, pages)
         return pdf_text
-    except pdftotext.Error:
+    elif pdf_reader == 'pymupdf':
         pdf_text = get_text_from_pdf_pymupdf(pdf_file_path, pages)
         return pdf_text
+    else:
+        raise NotImplementedError
 
 
 def extract_pandas_df_column1_row_values_based_on_column2_value(pandas_dataframe, column2_value,
