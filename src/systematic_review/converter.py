@@ -86,7 +86,7 @@ def list_of_dicts_to_dataframe(list_of_dicts: list) -> pd.DataFrame:
         This is the pandas dataframe consisted of all data from dictionaries converted into respective rows.
 
     """
-    dataframe = pd.DataFrame.from_dict(list_of_dicts)
+    dataframe = pd.DataFrame.from_records(list_of_dicts)
     return dataframe
 
 
