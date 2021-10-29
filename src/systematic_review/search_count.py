@@ -316,7 +316,7 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     return final_list_of_full_keywords_counts_citations_dict
 
 
-def citation_search_count_dataframe(citations_df, keywords):
+def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict) -> pd.DataFrame:
     """Loop over articles to calculate keywords counts and return dataframe.
 
     Parameters
