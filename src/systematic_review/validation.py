@@ -420,18 +420,7 @@ def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str 
     # print(text)
     pdf_filename = os_utils.get_filename_from_path(pdf_file_path)
 
-    validation_bool = exact_words_checker_in_text(pdf_filename, text)
-    if validation_bool:
-        return validation_bool, 1, "exact_words"
-    validation_bool, percentage_matched = words_percentage_checker_in_text(pdf_filename, text)
-    if validation_bool:
-        return validation_bool, percentage_matched, "words_percentage"
-    validation_bool, percentage_matched = jumbled_words_percentage_checker_in_text(pdf_filename, text)
-    if validation_bool:
-        return validation_bool, percentage_matched, "jumbled_words_percentage"
-
-    # print(validation_bool)
-    return False, percentage_matched, "all"
+    return multiple_methods_validating_words_string_in_text(pdf_filename, text)
 
 
 def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: str = "first",

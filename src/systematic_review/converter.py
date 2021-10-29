@@ -183,14 +183,17 @@ def get_text_from_pdf(pdf_file_path: str, pages: str = 'all', pdf_reader: str = 
         This is the required text from pdf file.
 
     """
-    if pdf_reader == 'pdftotext':
-        pdf_text = get_text_from_pdf_pdftotext(pdf_file_path, pages)
-        return pdf_text
-    elif pdf_reader == 'pymupdf':
-        pdf_text = get_text_from_pdf_pymupdf(pdf_file_path, pages)
-        return pdf_text
-    else:
-        raise NotImplementedError
+    try:
+        if pdf_reader == 'pdftotext':
+            pdf_text = get_text_from_pdf_pdftotext(pdf_file_path, pages)
+            return pdf_text
+        elif pdf_reader == 'pymupdf':
+            pdf_text = get_text_from_pdf_pymupdf(pdf_file_path, pages)
+            return pdf_text
+        else:
+            print("Not Implemented")
+    except pdftotext.Error or Exception:
+        return ""
 
 
 def extract_pandas_df_column1_row_values_based_on_column2_value(pandas_dataframe, column2_value,
