@@ -240,6 +240,29 @@ def adding_dict_key_or_increasing_value(input_dict: dict, dict_key: str, step: i
     return input_dict
 
 
+def creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict: dict):
+    """Initialise keyword count dict with value 0 for every keyword.
+
+    Parameters
+    ----------
+    unique_preprocessed_clean_grouped_keywords_dict : dict
+        looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
+                  'keyword_group_2': ["corporate", "pricing"],...}
+
+
+    Returns
+    -------
+    dict
+        This contains key as keyword and value as 0.
+
+    """
+    keyword_count_dict = {}
+    for keywords_list in unique_preprocessed_clean_grouped_keywords_dict.values():
+        for keyword in keywords_list:
+            keyword_count_dict.update({keyword: 0})
+    return keyword_count_dict
+
+
 def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.DataFrame,
                                           unique_preprocessed_clean_grouped_keywords_dict: dict,
                                           title_column_name: str = "title") -> list:
@@ -270,6 +293,9 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     for _, row in dataframe_citations_with_fulltext.iterrows():
         print(f"article: {row[title_column_name]}")
         full_keywords_counts_dict = {title_column_name: str(row[title_column_name])}
+        keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
+        full_keywords_counts_dict.update(keyword_count_dict)
+
         total_keywords_counts = 0
         # taking words one by one from full_text of citation.
         for searched_word in string_manipulation.split_preprocess_string(row['full_text']):
@@ -346,6 +372,8 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
         article_name = string_manipulation.cleaned_pdf_filename_from_filepath(pdf_path)
         print("article: ", article_name)
         full_keywords_counts_dict = {title_column_name: str(article_name)}
+        keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
+        full_keywords_counts_dict.update(keyword_count_dict)
         total_keywords_counts = 0
 
         try:
