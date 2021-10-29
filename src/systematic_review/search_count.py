@@ -5,7 +5,7 @@ present.
 
 import pandas as pd
 import json
-from systematic_review import string_manipulation
+from systematic_review import string_manipulation, citation, filter_sort, validation
 from systematic_review import converter
 
 
@@ -477,3 +477,94 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
         final_list_of_full_keywords_counts_pdf_text_dict.append(full_keywords_counts_dict)
 
     return final_list_of_full_keywords_counts_pdf_text_dict
+
+
+def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
+                                         unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                         title_column_name: str = "cleaned_title") -> pd.DataFrame:
+    """Loop over articles pdf files to calculate keywords counts.
+
+    Parameters
+    ----------
+    title_column_name : str
+        This is the name of column which contain citation title
+    list_of_downloaded_articles_path : list
+        This list contains path of all the pdf files contained in directory_path.
+    unique_preprocessed_clean_grouped_keywords_dict : dict
+        looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
+                  'keyword_group_2': ["corporate", "pricing"],...}
+
+    Returns
+    -------
+    pandas.DataFrame object
+        This is the dataframe of all citations search result which contains our all keywords count.
+        Examples - [{'article': 'article_name', 'total_keywords': count, 'keyword_group_1_count': count,
+        "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
+        "pricing": count,...}]
+
+    """
+    pdf_full_text_keywords_count_list = count_keywords_in_pdf_full_text(list_of_downloaded_articles_path,
+                                                                        unique_preprocessed_clean_grouped_keywords_dict,
+                                                                        title_column_name)
+    pdf_full_text_search_count_df = converter.list_of_dicts_to_dataframe(pdf_full_text_keywords_count_list)
+    return pdf_full_text_search_count_df
+
+
+def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_citations_df: pd.DataFrame,
+                                                                 pdf_full_text_search_count_df: list,
+                                                                 unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                                                 title_column_name: str = "cleaned_title") -> pd.DataFrame:
+    """Combining the pdf keywords counts with the citation details from filtered and sorted citation full text
+    dataframe.
+
+    Parameters
+    ----------
+    title_column_name : str
+        This is the name of column which contain citation title.
+    filter_sorted_citations_df : pandas.DataFrame object
+        This is the sorted dataframe which contains columns in this sequential manner. It contains citation df,
+         total_keywords, group_keywords_counts, and keywords_counts in the last.
+    pdf_full_text_search_count_df : list
+        This is the list of all citations search result which contains our all keywords count.
+        Examples - [{'article': 'article_name', 'total_keywords': count, 'keyword_group_1_count': count,
+        "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
+        "pricing": count,...}]
+    unique_preprocessed_clean_grouped_keywords_dict : dict
+        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+        group can not be found in any other keyword group.
+        Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
+        ["corporate", "pricing"],...}.
+        'risk' is removed from keyword_group_2.
+
+    Returns
+    -------
+    pandas.DataFrame object
+        This dataframe contains citations details from filtered and sorted citation full text dataframe and keywords
+        counts from searching in pdf file text.
+
+    """
+    criteria_list = filter_sort.get_sorting_keywords_criterion_list(unique_preprocessed_clean_grouped_keywords_dict)
+    filter_sorted_citations_details = filter_sorted_citations_df.drop(columns=criteria_list)
+
+    citations_list = converter.convert_dataframe_to_list_of_dicts(filter_sorted_citations_details)
+    matched_list = []
+    unmatched_list = []
+    for article_name in pdf_full_text_search_count_df:
+        validation_bool, percentage_matched, method = True, 0, None
+        for article_count in citations_list:
+
+            validation_bool, percentage_matched, method = validation.multiple_methods_validating_words_string_in_text(
+                article_name[title_column_name], article_count[title_column_name])
+            # print(f"validation_bool: {validation_bool}, percentage_matched: {percentage_matched}, method: {method}")
+            if validation_bool:
+                article_name_count = {**article_name, **article_count}
+                matched_list.append(article_name_count)
+                break
+
+        if not validation_bool:
+            unmatched_list.append([article_name[title_column_name], percentage_matched, method])
+
+    print(len(matched_list), len(unmatched_list))
+    final_review_df = converter.list_of_dicts_to_dataframe(matched_list)
+    final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[title_column_name])
+    return final_review_df

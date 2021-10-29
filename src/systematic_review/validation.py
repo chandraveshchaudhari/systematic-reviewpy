@@ -443,6 +443,7 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: 
     tuple
         validated_pdf_list - contains name of pdf files whose filename is in the pdf text
         invalidated_pdf_list - list of name of files which can't be included in validated_pdf_list
+        manual_pdf_list - list of files which can't be opened using python pdf reader or errors opening them.
 
     """
     validated_pdf_list = []
@@ -460,7 +461,7 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: 
                 # print("invalidated")
                 invalidated_pdf_list.append([article_name_path, percentage_matched, methods])
         except pdftotext.Error:
-            manual_pdf_list.append(article_name_path)
+            manual_pdf_list.append([article_name_path, 0, None])
 
     return validated_pdf_list, invalidated_pdf_list, manual_pdf_list
 
@@ -529,6 +530,74 @@ def finding_missed_articles_from_downloading(validated_pdf_list: list, original_
         elif validation_bool:
             downloaded_articles.append(article_name)
     return missing_articles, downloaded_articles
+
+
+def getting_article_paths_from_validation_detail(list_of_validation: list) -> list:
+    """Getting the first element from list of lists.
+
+    Parameters
+    ----------
+    list_of_validation : list
+        This list contain list of three values where the first is article path.
+
+    Returns
+    -------
+    list
+        This output list contains the articles paths
+
+    """
+    article_list = [i[0] for i in list_of_validation]
+    return article_list
+
+
+def validating_pdfs_using_multiple_pdf_reader(pdfs_parent_dir_path: str) -> tuple:
+    """This function uses two python readers pdftotext and pymupdf for validating if the filename are present inside of
+    pdf file text.
+
+    Parameters
+    ----------
+    pdfs_parent_dir_path : str
+        This is the parent directory of all the downloaded pdfs.
+
+    Returns
+    -------
+    tuple
+        validated_pdf_list - contains name of pdf files whose filename is in the pdf text
+        invalidated_pdf_list - list of name of files which can't be included in validated_pdf_list
+        manual_pdf_list - list of files which can't be opened using python pdf reader or errors opening them.
+
+    """
+    articles_paths = os_utils.extract_files_path_from_directories_or_subdirectories(
+        pdfs_parent_dir_path)
+    validated_list, invalidated_list, manual_list = validating_multiple_pdfs_via_filenames(articles_paths)
+    print(f"Using pdftotext reader to validate:")
+    print(f"Number of validated articles : {len(validated_list)}\n"
+          f"Number of invalidated articles : {len(invalidated_list)}\n "
+          f"Number of articles to open manually: {len(manual_list)}")
+    print("validating invalidated articles using other pdf reader.")
+
+    temp_invalidated_list, temp_manual_list = [], []
+    if len(invalidated_list) != 0:
+        temp_invalidated_list = getting_article_paths_from_validation_detail(invalidated_list)
+    if len(manual_list) != 0:
+        temp_manual_list = getting_article_paths_from_validation_detail(manual_list)
+    invalidated_list = temp_invalidated_list + temp_manual_list
+    temp_validated_list, temp_invalidated_list, temp_manual_list = validating_multiple_pdfs_via_filenames(
+        invalidated_list, pdf_reader="pymupdf")
+    print(f"Using pymupdf reader to validate:")
+    print(f"Number of validated articles : {len(temp_validated_list)}\n"
+          f"Number of invalidated articles : {len(temp_invalidated_list)}\n "
+          f"Number of articles to open manually: {len(temp_manual_list)}")
+
+    validated_list += temp_validated_list
+    invalidated_list = temp_invalidated_list
+    manual_list = temp_manual_list
+    print("Finally, using both python pdf readers:")
+    print(f"Number of validated articles : {len(validated_list)}\n"
+          f"Number of invalidated articles : {len(invalidated_list)}\n "
+          f"Number of articles to open manually: {len(manual_list)}")
+
+    return validated_list, invalidated_list, manual_list
 
 
 def manual_validating_of_pdf(articles_path_list: list, manual_index: int) -> tuple:

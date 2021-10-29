@@ -281,7 +281,7 @@ def get_sorting_criterion_list(citations_grouped_keywords_counts_df, unique_prep
     return sorting_criterion_list
 
 
-def get_sorting_keywords_criterion_list(unique_preprocessed_clean_grouped_keywords_dict):
+def get_sorting_keywords_criterion_list(unique_preprocessed_clean_grouped_keywords_dict: dict) -> list:
     """This sorting criteria list is based on the keywords got from the main input keywords. It contains total_keywords,
     group_keywords_counts, keywords_counts.
 
@@ -404,8 +404,9 @@ def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
     min_limit_tuple = return_finding_required_article_by_changing_min_limit_recursively(
         citations_grouped_keywords_counts_df, required_number)
     min_limit = min_limit_tuple[1][0] if min_limit_tuple[1] else min_limit_tuple[3][0]
-    filtered_df = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df, min_limit)
+    filtered_list = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df, min_limit)
     criteria_list = get_sorting_keywords_criterion_list(preprocessed_clean_grouped_keywords_dict)
+    filtered_df = converter.list_of_dicts_to_dataframe(filtered_list)
     filtered_sorted_df = sort_citations_grouped_keywords_counts_df(filtered_df, criteria_list)
 
     return filtered_sorted_df

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: systematic-reviewpy-CHANDRAVESH-CHAUDHARI
-Version: 0.0.30
+Version: 0.0.33
 Summary: A Python framework for systematic Review.
 Home-page: https://github.com/chandraveshchaudhari/systematic-reviewpy
 Author: Chandravesh Chaudhari
@@ -61,5 +61,9 @@ could be beneficial to other users as well.
 - external_tools.py to provide support for asreview
 - analysis.py for automated tables and diagrams
 - support for automated systematic review process diagram in analysis.py
+- writing test cases
+- Exception handling
+- improving design
+- creating web interface.
 
 
