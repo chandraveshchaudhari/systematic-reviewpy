@@ -64,7 +64,7 @@ def get_sample_keywords_json(output_file_path: str = "sample_keywords_template.j
 
     """
     sample_dict = {'keywords_finance': 'Management investing corporate pricing risk', 'keywords_machine_learning':
-                   'neural fuzzy inference system artificial intelligence artificial computational neural networks',
+        'neural fuzzy inference system artificial intelligence artificial computational neural networks',
                    'keywords_common_words': 'accuracy classification cross sectional cross-section expected metrics '
                                             'prediction predict expert system'}
     write_json_file_with_dict(output_file_path, sample_dict)
@@ -314,6 +314,85 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
         final_list_of_full_keywords_counts_citations_dict.append(full_keywords_counts_dict)
 
     return final_list_of_full_keywords_counts_citations_dict
+
+
+def count_keywords_in_citations_full_text_list(citations_with_fulltext_list: list,
+                                               unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                               title_column_name: str = "title") -> list:
+    """Loop over articles to calculate keywords counts
+
+    Parameters
+    ----------
+    citations_with_fulltext_list : list
+        This list contains all the citations details with column named 'full_text' containing full text like
+        article name, abstract and keyword.
+    unique_preprocessed_clean_grouped_keywords_dict : dict
+        looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
+                  'keyword_group_2': ["corporate", "pricing"],...}
+    title_column_name : str
+        This is the name of column which contain citation title
+
+    Returns
+    -------
+    list
+        This is the list of all citations search result which contains our all keywords count.
+        Examples - [{'primary_title': 'name', 'total_keywords': count, 'keyword_group_1_count': count,
+        "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
+        "pricing": count,...}]
+
+    """
+    final_list_of_full_keywords_counts_citations_dict = []
+    # iterating through each citation details one by one.
+    for citation_dict in citations_with_fulltext_list:
+        print(f"article: {citation_dict[title_column_name]}")
+        full_keywords_counts_dict = citation_dict
+        keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
+        full_keywords_counts_dict.update(keyword_count_dict)
+
+        total_keywords_counts = 0
+        # taking words one by one from full_text of citation.
+        for searched_word in string_manipulation.split_preprocess_string(citation_dict['full_text']):
+            # checking the word in grouped keywords and add to full_keywords_count_dict.
+            for keyword_group_name, unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
+                for keyword in unique_keywords:
+                    if searched_word == keyword:
+                        total_keywords_counts += 1
+                        group_name_count = str(keyword_group_name) + "_count"
+                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                        group_name_count)
+                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                        searched_word)
+
+        full_keywords_counts_dict.update({"total_keywords": total_keywords_counts})
+        final_list_of_full_keywords_counts_citations_dict.append(full_keywords_counts_dict)
+
+    return final_list_of_full_keywords_counts_citations_dict
+
+
+def citation_list_of_dict_search_count_to_df(citations_list: list, keywords: dict) -> pd.DataFrame:
+    """Loop over articles to calculate keywords counts and return dataframe.
+
+    Parameters
+    ----------
+    citations_list : list
+        list with additional columns needed for next steps of systematic review and duplicates are removed
+    keywords : dict
+        This is output dictionary which contains processed non-duplicate keywords dict.
+        Example - {'keyword_group_name': ["management", "investing", "corporate", "pricing", "risk", "pre",
+        "process"],...}
+
+    Returns
+    -------
+    pandas.DataFrame object
+        This is pandas object of all citations search result which contains our all keywords count.
+        Examples - [{'primary_title': 'name', 'total_keywords': count, 'keyword_group_1_count': count,
+        "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
+        "pricing": count,...}]
+
+    """
+    citations_keywords_count_list = count_keywords_in_citations_full_text_list(citations_list, keywords)
+    citation_search_count_df = converter.list_of_dicts_to_dataframe(citations_keywords_count_list)
+    return citation_search_count_df
 
 
 def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict) -> pd.DataFrame:

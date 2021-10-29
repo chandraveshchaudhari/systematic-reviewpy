@@ -311,6 +311,27 @@ def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list
     return citation_dataframe_with_multiple_sources_column
 
 
+def add_preprocess_column(dataframe_object: pd.DataFrame, column_name: str = "title"):
+    """Takes dataframe and column name to apply preprocess function from string_manipulation module.
+
+    Parameters
+    ----------
+    dataframe_object : pandas.DataFrame object
+        This is object with column containing column which needs to be preprocessed.
+    column_name : str
+        This is the name of the column of dataframe.
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with additional column with preprocessed column.
+
+    """
+    new_column_name = "cleaned_" + column_name
+    dataframe_object[new_column_name] = dataframe_object[column_name].apply(lambda x: string_manipulation.preprocess_string(x))
+    return dataframe_object
+
+
 def complete_citations_dataframe(citations_files_parent_folder_path):
     """Executes citation step.
     This function load all the citations from path, add required columns for next steps, and remove duplicates.
@@ -330,6 +351,31 @@ def complete_citations_dataframe(citations_files_parent_folder_path):
     full_list_df = converter.list_of_dicts_to_dataframe(full_list)
     complete_df = add_multiple_sources_column(full_list_df)
     complete_df = add_citation_text_column(complete_df)
+    complete_df = add_preprocess_column(complete_df)
     complete_citations_df = drop_duplicates_citations(complete_df)
     return complete_citations_df
 
+
+def complete_citations_list(citations_files_parent_folder_path):
+    """Executes citation step.
+    This function load all the citations from path, add required columns for next steps, and remove duplicates.
+
+    Parameters
+    ----------
+    citations_files_parent_folder_path : str
+        this is the path of parent folder of where citations files exists.
+
+    Returns
+    -------
+    list
+        list with additional columns needed for next steps of systematic review and duplicates are removed
+
+    """
+    full_list = converter.load_multiple_ris_citations_files(citations_files_parent_folder_path)
+    full_list_df = converter.list_of_dicts_to_dataframe(full_list)
+    complete_df = add_multiple_sources_column(full_list_df)
+    complete_df = add_citation_text_column(complete_df)
+    complete_df = add_preprocess_column(complete_df)
+    complete_citations_df = drop_duplicates_citations(complete_df)
+    citations_list = converter.convert_dataframe_to_list_of_dicts(complete_citations_df)
+    return citations_list
