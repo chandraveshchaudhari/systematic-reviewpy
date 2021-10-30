@@ -569,6 +569,7 @@ def validating_pdfs_using_multiple_pdf_reader(pdfs_parent_dir_path: str) -> tupl
     """
     articles_paths = os_utils.extract_files_path_from_directories_or_subdirectories(
         pdfs_parent_dir_path)
+    print(f"Total number of articles: {len(articles_paths)}")
     validated_list, invalidated_list, manual_list = validating_multiple_pdfs_via_filenames(articles_paths)
     print(f"Using pdftotext reader to validate:")
     print(f"Number of validated articles : {len(validated_list)}\n"
