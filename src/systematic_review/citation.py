@@ -377,5 +377,5 @@ def complete_citations_list(citations_files_parent_folder_path):
     complete_df = add_citation_text_column(complete_df)
     complete_df = add_preprocess_column(complete_df)
     complete_citations_df = drop_duplicates_citations(complete_df)
-    citations_list = converter.convert_dataframe_to_list_of_dicts(complete_citations_df)
+    citations_list = converter.dataframe_to_list_of_dicts(complete_citations_df)
     return citations_list

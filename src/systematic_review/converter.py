@@ -54,7 +54,7 @@ def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: str =
     dataframe_object.to_csv(output_filename, index)
 
 
-def convert_dataframe_to_list_of_dicts(dataframe: pd.DataFrame) -> list:
+def dataframe_to_list_of_dicts(dataframe: pd.DataFrame) -> list:
     """converts pandas dataframe to the list of dictionaries.
 
     Parameters
