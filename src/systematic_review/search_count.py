@@ -249,7 +249,6 @@ def creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict:
         looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
                   'keyword_group_2': ["corporate", "pricing"],...}
 
-
     Returns
     -------
     dict
@@ -257,7 +256,9 @@ def creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict:
 
     """
     keyword_count_dict = {}
-    for keywords_list in unique_preprocessed_clean_grouped_keywords_dict.values():
+    for group_name, keywords_list in unique_preprocessed_clean_grouped_keywords_dict.items():
+        group_name_count = str(group_name) + "_count"
+        keyword_count_dict.update({group_name_count: 0})
         for keyword in keywords_list:
             keyword_count_dict.update({keyword: 0})
     return keyword_count_dict
@@ -588,8 +589,8 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
     filter_sorted_citations_details = filter_sorted_citations_df.drop(columns=criteria_list)
 
     citations_list = converter.dataframe_to_list_of_dicts(filter_sorted_citations_details)
-    matched_list, unmatched_list = validate_column_details_between_two_dataframe(pdf_full_text_search_count,
-                                                                                 citations_list, title_column_name)
+    matched_list, unmatched_list = validate_column_details_between_two_record_list(pdf_full_text_search_count,
+                                                                                   citations_list, title_column_name)
     final_review_df = converter.list_of_dicts_to_dataframe(matched_list)
     final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[title_column_name])
     return final_review_df
