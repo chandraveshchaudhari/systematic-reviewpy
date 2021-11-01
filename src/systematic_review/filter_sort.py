@@ -142,6 +142,53 @@ def finding_required_article_by_changing_min_limit_recursively(citations_grouped
                                                                               search, lower_total_articles_rows)
 
 
+def return_finding_near_required_article_by_changing_min_limit_while_loop(
+        citations_grouped_keywords_counts_df: pd.DataFrame,
+        required_number_of_articles: int):
+    """This function increases the min_limit value to reach unto required_number_of_articles. this function return the
+    min_limit value of exact required_number_of_articles can be extracted from dataframe else it provide the lower and
+    upper limit of min_limit
+
+    Parameters
+    ----------
+    citations_grouped_keywords_counts_df : pd.DataFrame
+        This is input dataframe which contains some columns which have prefix or suffix in names.
+    required_number_of_articles : int
+        This is the number of articles you want after filtration process.
+
+    Returns
+    -------
+    tuple
+        This tuple consists of following values in same order
+        exact match values: min_limit, total_articles_rows
+        lower_info : min_limit, lower_total_articles_rows
+        upper_info : min_limit, upper_total_articles_rows
+
+    """
+    upper_info = [0, len(citations_grouped_keywords_counts_df.index)]
+    min_limit = iteration = 0
+
+    while True:
+        min_limit += 2 ** iteration
+        filtered_list_of_dict = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df,
+                                                                              min_limit, "_count", "suffix")
+        total_articles_rows = len(filtered_list_of_dict)
+        print("min_limit: ", min_limit, "total_articles_rows: ", total_articles_rows)
+        iteration += 1
+        if total_articles_rows == required_number_of_articles:
+            exact_info = [min_limit, total_articles_rows]
+            return exact_info, None, None
+
+        if iteration == 1 and total_articles_rows < required_number_of_articles:
+            lower_info = [min_limit, total_articles_rows]
+            return None, lower_info, upper_info
+
+        if total_articles_rows < required_number_of_articles:
+            iteration = 0
+        else:
+            upper_info = [min_limit, total_articles_rows]
+
+
 def return_finding_required_article_by_changing_min_limit_recursively(
         citations_grouped_keywords_counts_df: pd.DataFrame,
         required_number_of_articles: int,
@@ -400,7 +447,7 @@ def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
          total_keywords, group_keywords_counts, and keywords_counts in the last.
 
     """
-    min_limit_tuple = return_finding_required_article_by_changing_min_limit_recursively(
+    min_limit_tuple = return_finding_near_required_article_by_changing_min_limit_while_loop(
         citations_grouped_keywords_counts_df, required_number)
     min_limit = min_limit_tuple[1][0] if min_limit_tuple[1] else min_limit_tuple[3][0]
     filtered_list = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df, min_limit)
