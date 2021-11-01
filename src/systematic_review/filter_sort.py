@@ -166,12 +166,14 @@ def return_finding_near_required_article_by_changing_min_limit_while_loop(
 
     """
     upper_info = [0, len(citations_grouped_keywords_counts_df.index)]
-    min_limit = iteration = 0
+    min_limit = iteration = prev_min_limit = 0
 
     while True:
+        prev_min_limit = min_limit
         min_limit += 2 ** iteration
-        filtered_list_of_dict = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df,
-                                                                              min_limit, "_count", "suffix")
+        filtered_list_of_dict = filter_dataframe_on_keywords_group_name_count(
+            citations_grouped_keywords_counts_df,
+            min_limit, "_count", "suffix")
         total_articles_rows = len(filtered_list_of_dict)
         print("min_limit: ", min_limit, "total_articles_rows: ", total_articles_rows)
         iteration += 1
@@ -185,6 +187,8 @@ def return_finding_near_required_article_by_changing_min_limit_while_loop(
 
         if total_articles_rows < required_number_of_articles:
             iteration = 0
+            min_limit = prev_min_limit
+
         else:
             upper_info = [min_limit, total_articles_rows]
 

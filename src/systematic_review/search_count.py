@@ -64,7 +64,7 @@ def get_sample_keywords_json(output_file_path: str = "sample_keywords_template.j
 
     """
     sample_dict = {'keywords_finance': 'Management investing corporate pricing risk', 'keywords_machine_learning':
-        'neural fuzzy inference system artificial intelligence artificial computational neural networks',
+                   'neural fuzzy inference system artificial intelligence artificial computational neural networks',
                    'keywords_common_words': 'accuracy classification cross sectional cross-section expected metrics '
                                             'prediction predict expert system'}
     write_json_file_with_dict(output_file_path, sample_dict)
