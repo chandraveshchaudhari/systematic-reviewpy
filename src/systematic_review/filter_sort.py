@@ -453,7 +453,7 @@ def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
     """
     min_limit_tuple = return_finding_near_required_article_by_changing_min_limit_while_loop(
         citations_grouped_keywords_counts_df, required_number)
-    min_limit = min_limit_tuple[1][0] if min_limit_tuple[1] else min_limit_tuple[3][0]
+    min_limit = min_limit_tuple[0][0] if min_limit_tuple[0] else min_limit_tuple[2][0]
     filtered_list = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df, min_limit)
     criteria_list = get_sorting_keywords_criterion_list(preprocessed_clean_grouped_keywords_dict)
     filtered_df = converter.list_of_dicts_to_dataframe(filtered_list)
