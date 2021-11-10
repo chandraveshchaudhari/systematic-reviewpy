@@ -5,7 +5,7 @@ typos.
 
 import re
 import pandas as pd
-from systematic_review import string_manipulation
+from systematic_review import string_manipulation, filter_sort
 from systematic_review import converter
 
 
@@ -191,7 +191,7 @@ def get_details_via_article_name_from_citations(article_name: str, sources_name_
 
 def get_details_of_all_article_name_from_citations(filtered_list_of_dict: list,
                                                    sources_name_citations_path_list_of_dict: list,
-                                                   doi_url: bool = False, title_column_name: str = "title"):
+                                                   doi_url: bool = False, title_column_name: str = "title") -> list:
     """This function searches source names, doi, and url for all articles in filtered_list_of_dict.
 
     Parameters
@@ -257,7 +257,7 @@ def get_missed_articles_source_names(missed_articles_list: list, all_articles_ti
 
 
 def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ['title', 'year'], keep: str = 'last',
-                              index_reset: bool = True):
+                              index_reset: bool = True) -> pd.DataFrame:
     """Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time
     indexes are ignored.
 
@@ -287,7 +287,51 @@ def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = [
     return clean_df
 
 
-def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list = ['title', 'year']):
+def drop_columns_based_on_column_name_list(dataframe: pd.DataFrame, column_name_list: list) -> pd.DataFrame:
+    """This function drop columns based on the column name in the list.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame object
+        This dataframe contains columns which we want to drop or remove.
+    column_name_list : list
+        This is the name of dataframe columns to be removed
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with columns mentioned in column_name_list removed.
+
+    """
+    output_df = dataframe.drop(column_name_list, axis=1)
+    return output_df
+
+
+def drop_keywords_count_columns(dataframe, keywords):
+    """removes columns created based on the keywords.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame object
+        This dataframe contains keywords columns which we want to drop or remove.
+    keywords : dict
+        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+        group can not be found in any other keyword group.
+        Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
+        ["corporate", "pricing"],...}
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with keywords columns removed.
+
+    """
+    keywords_count_cols = filter_sort.get_sorting_keywords_criterion_list(keywords)
+    cleaned_dataframe = drop_columns_based_on_column_name_list(dataframe, keywords_count_cols)
+    return cleaned_dataframe
+
+
+def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list = ['title', 'year']) -> pd.DataFrame:
     """This function check if citations or article title is available at more than one sources and add column named
     'multiple_sources' to the dataframe with list of name of sources names.
 
