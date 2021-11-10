@@ -264,6 +264,29 @@ def creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict:
     return keyword_count_dict
 
 
+def count_words_in_list_of_lists(list_of_lists: list) -> dict:
+    """count words in list containing other lists with words.
+
+    Parameters
+    ----------
+    list_of_lists : list
+        This list contains each element of type list.
+
+    Returns
+    -------
+    dict
+        dictionary with key as words and value as counts
+
+    """
+    dict_with_words_count = {}
+    for keyword_list in list_of_lists:
+        for keyword in keyword_list:
+            clean_keyword = string_manipulation.preprocess_string(keyword)
+            dict_with_words_count = adding_dict_key_or_increasing_value(dict_with_words_count, clean_keyword)
+
+    return dict_with_words_count
+
+
 def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.DataFrame,
                                           unique_preprocessed_clean_grouped_keywords_dict: dict,
                                           title_column_name: str = "title") -> list:

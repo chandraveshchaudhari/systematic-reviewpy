@@ -72,6 +72,32 @@ def dataframe_to_list_of_dicts(dataframe: pd.DataFrame) -> list:
     return list_of_dicts
 
 
+def try_convert_dataframe_column_elements_to_list(dataframe: pd.DataFrame, column_name: str) -> list:
+    """try statement for converting each element of dataframe column to list object.
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        The dataframe with column to convert into list
+    column_name : str
+        Name of column for conversion
+
+    Returns
+    -------
+    list
+        This is list with each element of type list.
+
+    """
+    keyword_list_of_list = []
+
+    for keyword_list in dataframe[column_name]:
+        try:
+            keyword_list_of_list.append(list(keyword_list))
+        except TypeError:
+            print(f"'{keyword_list}' can not be converted to list")
+    return keyword_list_of_list
+
+
 def list_of_dicts_to_dataframe(list_of_dicts: list) -> pd.DataFrame:
     """converts the list of dictionaries to pandas dataframe.
 

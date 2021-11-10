@@ -3,8 +3,9 @@ This module contain code for generating info, diagrams and tables.
 """
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-from systematic_review import os_utils, converter, citation, string_manipulation, validation
+from systematic_review import os_utils, converter, citation, string_manipulation, validation, search_count
 
 
 def creating_sample_review_file(selected_citation_df):
@@ -240,15 +241,24 @@ class SystematicReviewInfo:
         # box 0 to 8
 
         all_boxes = [
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30), validation.amount_by_percentage(fig_height, 85), text_list[0]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30), validation.amount_by_percentage(fig_height, 70), text_list[1]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30), validation.amount_by_percentage(fig_height, 50), text_list[2]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30), validation.amount_by_percentage(fig_height, 30), text_list[3]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30), validation.amount_by_percentage(fig_height, 15), text_list[4]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70), validation.amount_by_percentage(fig_height, 85), text_list[5]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70), validation.amount_by_percentage(fig_height, 70), text_list[6]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70), validation.amount_by_percentage(fig_height, 50), text_list[7]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70), validation.amount_by_percentage(fig_height, 30), text_list[8])]
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
+                      validation.amount_by_percentage(fig_height, 85), text_list[0]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
+                      validation.amount_by_percentage(fig_height, 70), text_list[1]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
+                      validation.amount_by_percentage(fig_height, 50), text_list[2]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
+                      validation.amount_by_percentage(fig_height, 30), text_list[3]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
+                      validation.amount_by_percentage(fig_height, 15), text_list[4]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
+                      validation.amount_by_percentage(fig_height, 85), text_list[5]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
+                      validation.amount_by_percentage(fig_height, 70), text_list[6]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
+                      validation.amount_by_percentage(fig_height, 50), text_list[7]),
+            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
+                      validation.amount_by_percentage(fig_height, 30), text_list[8])]
 
         for box in all_boxes:
             box.add_box()
@@ -271,3 +281,308 @@ class SystematicReviewInfo:
             arrow.add_arrow()
 
         plt.show()
+
+
+def dataframe_column_counts(dataframe, column_name):
+    """Equivalent to pandas.DataFrame.value_counts(), It return list with count of unique element in column
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        dataframe which contains column that is to be counted
+    column_name : str
+        Name of pandas column elements are supposed to be counted.
+
+    Returns
+    -------
+    object
+        unique column elements with counts
+
+    """
+    return dataframe[column_name].value_counts()
+
+
+def seaborn_countplot_with_pandas_dataframe_column(dataframe, column_name, theme_style="darkgrid",
+                                                   xaxis_label_rotation=90, top_result=None):
+    """generate seaborn count bar chart using dataframe column.
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        dataframe which contains column whose value counts to be shown.
+    column_name : str
+        Name of pandas column elements are supposed to be counted.
+    theme_style : str
+        name of the bar chart theme
+    xaxis_label_rotation : float
+        rotate the column elements shown on x axis or horizontally.
+    top_result : int
+        This limits the number of column unique elements to be shown
+
+    Returns
+    -------
+    object
+            show the bar chart
+
+    """
+    ax = sns.countplot(x=column_name, data=dataframe, order=dataframe.value_counts(column_name).iloc[:top_result].index)
+    sns.set_theme(style=theme_style)
+    plt.xticks(rotation=xaxis_label_rotation)
+    ax.bar_label(ax.containers[0])
+    plt.show()
+
+
+class CitationAnalysis:
+    def __init__(self, dataframe):
+        self.dataframe = dataframe
+
+    def publication_year_info(self, column_name: str = "year"):
+        """shows how many articles are published each year.
+
+        Parameters
+        ----------
+        column_name : str
+            column name of publication year detail in citation dataframe
+
+        Returns
+        -------
+        object
+            contains year and count of publications
+
+        """
+        return dataframe_column_counts(self.dataframe, column_name)
+
+    def publication_year_diagram(self, column_name: str = "year",
+                                 top_result=None, method: str = "seaborn", theme_style="darkgrid",
+                                 xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+        """generates chart showing how many articles are published each year.
+
+        Parameters
+        ----------
+        pandas_bar_kind : str
+            pandas plot option of kind of chart needed. defaults to 'bar' in this implementation
+        column_name : str
+            column name of publication year detail in citation dataframe
+        theme_style : str
+            name of the bar chart theme
+        xaxis_label_rotation : float
+            rotate the column elements shown on x axis or horizontally.
+        top_result : int
+            This limits the number of column unique elements to be shown
+        method : str
+            provide option to plot chart using either 'seaborn' or 'pandas'
+
+        Returns
+        -------
+
+        """
+        if method.lower() == "seaborn":
+            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style=theme_style,
+                                                           xaxis_label_rotation=xaxis_label_rotation,
+                                                           top_result=top_result)
+        elif method.lower() == "pandas":
+            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
+            plt.show()
+        else:
+            print("Please provide method value as 'seaborn' or 'pandas'.")
+
+    def authors_analysis(self, authors_column_name="authors"):
+        """generates the details based on pandas dataframe column of article authors. example- Number of authors,
+        Articles with single authors, Articles per authors, Authors per articles
+
+        Parameters
+        ----------
+        authors_column_name : str
+            Name of column containing authors details.
+
+        Returns
+        -------
+        tuple
+            contains Number of authors, Articles with single authors, Articles per authors, Authors per articles
+
+        """
+        number_of_articles = len(self.dataframe)
+        unique_author_names = set()
+        articles_with_single_authors = 0
+
+        for authors_list in self.dataframe[authors_column_name]:
+            if len(authors_list) == 1:
+                articles_with_single_authors += 1
+            for authors in authors_list:
+                unique_author_names.add(authors)
+
+        number_of_authors = len(unique_author_names)
+        articles_per_authors = number_of_articles / number_of_authors
+        authors_per_articles = number_of_authors / number_of_articles
+
+        return number_of_authors, articles_with_single_authors, articles_per_authors, authors_per_articles
+
+    def authors_info(self):
+        """prints the authors analysis details in nice format
+
+        Returns
+        -------
+
+        """
+        number_of_authors, articles_with_single_authors, articles_per_authors, authors_per_articles = self.authors_analysis()
+        print(f"Number of authors = {number_of_authors}")
+        print(f"Articles with single authors = {articles_with_single_authors}")
+        print(f"Articles per authors = {articles_per_authors}")
+        print(f"Authors per articles = {authors_per_articles}")
+
+    def publication_place_info(self, column_name: str = "place_published"):
+        """shows how many articles are published from different places or countries.
+
+        Parameters
+        ----------
+        column_name : str
+            column name of publication place detail in citation dataframe
+
+        Returns
+        -------
+        object
+            contains publication place and count of publications
+
+        """
+        return dataframe_column_counts(self.dataframe, column_name)
+
+    def publication_place_diagram(self, column_name: str = "place_published",
+                                  top_result=None, method: str = "seaborn", theme_style="darkgrid",
+                                  xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+        """generates chart showing how many articles are published from different places or countries.
+
+        Parameters
+        ----------
+        pandas_bar_kind : str
+            pandas plot option of kind of chart needed. defaults to 'bar' in this implementation
+        column_name : str
+            column name of publication place detail in citation dataframe
+        theme_style : str
+            name of the bar chart theme
+        xaxis_label_rotation : float
+            rotate the column elements shown on x axis or horizontally.
+        top_result : int
+            This limits the number of column unique elements to be shown
+        method : str
+            provide option to plot chart using either 'seaborn' or 'pandas'
+
+        Returns
+        -------
+
+        """
+        if method.lower() == "seaborn":
+            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style=theme_style,
+                                                           xaxis_label_rotation=xaxis_label_rotation,
+                                                           top_result=top_result)
+        elif method.lower() == "pandas":
+            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
+            plt.show()
+        else:
+            print("Please provide method value as 'seaborn' or 'pandas'.")
+
+    def publisher_info(self, column_name: str = "publisher"):
+        """shows how many articles are published by different publishers.
+
+        Parameters
+        ----------
+        column_name : str
+            column name of publisher detail in citation dataframe
+
+        Returns
+        -------
+        object
+            contains publisher name and count of publications
+
+        """
+        return dataframe_column_counts(self.dataframe, column_name)
+
+    def publisher_diagram(self, column_name: str = "publisher",
+                          top_result=None, method: str = "seaborn", theme_style="darkgrid",
+                          xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+        """generates chart showing how many articles are published by different publishers.
+
+        Parameters
+        ----------
+        pandas_bar_kind : str
+            pandas plot option of kind of chart needed. defaults to 'bar' in this implementation
+        column_name : str
+            column name of publisher detail in citation dataframe
+        theme_style : str
+            name of the bar chart theme
+        xaxis_label_rotation : float
+            rotate the column elements shown on x axis or horizontally.
+        top_result : int
+            This limits the number of column unique elements to be shown
+        method : str
+            provide option to plot chart using either 'seaborn' or 'pandas'
+
+        Returns
+        -------
+
+        """
+        if method.lower() == "seaborn":
+            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style=theme_style,
+                                                           xaxis_label_rotation=xaxis_label_rotation,
+                                                           top_result=top_result)
+        elif method.lower() == "pandas":
+            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
+            plt.show()
+        else:
+            print("Please provide method value as 'seaborn' or 'pandas'.")
+
+    def keywords_info(self, column_name: str = "keywords", top_result=None):
+        """return keywords and number of times they are used in the articles
+
+        Parameters
+        ----------
+        column_name : str
+            column name of keywords detail in citation dataframe
+        top_result : int
+            This limits the number of column unique elements to be shown
+
+        Returns
+        -------
+
+        """
+        keywords_list_of_lists = converter.try_convert_dataframe_column_elements_to_list(self.dataframe, column_name)
+        dict_with_words_count = search_count.count_words_in_list_of_lists(keywords_list_of_lists)
+        sorted_dict_with_words_count = dict(
+            sorted(dict_with_words_count.items(), key=lambda item: item[1], reverse=True))
+        keyword_series = pd.Series(sorted_dict_with_words_count, name=column_name)
+
+        return keyword_series[:top_result] if top_result else keyword_series
+
+    def keyword_diagram(self, column_name: str = "keywords",
+                        top_result=None, method: str = "seaborn", theme_style="darkgrid",
+                        xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+        """generates chart showing how many articles are published by different publishers.
+
+        Parameters
+        ----------
+        pandas_bar_kind : str
+            pandas plot option of kind of chart needed. defaults to 'bar' in this implementation
+        column_name : str
+            column name of keywords detail in citation dataframe
+        theme_style : str
+            name of the bar chart theme
+        xaxis_label_rotation : float
+            rotate the column elements shown on x axis or horizontally.
+        top_result : int
+            This limits the number of column unique elements to be shown
+        method : str
+            provide option to plot chart using either 'seaborn' or 'pandas'
+
+        Returns
+        -------
+
+        """
+        if method.lower() == "seaborn":
+            seaborn_countplot_with_pandas_dataframe_column(self.keywords_info().to_frame(), column_name,
+                                                           theme_style=theme_style,
+                                                           xaxis_label_rotation=xaxis_label_rotation,
+                                                           top_result=top_result)
+        elif method.lower() == "pandas":
+            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
+            plt.show()
+        else:
+            print("Please provide method value as 'seaborn' or 'pandas'.")
