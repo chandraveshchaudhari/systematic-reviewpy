@@ -9,6 +9,28 @@ import pandas as pd
 from systematic_review import converter
 
 
+def sort_dataframe_based_on_column(dataframe, column_name, ascending=True):
+    """sort the dataframe based on column values.
+
+    Parameters
+    ----------
+    ascending : bool
+        This decide increasing or decreasing order of sort. default to ascending a-z, 1-9.
+    dataframe : pd.DataFrame
+        This is unsorted dataframe.
+    column_name : str
+        This is the name of column which is used to sort the dataframe.
+
+    Returns
+    -------
+    pd.DataFrame
+        This is sorted dataframe based on column_name.
+
+    """
+    column_sorted_df = dataframe.sort_values(by=column_name, ascending=ascending)
+    return column_sorted_df
+
+
 def get_pd_df_columns_names_with_prefix_suffix(input_pandas_dataframe: pd.DataFrame, common_word: str = "_count",
                                                method: str = "suffix") -> list:
     """Provide the columns name from pandas dataframe which contains given prefix or suffix.

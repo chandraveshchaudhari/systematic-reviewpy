@@ -82,6 +82,25 @@ def calculate_percentage(value: float, total: float) -> float:
     return percentage
 
 
+def amount_by_percentage(number: float, percentage: float) -> float:
+    """get the amount of number based on percentage. example- 5% (percentage) of 10 (number) is 0.5 (result).
+
+    Parameters
+    ----------
+    number : float
+        This is the input number from which we want some percent amount
+    percentage : float
+        This is equivalent to math percentage.
+
+    Returns
+    -------
+    float
+        This is resultant number.
+
+    """
+    return number * percentage/100
+
+
 def add_dict_element_with_count(dictionary: dict, key: str) -> dict:
     """It increase the value by checking the key of dictionary or initialise new key with value 1. Works as collections
     module default dict with value 1.

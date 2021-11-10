@@ -273,6 +273,26 @@ def load_multiple_ris_citations_files(citations_files_parent_folder_path: str) -
     return citations_list
 
 
+def load_multiple_ris_citations_files_to_dataframe(citations_files_parent_folder_path: str) -> list:
+    """This function loads all ris citations files from folder
+
+    Parameters
+    ----------
+    citations_files_parent_folder_path : str
+        this is the path of parent folder of where citations files exists.
+
+    Returns
+    -------
+    pd.DataFrame
+        this is dataframe of citations dicts inclusive of all citation files.
+
+    """
+    full_list = load_multiple_ris_citations_files(citations_files_parent_folder_path)
+    full_list_df = list_of_dicts_to_dataframe(full_list)
+
+    return full_list_df
+
+
 def list_to_text_file(filename: str, list_name: str, permission: str = "w"):
     """This converts list to text file and put each element in new line.
 
