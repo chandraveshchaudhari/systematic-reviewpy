@@ -1,5 +1,6 @@
 """Module: analysis
-This module contain code for generating info, diagrams and tables.
+This module contain code for generating info, diagrams and tables. It can be used to generate systematic review flow
+and citations information.
 """
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -130,7 +131,27 @@ def missed_article_count(filter_sorted_citations_df: pd.DataFrame, downloaded_ar
     return len(missed_articles[0])
 
 
-def text_padding_for_visualise(text, front_padding_space_multiple=4, top_bottom_line_padding_multiple=1):
+def text_padding_for_visualise(text: str, front_padding_space_multiple: int = 4,
+                               top_bottom_line_padding_multiple: int = 1):
+    """This add required space on all four side of text for better look.
+
+    Parameters
+    ----------
+    text : str
+        This is the input word.
+    front_padding_space_multiple : int
+        This multiply the left and right side of spaces for increased padding.
+    top_bottom_line_padding_multiple : int
+        This multiply the top and down side of spaces for increased padding.
+
+    Returns
+    -------
+    tuple
+        str - text with spaces on all four sides.
+        int - height that is number of lines.
+        int - width that is number of char in longest line.
+
+    """
     top_bottom_line_padding = "\n" * top_bottom_line_padding_multiple
     output_text = top_bottom_line_padding
     height = top_bottom_line_padding_multiple * 2
@@ -149,7 +170,20 @@ def text_padding_for_visualise(text, front_padding_space_multiple=4, top_bottom_
     return output_text, height, width
 
 
-def custom_box(**kwargs):
+def custom_box(**kwargs) -> dict:
+    """This is the option for matplotlib text in box.
+
+    Parameters
+    ----------
+    kwargs : dict
+        Contains key word arguments
+
+    Returns
+    -------
+    dict
+        contains options
+
+    """
     custom_options = {"bbox": {"boxstyle": "square", "facecolor": "white"}, "horizontalalignment": "center",
                       "verticalalignment": "center", "color": "midnightblue"}
 
@@ -161,7 +195,23 @@ def custom_box(**kwargs):
 
 
 class TextInBox:
+    """This is matplotlib text in box class to make it easier to use text boxes.
+
+    """
     def __init__(self, figure_axes, x_coordinate, y_coordinate, text=""):
+        """It needs pyplot figure axes to add boxes, and x and y coordinate with any text to put into box.
+
+        Parameters
+        ----------
+        figure_axes : matplotlib.pyplot.axes
+            This is the axes of the figure where we want to add text box.
+        x_coordinate : float
+            This is the x coordinate usually 0 at left bottom side of figure in this module.
+        y_coordinate : float
+            This is the y coordinate usually 0 at left bottom side of figure in this module.
+        text : str
+            This is text to be written inside of box.
+        """
         self.figure_axes = figure_axes
         self.x_coordinate = x_coordinate
         self.y_coordinate = y_coordinate
@@ -178,17 +228,58 @@ class TextInBox:
             self.x_coordinate, self.y_coordinate - ((text_padding_for_visualise(text)[1] / 2) * self.width_of_one_line))
 
     def add_box(self, **kwargs):
+        """It put the box on the matplotlib.pyplot.axes figure
+
+        Parameters
+        ----------
+        kwargs : dict
+            This taken any custom options to be set into box.
+
+        Returns
+        -------
+
+        """
         self.figure_axes.text(self.x_coordinate, self.y_coordinate, self.text, custom_box(**kwargs))
 
 
 class Annotate:
+    """This class makes it easier to draw arrows into matplotlib.pyplot.axes figure
+
+    """
     def __init__(self, figure_axes, start_coordinate, end_coordinate, arrow_style="<|-"):
+        """This takes matplotlib.pyplot.axes and location of x and y coordinate for both start and end point. end point
+        is the arrow head target.
+
+        Parameters
+        ----------
+        figure_axes : matplotlib.pyplot.axes
+            This is the axes of the figure where we want to add text box.
+        start_coordinate : tuple
+            this is tuple containing x and y coordinates of the point, 0, 0 is left bottom in this module figure. start
+             point is the arrow handle.
+        end_coordinate : tuple
+            this is tuple containing x and y coordinates of the point, 0, 0 is left bottom in this module figure. end
+            point is the arrow head target.
+        arrow_style : str
+            This contains symbol for different type of arrows in matplotlib.
+        """
         self.figure_axes = figure_axes
         self.start_coordinate = start_coordinate
         self.end_coordinate = end_coordinate
         self.arrowstyle = arrow_style
 
     def add_arrow(self, text=""):
+        """This draw the arrow on matplotlib.pyplot.axes.
+
+        Parameters
+        ----------
+        text : str
+            This takes test to put on the arrow.
+
+        Returns
+        -------
+
+        """
         self.figure_axes.annotate(
             text,
             self.start_coordinate,
@@ -197,6 +288,9 @@ class Annotate:
 
 
 class SystematicReviewInfo:
+    """This analyse whole systematic review process and takes all produced file to generate tables, figure.
+
+    """
     def __init__(self, citations_files_parent_folder_path: str = None, filter_sorted_citations_df: pd.DataFrame = None,
                  sorted_final_df: pd.DataFrame = None, downloaded_articles_path: str = None):
         """This class contains all necessary information for systematic review flow.
@@ -205,7 +299,12 @@ class SystematicReviewInfo:
         ----------
         citations_files_parent_folder_path : str
             this is the path of parent folder of where citations files exists.
-
+        filter_sorted_citations_df : pd.DataFrame
+            This is screened dataframe containing records for downloading full text.
+        sorted_final_df : pd.DataFrame
+            This dataframe contains records for manual literature review.
+        downloaded_articles_path : str
+            This is the location of all articles full text folder.
         """
         self.citations_files_parent_folder_path = citations_files_parent_folder_path if \
             citations_files_parent_folder_path is not None else ""
@@ -230,6 +329,14 @@ class SystematicReviewInfo:
         self.included = ""
 
     def get_text_list(self):
+        """This produces the list of all analysis done in this class.
+
+        Returns
+        -------
+        list
+            This contains systematic review information in sentences.
+
+        """
         text_list = [f"Records identified from:\n{vertical_dict_view(self.sources)}",
                      f"Records screened\n(n = {self.screened})",
                      f"Reports sought for retrieval\n(n = {self.for_retrieval})",
@@ -243,12 +350,31 @@ class SystematicReviewInfo:
         return text_list
 
     def info(self):
+        """This takes systematic review text list and create proper order to print.
+
+        Returns
+        -------
+
+        """
         temp_text = self.get_text_list()
         order = [0, 5, 1, 6, 2, 7, 3, 8, 4]
         for index in order:
             print(temp_text[index], "\n")
 
     def systematic_review_diagram(self, fig_width=10, fig_height=10):
+        """This outputs the systematic review diagram resembling PRISMA guidelines.
+
+        Parameters
+        ----------
+        fig_width : float
+            This is width of figure in inches.
+        fig_height : float
+            This is height of figure in inches.
+
+        Returns
+        -------
+
+        """
         fig = plt.figure(figsize=(fig_width, fig_height))
         ax = fig.add_axes((0, 0, 1, 1))
         ax.set_xlim(0, fig_width)
@@ -357,7 +483,19 @@ def seaborn_countplot_with_pandas_dataframe_column(dataframe, column_name, theme
 
 
 class CitationAnalysis:
+    """This takes any pandas dataframe containing citation details and produces analyses on various columns.
+
+    """
     def __init__(self, dataframe):
+        """This requires citation dataframe.
+
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            This dataframe is checked for columns for analyses, please change column name for analyses if not same as
+            implemented.
+
+        """
         self.dataframe = dataframe
 
     def publication_year_info(self, column_name: str = "year"):
