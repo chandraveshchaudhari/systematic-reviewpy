@@ -294,11 +294,14 @@ def count_words_in_list_of_lists(list_of_lists: list) -> dict:
 
 def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.DataFrame,
                                           unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                          title_column_name: str = "title") -> list:
+                                          title_column_name: str = "title",
+                                          method: str = "preprocess") -> list:
     """Loop over articles to calculate keywords counts
 
     Parameters
     ----------
+    method : str
+        provides the options to use any text manipulation function.
     dataframe_citations_with_fulltext : pd.DataFrame
         This dataframe contains all the citations details with column named 'full_text' containing full text like
         article name, abstract and keyword.
@@ -318,16 +321,17 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
 
     """
     final_list_of_full_keywords_counts_citations_dict = []
+    keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
     # iterating through each citation details one by one.
     for _, row in dataframe_citations_with_fulltext.iterrows():
         print(f"article: {row[title_column_name]}")
         full_keywords_counts_dict = {title_column_name: str(row[title_column_name])}
-        keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
         full_keywords_counts_dict.update(keyword_count_dict)
 
         total_keywords_counts = 0
+        citation_full_text = text_manipulation_methods(row['full_text'], method).split()
         # taking words one by one from full_text of citation.
-        for searched_word in string_manipulation.split_preprocess_string(row['full_text']):
+        for searched_word in citation_full_text:
             # checking the word in grouped keywords and add to full_keywords_count_dict.
             for keyword_group_name, unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
                 if searched_word in unique_keywords:
@@ -344,13 +348,39 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     return final_list_of_full_keywords_counts_citations_dict
 
 
+def text_manipulation_methods(text: str, method: str = "preprocess"):
+    """This convert text or string using options like preprocess, nlp module function, for more info each respective
+    methods methods implemented.
+
+    Parameters
+    ----------
+    text : str
+        string type text which is needed to be converted
+    method : str
+        provides the options to use any text manipulation function.
+
+    Returns
+    -------
+    str
+        this return the converted text
+
+    """
+    if method == "preprocess".lower():
+        return string_manipulation.preprocess_string(text)
+    else:
+        print("Not implemented yet.")
+
+
 def count_keywords_in_citations_full_text_list(citations_with_fulltext_list: list,
                                                unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                               title_column_name: str = "title") -> list:
+                                               title_column_name: str = "title",
+                                               method: str = "preprocess") -> list:
     """Loop over articles to calculate keywords counts
 
     Parameters
     ----------
+    method : str
+        provides the options to use any text manipulation function.
     citations_with_fulltext_list : list
         This list contains all the citations details with column named 'full_text' containing full text like
         article name, abstract and keyword.
@@ -370,16 +400,17 @@ def count_keywords_in_citations_full_text_list(citations_with_fulltext_list: lis
 
     """
     final_list_of_full_keywords_counts_citations_dict = []
+    keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
     # iterating through each citation details one by one.
     for citation_dict in citations_with_fulltext_list:
         print(f"article: {citation_dict[title_column_name]}")
         full_keywords_counts_dict = citation_dict
-        keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
         full_keywords_counts_dict.update(keyword_count_dict)
 
         total_keywords_counts = 0
+        citation_full_text = text_manipulation_methods(citation_dict['full_text'], method).split()
         # taking words one by one from full_text of citation.
-        for searched_word in string_manipulation.split_preprocess_string(citation_dict['full_text']):
+        for searched_word in citation_full_text:
             # checking the word in grouped keywords and add to full_keywords_count_dict.
             for keyword_group_name, unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
                 if searched_word in unique_keywords:
@@ -450,11 +481,14 @@ def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict) 
 
 def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
                                     unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                    title_column_name: str = "cleaned_title") -> list:
+                                    title_column_name: str = "cleaned_title",
+                                    method: str = "preprocess") -> list:
     """Loop over articles pdf files to calculate keywords counts.
 
     Parameters
     ----------
+    method : str
+        provides the options to use any text manipulation function.
     title_column_name : str
         This is the name of column which contain citation title
     list_of_downloaded_articles_path : list
@@ -473,12 +507,12 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
 
     """
     final_list_of_full_keywords_counts_pdf_text_dict = []
+    keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
     # iterating through each pdf path one by one.
     for pdf_path in list_of_downloaded_articles_path:
         article_name = string_manipulation.cleaned_pdf_filename_from_filepath(pdf_path)
         print("article: ", article_name)
         full_keywords_counts_dict = {title_column_name: str(article_name)}
-        keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
         full_keywords_counts_dict.update(keyword_count_dict)
         total_keywords_counts = 0
 
@@ -487,8 +521,9 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
         except FileNotFoundError:
             continue
 
+        pdf_full_text = text_manipulation_methods(pdf_text, method).split()
         # taking words one by one from full_text of pdf file.
-        for searched_word in string_manipulation.split_preprocess_string(pdf_text):
+        for searched_word in pdf_full_text:
             # checking the word in grouped keywords and add to full_keywords_count_dict.
             for keyword_group_name, unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
                 if searched_word in unique_keywords:
