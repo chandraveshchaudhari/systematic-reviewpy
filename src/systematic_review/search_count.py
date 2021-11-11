@@ -102,7 +102,7 @@ def construct_search_keywords_dictionary(keywords_list: list, default_string: st
     return grouped_keywords_dictionary
 
 
-def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict) -> dict:
+def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, all_unique_keywords: bool = True) -> dict:
     """
     This takes keywords from {keyword_group_name: keywords,...} dict and remove symbols with spaces. it then convert
     them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:
@@ -110,6 +110,8 @@ def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict) -> 
 
     Parameters
     ----------
+    all_unique_keywords : bool
+        provide option to make keywords in all groups unique.
     grouped_keywords_dictionary : dict
         This is the input dictionary of keywords used for systematic review.
         Example - {'keyword_group_name': "Management investing corporate pricing risk Risk Pre-process",...}
@@ -125,7 +127,8 @@ def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict) -> 
     preprocessed_clean_grouped_keywords_dictionary = {}
     for keyword_group_name, keywords in grouped_keywords_dictionary.items():
         preprocessed_string = string_manipulation.preprocess_string(keywords)
-        preprocessed_clean_keywords = string_manipulation.split_words_remove_duplicates(preprocessed_string.split())
+        preprocessed_clean_keywords = string_manipulation.split_words_remove_duplicates(preprocessed_string.split()) if \
+            all_unique_keywords else preprocessed_string.split()
         preprocessed_clean_grouped_keywords_dictionary[keyword_group_name] = preprocessed_clean_keywords
     return preprocessed_clean_grouped_keywords_dictionary
 
@@ -177,22 +180,24 @@ def remove_duplicates_keywords_from_next_groups(preprocessed_clean_grouped_keywo
 
     """
     temp_set = set()
-
+    temp_preprocessed_clean_grouped_keywords_dict = preprocessed_clean_grouped_keywords_dict.copy()
     for keyword_group_name, grouped_unique_keywords in preprocessed_clean_grouped_keywords_dict.items():
         # appending new keywords in temp_set
         for keywords in grouped_unique_keywords:
             if keywords not in temp_set:
                 temp_set.add(keywords)
             else:
-                preprocessed_clean_grouped_keywords_dict[keyword_group_name].remove(keywords)
-    return preprocessed_clean_grouped_keywords_dict
+                temp_preprocessed_clean_grouped_keywords_dict[keyword_group_name].remove(keywords)
+    return temp_preprocessed_clean_grouped_keywords_dict
 
 
-def preprocess_searched_keywords(grouped_keywords_dictionary: dict) -> dict:
+def preprocess_searched_keywords(grouped_keywords_dictionary: dict, all_unique_keywords: bool = True) -> dict:
     """Remove duplicate instances of keywords in other keywords groups.
 
     Parameters
     ----------
+    all_unique_keywords : bool
+        provide option to make keywords in all groups unique.
     grouped_keywords_dictionary : dict
         This is the input dictionary of keywords used for systematic review.
         Example - {'keyword_group_name': "Management investing corporate pricing risk Risk Pre-process",...}
@@ -207,7 +212,7 @@ def preprocess_searched_keywords(grouped_keywords_dictionary: dict) -> dict:
         'risk' is removed from keyword_group_2.
 
     """
-    preprocessed_keywords = preprocess_search_keywords_dictionary(grouped_keywords_dictionary)
+    preprocessed_keywords = preprocess_search_keywords_dictionary(grouped_keywords_dictionary, all_unique_keywords)
     preprocessed_clean_grouped_keywords_dict = remove_duplicates_keywords_from_next_groups(preprocessed_keywords)
     return preprocessed_clean_grouped_keywords_dict
 
@@ -325,14 +330,13 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
         for searched_word in string_manipulation.split_preprocess_string(row['full_text']):
             # checking the word in grouped keywords and add to full_keywords_count_dict.
             for keyword_group_name, unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
-                for keyword in unique_keywords:
-                    if searched_word == keyword:
-                        total_keywords_counts += 1
-                        group_name_count = str(keyword_group_name) + "_count"
-                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
-                                                                                        group_name_count)
-                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
-                                                                                        searched_word)
+                if searched_word in unique_keywords:
+                    total_keywords_counts += 1
+                    group_name_count = str(keyword_group_name) + "_count"
+                    full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                    group_name_count)
+                    full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                    searched_word)
 
         full_keywords_counts_dict.update({"total_keywords": total_keywords_counts})
         final_list_of_full_keywords_counts_citations_dict.append(full_keywords_counts_dict)
@@ -378,14 +382,13 @@ def count_keywords_in_citations_full_text_list(citations_with_fulltext_list: lis
         for searched_word in string_manipulation.split_preprocess_string(citation_dict['full_text']):
             # checking the word in grouped keywords and add to full_keywords_count_dict.
             for keyword_group_name, unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
-                for keyword in unique_keywords:
-                    if searched_word == keyword:
-                        total_keywords_counts += 1
-                        group_name_count = str(keyword_group_name) + "_count"
-                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
-                                                                                        group_name_count)
-                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
-                                                                                        searched_word)
+                if searched_word in unique_keywords:
+                    total_keywords_counts += 1
+                    group_name_count = str(keyword_group_name) + "_count"
+                    full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                    group_name_count)
+                    full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                    searched_word)
 
         full_keywords_counts_dict.update({"total_keywords": total_keywords_counts})
         final_list_of_full_keywords_counts_citations_dict.append(full_keywords_counts_dict)
@@ -488,14 +491,13 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
         for searched_word in string_manipulation.split_preprocess_string(pdf_text):
             # checking the word in grouped keywords and add to full_keywords_count_dict.
             for keyword_group_name, unique_keywords in unique_preprocessed_clean_grouped_keywords_dict.items():
-                for keyword in unique_keywords:
-                    if searched_word == keyword:
-                        total_keywords_counts += 1
-                        group_name_count = str(keyword_group_name) + "_count"
-                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
-                                                                                        group_name_count)
-                        full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
-                                                                                        searched_word)
+                if searched_word in unique_keywords:
+                    total_keywords_counts += 1
+                    group_name_count = str(keyword_group_name) + "_count"
+                    full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                    group_name_count)
+                    full_keywords_counts_dict = adding_dict_key_or_increasing_value(full_keywords_counts_dict,
+                                                                                    searched_word)
 
         full_keywords_counts_dict.update({"total_keywords": total_keywords_counts})
         final_list_of_full_keywords_counts_pdf_text_dict.append(full_keywords_counts_dict)
