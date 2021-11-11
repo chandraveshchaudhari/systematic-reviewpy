@@ -57,6 +57,28 @@ def analysis_of_multiple_ris_citations_files(citations_files_parent_folder_path:
     return details
 
 
+def vertical_dict_view(dictionary: dict) -> str:
+    """convert dict to string with each element in new line.
+
+    Parameters
+    ----------
+    dictionary : dict
+        Contains key and value which we want to print vertically.
+
+    Returns
+    -------
+    str
+        This prints key1 : value1
+        and         key2 : value2 ... in vertical format
+
+    """
+    output_string = ""
+    for key, value in dictionary.items():
+        output_string += f"{key} : {value}\n"
+
+    return output_string
+
+
 def duplicate_count(dataframe: pd.DataFrame) -> int:
     """return count of the duplicate articles.
 
@@ -186,29 +208,29 @@ class SystematicReviewInfo:
 
         """
         self.citations_files_parent_folder_path = citations_files_parent_folder_path if \
-            citations_files_parent_folder_path else ""
+            citations_files_parent_folder_path is not None else ""
 
         self.sources = analysis_of_multiple_ris_citations_files(citations_files_parent_folder_path) if \
-            citations_files_parent_folder_path else ""
+            citations_files_parent_folder_path is not None else ""
         self.duplicates = duplicate_count(
             converter.load_multiple_ris_citations_files_to_dataframe(citations_files_parent_folder_path)) if \
-            citations_files_parent_folder_path else ""
+            citations_files_parent_folder_path is not None else ""
 
-        self.screened = int(self.sources["total"]) - int(self.duplicates) if self.sources and self.duplicates else ""
-        self.for_retrieval = len(filter_sorted_citations_df) if filter_sorted_citations_df else ""
-        self.screened_out = self.screened - self.for_retrieval if self.screened and self.for_retrieval else ""
+        self.screened = int(self.sources["total"]) - int(self.duplicates) if (self.sources is not None) and (self.duplicates is not None) else ""
+        self.for_retrieval = len(filter_sorted_citations_df) if filter_sorted_citations_df is not None else ""
+        self.screened_out = self.screened - self.for_retrieval if (self.screened is not None) and (self.for_retrieval is not None) else ""
 
         self.not_retrieved = missed_article_count(filter_sorted_citations_df, downloaded_articles_path) if \
-            filter_sorted_citations_df and downloaded_articles_path else ""
+            (filter_sorted_citations_df is not None) and (downloaded_articles_path is not None) else ""
 
-        self.eligible = len(sorted_final_df) if sorted_final_df else ""
+        self.eligible = len(sorted_final_df) if sorted_final_df is not None else ""
         self.manually_excluded = ""
         self.manually_excluded_reasons = ""
 
         self.included = ""
 
     def get_text_list(self):
-        text_list = [f"Records identified from:\n{self.sources}",
+        text_list = [f"Records identified from:\n{vertical_dict_view(self.sources)}",
                      f"Records screened\n(n = {self.screened})",
                      f"Reports sought for retrieval\n(n = {self.for_retrieval})",
                      f"Reports assessed for eligibility\n(n = {self.eligible})",
@@ -221,8 +243,10 @@ class SystematicReviewInfo:
         return text_list
 
     def info(self):
-        for text in self.get_text_list():
-            print(text, "\n")
+        temp_text = self.get_text_list()
+        order = [0, 5, 1, 6, 2, 7, 3, 8, 4]
+        for index in order:
+            print(temp_text[index], "\n")
 
     def systematic_review_diagram(self, fig_width=10, fig_height=10):
         fig = plt.figure(figsize=(fig_width, fig_height))
