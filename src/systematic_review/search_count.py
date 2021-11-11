@@ -102,7 +102,7 @@ def construct_search_keywords_dictionary(keywords_list: list, default_string: st
     return grouped_keywords_dictionary
 
 
-def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, all_unique_keywords: bool = True) -> dict:
+def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, all_unique_keywords: bool = False) -> dict:
     """
     This takes keywords from {keyword_group_name: keywords,...} dict and remove symbols with spaces. it then convert
     them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:
@@ -191,7 +191,7 @@ def remove_duplicates_keywords_from_next_groups(preprocessed_clean_grouped_keywo
     return temp_preprocessed_clean_grouped_keywords_dict
 
 
-def preprocess_searched_keywords(grouped_keywords_dictionary: dict, all_unique_keywords: bool = True) -> dict:
+def preprocess_searched_keywords(grouped_keywords_dictionary: dict, all_unique_keywords: bool = False) -> dict:
     """Remove duplicate instances of keywords in other keywords groups.
 
     Parameters
