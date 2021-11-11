@@ -160,7 +160,7 @@
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">string_manipulation</span>
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">string_manipulation</span><span class="p">,</span> <span class="n">citation</span><span class="p">,</span> <span class="n">filter_sort</span><span class="p">,</span> <span class="n">validation</span>
 <span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">converter</span>
 
 
@@ -257,7 +257,7 @@
     <span class="k">return</span> <span class="n">grouped_keywords_dictionary</span></div>
 
 
-<div class="viewcode-block" id="preprocess_search_keywords_dictionary"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.preprocess_search_keywords_dictionary">[docs]</a><span class="k">def</span> <span class="nf">preprocess_search_keywords_dictionary</span><span class="p">(</span><span class="n">grouped_keywords_dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="preprocess_search_keywords_dictionary"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.preprocess_search_keywords_dictionary">[docs]</a><span class="k">def</span> <span class="nf">preprocess_search_keywords_dictionary</span><span class="p">(</span><span class="n">grouped_keywords_dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">all_unique_keywords</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This takes keywords from {keyword_group_name: keywords,...} dict and remove symbols with spaces. it then convert</span>
 <span class="sd">    them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:</span>
@@ -265,6 +265,8 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    all_unique_keywords : bool</span>
+<span class="sd">        provide option to make keywords in all groups unique.</span>
 <span class="sd">    grouped_keywords_dictionary : dict</span>
 <span class="sd">        This is the input dictionary of keywords used for systematic review.</span>
 <span class="sd">        Example - {&#39;keyword_group_name&#39;: &quot;Management investing corporate pricing risk Risk Pre-process&quot;,...}</span>
@@ -280,7 +282,8 @@
     <span class="n">preprocessed_clean_grouped_keywords_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">keyword_group_name</span><span class="p">,</span> <span class="n">keywords</span> <span class="ow">in</span> <span class="n">grouped_keywords_dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">preprocessed_string</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">preprocess_string</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
-        <span class="n">preprocessed_clean_keywords</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_words_remove_duplicates</span><span class="p">(</span><span class="n">preprocessed_string</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">preprocessed_clean_keywords</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_words_remove_duplicates</span><span class="p">(</span><span class="n">preprocessed_string</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="k">if</span> \
+            <span class="n">all_unique_keywords</span> <span class="k">else</span> <span class="n">preprocessed_string</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="n">preprocessed_clean_grouped_keywords_dictionary</span><span class="p">[</span><span class="n">keyword_group_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessed_clean_keywords</span>
     <span class="k">return</span> <span class="n">preprocessed_clean_grouped_keywords_dictionary</span></div>
 
@@ -309,7 +312,10 @@
 
 
 <div class="viewcode-block" id="remove_duplicates_keywords_from_next_groups"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.remove_duplicates_keywords_from_next_groups">[docs]</a><span class="k">def</span> <span class="nf">remove_duplicates_keywords_from_next_groups</span><span class="p">(</span><span class="n">preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Remove duplicate instances of keywords in other keywords groups.</span>
+    <span class="sd">&quot;&quot;&quot;Execute keywords step.</span>
+<span class="sd">    This takes keywords from {keyword_group_name: keywords,...} dict and remove symbols with spaces. it then convert</span>
+<span class="sd">    them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:</span>
+<span class="sd">    [clean_keywords],...} and then Remove duplicate instances of keywords in other keywords groups.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -328,17 +334,42 @@
 <span class="sd">        &#39;risk&#39; is removed from keyword_group_2.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span> <span class="o">=</span> <span class="n">preprocessed_clean_grouped_keywords_dict</span>
     <span class="n">temp_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">keyword_group_name</span><span class="p">,</span> <span class="n">grouped_unique_keywords</span> <span class="ow">in</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">temp_preprocessed_clean_grouped_keywords_dict</span> <span class="o">=</span> <span class="n">preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">keyword_group_name</span><span class="p">,</span> <span class="n">grouped_unique_keywords</span> <span class="ow">in</span> <span class="n">preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="c1"># appending new keywords in temp_set</span>
         <span class="k">for</span> <span class="n">keywords</span> <span class="ow">in</span> <span class="n">grouped_unique_keywords</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">keywords</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">temp_set</span><span class="p">:</span>
                 <span class="n">temp_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">[</span><span class="n">keyword_group_name</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span></div>
+                <span class="n">temp_preprocessed_clean_grouped_keywords_dict</span><span class="p">[</span><span class="n">keyword_group_name</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">temp_preprocessed_clean_grouped_keywords_dict</span></div>
+
+
+<div class="viewcode-block" id="preprocess_searched_keywords"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.preprocess_searched_keywords">[docs]</a><span class="k">def</span> <span class="nf">preprocess_searched_keywords</span><span class="p">(</span><span class="n">grouped_keywords_dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">all_unique_keywords</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Remove duplicate instances of keywords in other keywords groups.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    all_unique_keywords : bool</span>
+<span class="sd">        provide option to make keywords in all groups unique.</span>
+<span class="sd">    grouped_keywords_dictionary : dict</span>
+<span class="sd">        This is the input dictionary of keywords used for systematic review.</span>
+<span class="sd">        Example - {&#39;keyword_group_name&#39;: &quot;Management investing corporate pricing risk Risk Pre-process&quot;,...}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword</span>
+<span class="sd">        group can not be found in any other keyword group.</span>
+<span class="sd">        Example - {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;], &#39;keyword_group_2&#39;:</span>
+<span class="sd">        [&quot;corporate&quot;, &quot;pricing&quot;],...}</span>
+<span class="sd">        &#39;risk&#39; is removed from keyword_group_2.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">preprocessed_keywords</span> <span class="o">=</span> <span class="n">preprocess_search_keywords_dictionary</span><span class="p">(</span><span class="n">grouped_keywords_dictionary</span><span class="p">,</span> <span class="n">all_unique_keywords</span><span class="p">)</span>
+    <span class="n">preprocessed_clean_grouped_keywords_dict</span> <span class="o">=</span> <span class="n">remove_duplicates_keywords_from_next_groups</span><span class="p">(</span><span class="n">preprocessed_keywords</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">preprocessed_clean_grouped_keywords_dict</span></div>
 
 
 <div class="viewcode-block" id="adding_dict_key_or_increasing_value"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.adding_dict_key_or_increasing_value">[docs]</a><span class="k">def</span> <span class="nf">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">input_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">dict_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">default_dict_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
@@ -369,8 +400,56 @@
     <span class="k">return</span> <span class="n">input_dict</span></div>
 
 
+<div class="viewcode-block" id="creating_keyword_count_dict"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.creating_keyword_count_dict">[docs]</a><span class="k">def</span> <span class="nf">creating_keyword_count_dict</span><span class="p">(</span><span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initialise keyword count dict with value 0 for every keyword.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    unique_preprocessed_clean_grouped_keywords_dict : dict</span>
+<span class="sd">        looks like this {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;],</span>
+<span class="sd">                  &#39;keyword_group_2&#39;: [&quot;corporate&quot;, &quot;pricing&quot;],...}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        This contains key as keyword and value as 0.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keyword_count_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">keywords_list</span> <span class="ow">in</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">group_name_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">group_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_count&quot;</span>
+        <span class="n">keyword_count_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">group_name_count</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+        <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords_list</span><span class="p">:</span>
+            <span class="n">keyword_count_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">keyword</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">keyword_count_dict</span></div>
+
+
+<div class="viewcode-block" id="count_words_in_list_of_lists"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.count_words_in_list_of_lists">[docs]</a><span class="k">def</span> <span class="nf">count_words_in_list_of_lists</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;count words in list containing other lists with words.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_of_lists : list</span>
+<span class="sd">        This list contains each element of type list.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        dictionary with key as words and value as counts</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dict_with_words_count</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">keyword_list</span> <span class="ow">in</span> <span class="n">list_of_lists</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keyword_list</span><span class="p">:</span>
+            <span class="n">clean_keyword</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">preprocess_string</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>
+            <span class="n">dict_with_words_count</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">dict_with_words_count</span><span class="p">,</span> <span class="n">clean_keyword</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dict_with_words_count</span></div>
+
+
 <div class="viewcode-block" id="count_keywords_in_citations_full_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.count_keywords_in_citations_full_text">[docs]</a><span class="k">def</span> <span class="nf">count_keywords_in_citations_full_text</span><span class="p">(</span><span class="n">dataframe_citations_with_fulltext</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                                          <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+                                          <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                          <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Loop over articles to calculate keywords counts</span>
 
 <span class="sd">    Parameters</span>
@@ -381,6 +460,8 @@
 <span class="sd">    unique_preprocessed_clean_grouped_keywords_dict : dict</span>
 <span class="sd">        looks like this {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;],</span>
 <span class="sd">                  &#39;keyword_group_2&#39;: [&quot;corporate&quot;, &quot;pricing&quot;],...}</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation title</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -394,21 +475,23 @@
     <span class="n">final_list_of_full_keywords_counts_citations_dict</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># iterating through each citation details one by one.</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dataframe_citations_with_fulltext</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;article: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;primary_title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;primary_title&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;primary_title&#39;</span><span class="p">])}</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;article: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">])}</span>
+        <span class="n">keyword_count_dict</span> <span class="o">=</span> <span class="n">creating_keyword_count_dict</span><span class="p">(</span><span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">)</span>
+        <span class="n">full_keywords_counts_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keyword_count_dict</span><span class="p">)</span>
+
         <span class="n">total_keywords_counts</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># taking words one by one from full_text of citation.</span>
         <span class="k">for</span> <span class="n">searched_word</span> <span class="ow">in</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;full_text&#39;</span><span class="p">]):</span>
             <span class="c1"># checking the word in grouped keywords and add to full_keywords_count_dict.</span>
             <span class="k">for</span> <span class="n">keyword_group_name</span><span class="p">,</span> <span class="n">unique_keywords</span> <span class="ow">in</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">unique_keywords</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">searched_word</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">:</span>
-                        <span class="n">total_keywords_counts</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="n">group_name_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">keyword_group_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_count&quot;</span>
-                        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
-                                                                                        <span class="n">group_name_count</span><span class="p">)</span>
-                        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
-                                                                                        <span class="n">searched_word</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">searched_word</span> <span class="ow">in</span> <span class="n">unique_keywords</span><span class="p">:</span>
+                    <span class="n">total_keywords_counts</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">group_name_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">keyword_group_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_count&quot;</span>
+                    <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
+                                                                                    <span class="n">group_name_count</span><span class="p">)</span>
+                    <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
+                                                                                    <span class="n">searched_word</span><span class="p">)</span>
 
         <span class="n">full_keywords_counts_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;total_keywords&quot;</span><span class="p">:</span> <span class="n">total_keywords_counts</span><span class="p">})</span>
         <span class="n">final_list_of_full_keywords_counts_citations_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">)</span>
@@ -416,12 +499,119 @@
     <span class="k">return</span> <span class="n">final_list_of_full_keywords_counts_citations_dict</span></div>
 
 
+<div class="viewcode-block" id="count_keywords_in_citations_full_text_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.count_keywords_in_citations_full_text_list">[docs]</a><span class="k">def</span> <span class="nf">count_keywords_in_citations_full_text_list</span><span class="p">(</span><span class="n">citations_with_fulltext_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                               <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                               <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Loop over articles to calculate keywords counts</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_with_fulltext_list : list</span>
+<span class="sd">        This list contains all the citations details with column named &#39;full_text&#39; containing full text like</span>
+<span class="sd">        article name, abstract and keyword.</span>
+<span class="sd">    unique_preprocessed_clean_grouped_keywords_dict : dict</span>
+<span class="sd">        looks like this {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;],</span>
+<span class="sd">                  &#39;keyword_group_2&#39;: [&quot;corporate&quot;, &quot;pricing&quot;],...}</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation title</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This is the list of all citations search result which contains our all keywords count.</span>
+<span class="sd">        Examples - [{&#39;primary_title&#39;: &#39;name&#39;, &#39;total_keywords&#39;: count, &#39;keyword_group_1_count&#39;: count,</span>
+<span class="sd">        &quot;management&quot;: count, &quot;investing: count&quot;, &quot;risk: count&quot;, &#39;keyword_group_2_count&#39;: count, &quot;corporate&quot;: count,</span>
+<span class="sd">        &quot;pricing&quot;: count,...}]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">final_list_of_full_keywords_counts_citations_dict</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># iterating through each citation details one by one.</span>
+    <span class="k">for</span> <span class="n">citation_dict</span> <span class="ow">in</span> <span class="n">citations_with_fulltext_list</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;article: </span><span class="si">{</span><span class="n">citation_dict</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">citation_dict</span>
+        <span class="n">keyword_count_dict</span> <span class="o">=</span> <span class="n">creating_keyword_count_dict</span><span class="p">(</span><span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">)</span>
+        <span class="n">full_keywords_counts_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keyword_count_dict</span><span class="p">)</span>
+
+        <span class="n">total_keywords_counts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># taking words one by one from full_text of citation.</span>
+        <span class="k">for</span> <span class="n">searched_word</span> <span class="ow">in</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">citation_dict</span><span class="p">[</span><span class="s1">&#39;full_text&#39;</span><span class="p">]):</span>
+            <span class="c1"># checking the word in grouped keywords and add to full_keywords_count_dict.</span>
+            <span class="k">for</span> <span class="n">keyword_group_name</span><span class="p">,</span> <span class="n">unique_keywords</span> <span class="ow">in</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">searched_word</span> <span class="ow">in</span> <span class="n">unique_keywords</span><span class="p">:</span>
+                    <span class="n">total_keywords_counts</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">group_name_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">keyword_group_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_count&quot;</span>
+                    <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
+                                                                                    <span class="n">group_name_count</span><span class="p">)</span>
+                    <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
+                                                                                    <span class="n">searched_word</span><span class="p">)</span>
+
+        <span class="n">full_keywords_counts_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;total_keywords&quot;</span><span class="p">:</span> <span class="n">total_keywords_counts</span><span class="p">})</span>
+        <span class="n">final_list_of_full_keywords_counts_citations_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">final_list_of_full_keywords_counts_citations_dict</span></div>
+
+
+<div class="viewcode-block" id="citation_list_of_dict_search_count_to_df"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.citation_list_of_dict_search_count_to_df">[docs]</a><span class="k">def</span> <span class="nf">citation_list_of_dict_search_count_to_df</span><span class="p">(</span><span class="n">citations_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Loop over articles to calculate keywords counts and return dataframe.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_list : list</span>
+<span class="sd">        list with additional columns needed for next steps of systematic review and duplicates are removed</span>
+<span class="sd">    keywords : dict</span>
+<span class="sd">        This is output dictionary which contains processed non-duplicate keywords dict.</span>
+<span class="sd">        Example - {&#39;keyword_group_name&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;corporate&quot;, &quot;pricing&quot;, &quot;risk&quot;, &quot;pre&quot;,</span>
+<span class="sd">        &quot;process&quot;],...}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        This is pandas object of all citations search result which contains our all keywords count.</span>
+<span class="sd">        Examples - [{&#39;primary_title&#39;: &#39;name&#39;, &#39;total_keywords&#39;: count, &#39;keyword_group_1_count&#39;: count,</span>
+<span class="sd">        &quot;management&quot;: count, &quot;investing: count&quot;, &quot;risk: count&quot;, &#39;keyword_group_2_count&#39;: count, &quot;corporate&quot;: count,</span>
+<span class="sd">        &quot;pricing&quot;: count,...}]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">citations_keywords_count_list</span> <span class="o">=</span> <span class="n">count_keywords_in_citations_full_text_list</span><span class="p">(</span><span class="n">citations_list</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">citation_search_count_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">citations_keywords_count_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">citation_search_count_df</span></div>
+
+
+<div class="viewcode-block" id="citation_search_count_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.citation_search_count_dataframe">[docs]</a><span class="k">def</span> <span class="nf">citation_search_count_dataframe</span><span class="p">(</span><span class="n">citations_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Loop over articles to calculate keywords counts and return dataframe.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_df : pandas.DataFrame object</span>
+<span class="sd">        DataFrame with additional columns needed for next steps of systematic review and duplicates are removed</span>
+<span class="sd">    keywords : dict</span>
+<span class="sd">        This is output dictionary which contains processed non-duplicate keywords dict.</span>
+<span class="sd">        Example - {&#39;keyword_group_name&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;corporate&quot;, &quot;pricing&quot;, &quot;risk&quot;, &quot;pre&quot;,</span>
+<span class="sd">        &quot;process&quot;],...}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        This is pandas object of all citations search result which contains our all keywords count.</span>
+<span class="sd">        Examples - [{&#39;primary_title&#39;: &#39;name&#39;, &#39;total_keywords&#39;: count, &#39;keyword_group_1_count&#39;: count,</span>
+<span class="sd">        &quot;management&quot;: count, &quot;investing: count&quot;, &quot;risk: count&quot;, &#39;keyword_group_2_count&#39;: count, &quot;corporate&quot;: count,</span>
+<span class="sd">        &quot;pricing&quot;: count,...}]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">citations_keywords_count_list</span> <span class="o">=</span> <span class="n">count_keywords_in_citations_full_text</span><span class="p">(</span><span class="n">citations_df</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">citation_search_count_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">citations_keywords_count_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">citation_search_count_df</span></div>
+
+
 <div class="viewcode-block" id="count_keywords_in_pdf_full_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.count_keywords_in_pdf_full_text">[docs]</a><span class="k">def</span> <span class="nf">count_keywords_in_pdf_full_text</span><span class="p">(</span><span class="n">list_of_downloaded_articles_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-                                    <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+                                    <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                    <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cleaned_title&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Loop over articles pdf files to calculate keywords counts.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation title</span>
 <span class="sd">    list_of_downloaded_articles_path : list</span>
 <span class="sd">        This list contains path of all the pdf files contained in directory_path.</span>
 <span class="sd">    unique_preprocessed_clean_grouped_keywords_dict : dict</span>
@@ -442,7 +632,9 @@
     <span class="k">for</span> <span class="n">pdf_path</span> <span class="ow">in</span> <span class="n">list_of_downloaded_articles_path</span><span class="p">:</span>
         <span class="n">article_name</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">cleaned_pdf_filename_from_filepath</span><span class="p">(</span><span class="n">pdf_path</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;article: &quot;</span><span class="p">,</span> <span class="n">article_name</span><span class="p">)</span>
-        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;article&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">article_name</span><span class="p">)}</span>
+        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">article_name</span><span class="p">)}</span>
+        <span class="n">keyword_count_dict</span> <span class="o">=</span> <span class="n">creating_keyword_count_dict</span><span class="p">(</span><span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">)</span>
+        <span class="n">full_keywords_counts_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keyword_count_dict</span><span class="p">)</span>
         <span class="n">total_keywords_counts</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -454,19 +646,134 @@
         <span class="k">for</span> <span class="n">searched_word</span> <span class="ow">in</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">split_preprocess_string</span><span class="p">(</span><span class="n">pdf_text</span><span class="p">):</span>
             <span class="c1"># checking the word in grouped keywords and add to full_keywords_count_dict.</span>
             <span class="k">for</span> <span class="n">keyword_group_name</span><span class="p">,</span> <span class="n">unique_keywords</span> <span class="ow">in</span> <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">unique_keywords</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">searched_word</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">:</span>
-                        <span class="n">total_keywords_counts</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="n">group_name_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">keyword_group_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_count&quot;</span>
-                        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
-                                                                                        <span class="n">group_name_count</span><span class="p">)</span>
-                        <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
-                                                                                        <span class="n">searched_word</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">searched_word</span> <span class="ow">in</span> <span class="n">unique_keywords</span><span class="p">:</span>
+                    <span class="n">total_keywords_counts</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">group_name_count</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">keyword_group_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_count&quot;</span>
+                    <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
+                                                                                    <span class="n">group_name_count</span><span class="p">)</span>
+                    <span class="n">full_keywords_counts_dict</span> <span class="o">=</span> <span class="n">adding_dict_key_or_increasing_value</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">,</span>
+                                                                                    <span class="n">searched_word</span><span class="p">)</span>
 
         <span class="n">full_keywords_counts_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;total_keywords&quot;</span><span class="p">:</span> <span class="n">total_keywords_counts</span><span class="p">})</span>
         <span class="n">final_list_of_full_keywords_counts_pdf_text_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_keywords_counts_dict</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">final_list_of_full_keywords_counts_pdf_text_dict</span></div>
+
+
+<div class="viewcode-block" id="pdf_full_text_search_count_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.pdf_full_text_search_count_dataframe">[docs]</a><span class="k">def</span> <span class="nf">pdf_full_text_search_count_dataframe</span><span class="p">(</span><span class="n">list_of_downloaded_articles_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                         <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                         <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cleaned_title&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Loop over articles pdf files to calculate keywords counts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation title</span>
+<span class="sd">    list_of_downloaded_articles_path : list</span>
+<span class="sd">        This list contains path of all the pdf files contained in directory_path.</span>
+<span class="sd">    unique_preprocessed_clean_grouped_keywords_dict : dict</span>
+<span class="sd">        looks like this {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;],</span>
+<span class="sd">                  &#39;keyword_group_2&#39;: [&quot;corporate&quot;, &quot;pricing&quot;],...}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        This is the dataframe of all citations search result which contains our all keywords count.</span>
+<span class="sd">        Examples - [{&#39;article&#39;: &#39;article_name&#39;, &#39;total_keywords&#39;: count, &#39;keyword_group_1_count&#39;: count,</span>
+<span class="sd">        &quot;management&quot;: count, &quot;investing: count&quot;, &quot;risk: count&quot;, &#39;keyword_group_2_count&#39;: count, &quot;corporate&quot;: count,</span>
+<span class="sd">        &quot;pricing&quot;: count,...}]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pdf_full_text_keywords_count_list</span> <span class="o">=</span> <span class="n">count_keywords_in_pdf_full_text</span><span class="p">(</span><span class="n">list_of_downloaded_articles_path</span><span class="p">,</span>
+                                                                        <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">,</span>
+                                                                        <span class="n">title_column_name</span><span class="p">)</span>
+    <span class="n">pdf_full_text_search_count_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">pdf_full_text_keywords_count_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pdf_full_text_search_count_df</span></div>
+
+
+<div class="viewcode-block" id="validate_column_details_between_two_record_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.validate_column_details_between_two_record_list">[docs]</a><span class="k">def</span> <span class="nf">validate_column_details_between_two_record_list</span><span class="p">(</span><span class="n">first_list_of_dict</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">second_list_of_dict</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                                    <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cleaned_title&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;It produce list of matched columns rows and unmatched column rows based on same column from both.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    first_list_of_dict : list</span>
+<span class="sd">        Iterable object pandas.DataFrame or list which contains title_column_name</span>
+<span class="sd">    second_list_of_dict : list</span>
+<span class="sd">        Iterable object pandas.DataFrame or list which contains title_column_name</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation title.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        matched_list - It contains column&#39;s row which are matched in both data object.</span>
+<span class="sd">        unmatched_list - It contains column&#39;s row which are unmatched in both data object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matched_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">unmatched_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">article_name</span> <span class="ow">in</span> <span class="n">first_list_of_dict</span><span class="p">:</span>
+        <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">article_count</span> <span class="ow">in</span> <span class="n">second_list_of_dict</span><span class="p">:</span>
+
+            <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">multiple_methods_validating_words_string_in_text</span><span class="p">(</span>
+                <span class="n">article_name</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">],</span> <span class="n">article_count</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">])</span>
+            <span class="c1"># print(f&quot;validation_bool: {validation_bool}, percentage_matched: {percentage_matched}, method: {method}&quot;)</span>
+            <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
+                <span class="n">article_name_count</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">article_name</span><span class="p">,</span> <span class="o">**</span><span class="n">article_count</span><span class="p">}</span>
+                <span class="n">matched_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name_count</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">validation_bool</span><span class="p">:</span>
+            <span class="n">unmatched_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">article_name</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">],</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">method</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matched_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">unmatched_list</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">matched_list</span><span class="p">,</span> <span class="n">unmatched_list</span></div>
+
+
+<div class="viewcode-block" id="adding_citation_details_with_keywords_count_in_pdf_full_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.search_count.adding_citation_details_with_keywords_count_in_pdf_full_text">[docs]</a><span class="k">def</span> <span class="nf">adding_citation_details_with_keywords_count_in_pdf_full_text</span><span class="p">(</span><span class="n">filter_sorted_citations_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                                                                 <span class="n">pdf_full_text_search_count</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                                                 <span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                                                 <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cleaned_title&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Combining the pdf keywords counts with the citation details from filtered and sorted citation full text</span>
+<span class="sd">    dataframe.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation title.</span>
+<span class="sd">    filter_sorted_citations_df : pandas.DataFrame object</span>
+<span class="sd">        This is the sorted dataframe which contains columns in this sequential manner. It contains citation df,</span>
+<span class="sd">         total_keywords, group_keywords_counts, and keywords_counts in the last.</span>
+<span class="sd">    pdf_full_text_search_count : list</span>
+<span class="sd">        This is the list of all citations search result which contains our all keywords count.</span>
+<span class="sd">        Examples - [{&#39;article&#39;: &#39;article_name&#39;, &#39;total_keywords&#39;: count, &#39;keyword_group_1_count&#39;: count,</span>
+<span class="sd">        &quot;management&quot;: count, &quot;investing: count&quot;, &quot;risk: count&quot;, &#39;keyword_group_2_count&#39;: count, &quot;corporate&quot;: count,</span>
+<span class="sd">        &quot;pricing&quot;: count,...}]</span>
+<span class="sd">    unique_preprocessed_clean_grouped_keywords_dict : dict</span>
+<span class="sd">        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword</span>
+<span class="sd">        group can not be found in any other keyword group.</span>
+<span class="sd">        Example - {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;], &#39;keyword_group_2&#39;:</span>
+<span class="sd">        [&quot;corporate&quot;, &quot;pricing&quot;],...}.</span>
+<span class="sd">        &#39;risk&#39; is removed from keyword_group_2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        This dataframe contains citations details from filtered and sorted citation full text dataframe and keywords</span>
+<span class="sd">        counts from searching in pdf file text.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">criteria_list</span> <span class="o">=</span> <span class="n">filter_sort</span><span class="o">.</span><span class="n">get_sorting_keywords_criterion_list</span><span class="p">(</span><span class="n">unique_preprocessed_clean_grouped_keywords_dict</span><span class="p">)</span>
+    <span class="n">filter_sorted_citations_details</span> <span class="o">=</span> <span class="n">filter_sorted_citations_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">criteria_list</span><span class="p">)</span>
+
+    <span class="n">citations_list</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_to_list_of_dicts</span><span class="p">(</span><span class="n">filter_sorted_citations_details</span><span class="p">)</span>
+    <span class="n">matched_list</span><span class="p">,</span> <span class="n">unmatched_list</span> <span class="o">=</span> <span class="n">validate_column_details_between_two_record_list</span><span class="p">(</span><span class="n">pdf_full_text_search_count</span><span class="p">,</span>
+                                                                                   <span class="n">citations_list</span><span class="p">,</span> <span class="n">title_column_name</span><span class="p">)</span>
+    <span class="n">final_review_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">matched_list</span><span class="p">)</span>
+    <span class="n">final_review_df</span> <span class="o">=</span> <span class="n">citation</span><span class="o">.</span><span class="n">drop_duplicates_citations</span><span class="p">(</span><span class="n">final_review_df</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">final_review_df</span></div>
 </pre></div>
 
            </div>

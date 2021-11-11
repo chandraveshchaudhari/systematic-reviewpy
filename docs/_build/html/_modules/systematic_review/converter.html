@@ -157,12 +157,15 @@
 <span class="sd">This module contains functions related to files and data type conversion. such as list to txt file, pandas df to list of</span>
 <span class="sd">dicts and many more.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pdftotext</span>
 <span class="kn">import</span> <span class="nn">rispy</span>
 <span class="kn">import</span> <span class="nn">fitz</span>
+
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">os_utils</span>
 
 
 <div class="viewcode-block" id="ris_file_to_pandas_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.ris_file_to_pandas_dataframe">[docs]</a><span class="k">def</span> <span class="nf">ris_file_to_pandas_dataframe</span><span class="p">(</span><span class="n">ris_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -206,7 +209,7 @@
     <span class="n">dataframe_object</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="convert_dataframe_to_list_of_dicts"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.convert_dataframe_to_list_of_dicts">[docs]</a><span class="k">def</span> <span class="nf">convert_dataframe_to_list_of_dicts</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<div class="viewcode-block" id="dataframe_to_list_of_dicts"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.dataframe_to_list_of_dicts">[docs]</a><span class="k">def</span> <span class="nf">dataframe_to_list_of_dicts</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;converts pandas dataframe to the list of dictionaries.</span>
 
 <span class="sd">    Parameters</span>
@@ -224,7 +227,33 @@
     <span class="k">return</span> <span class="n">list_of_dicts</span></div>
 
 
-<div class="viewcode-block" id="convert_list_of_dicts_to_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.convert_list_of_dicts_to_dataframe">[docs]</a><span class="k">def</span> <span class="nf">convert_list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">list_of_dicts</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="try_convert_dataframe_column_elements_to_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.try_convert_dataframe_column_elements_to_list">[docs]</a><span class="k">def</span> <span class="nf">try_convert_dataframe_column_elements_to_list</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;try statement for converting each element of dataframe column to list object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe : pd.DataFrame</span>
+<span class="sd">        The dataframe with column to convert into list</span>
+<span class="sd">    column_name : str</span>
+<span class="sd">        Name of column for conversion</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This is list with each element of type list.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keyword_list_of_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">keyword_list</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="p">[</span><span class="n">column_name</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">keyword_list_of_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">keyword_list</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">keyword_list</span><span class="si">}</span><span class="s2">&#39; can not be converted to list&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">keyword_list_of_list</span></div>
+
+
+<div class="viewcode-block" id="list_of_dicts_to_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.list_of_dicts_to_dataframe">[docs]</a><span class="k">def</span> <span class="nf">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">list_of_dicts</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;converts the list of dictionaries to pandas dataframe.</span>
 
 <span class="sd">    Parameters</span>
@@ -238,7 +267,7 @@
 <span class="sd">        This is the pandas dataframe consisted of all data from dictionaries converted into respective rows.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">list_of_dicts</span><span class="p">)</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">list_of_dicts</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dataframe</span></div>
 
 
@@ -317,11 +346,13 @@
     <span class="k">return</span> <span class="n">text</span></div>
 
 
-<div class="viewcode-block" id="get_text_from_pdf"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.get_text_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;This Function try to get text from pdf files using pdftotext or pymupdf. It raises no exception.</span>
+<div class="viewcode-block" id="get_text_from_pdf"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.get_text_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">pdf_reader</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pdftotext&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;This Function get text from pdf files using pdftotext or pymupdf.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    pdf_reader : str</span>
+<span class="sd">        This is python pdf reader package which convert pdf to text.</span>
 <span class="sd">    pdf_file_path : str</span>
 <span class="sd">        This is the path of pdf file.</span>
 <span class="sd">    pages : str</span>
@@ -334,14 +365,16 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">pdf_text</span> <span class="o">=</span> <span class="n">get_text_from_pdf_pdftotext</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">pdf_text</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pdf_reader</span> <span class="o">==</span> <span class="s1">&#39;pdftotext&#39;</span><span class="p">:</span>
+            <span class="n">pdf_text</span> <span class="o">=</span> <span class="n">get_text_from_pdf_pdftotext</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pdf_text</span>
+        <span class="k">elif</span> <span class="n">pdf_reader</span> <span class="o">==</span> <span class="s1">&#39;pymupdf&#39;</span><span class="p">:</span>
             <span class="n">pdf_text</span> <span class="o">=</span> <span class="n">get_text_from_pdf_pymupdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pdf_text</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span></div>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not Implemented&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">pdftotext</span><span class="o">.</span><span class="n">Error</span> <span class="ow">or</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="extract_pandas_df_column1_row_values_based_on_column2_value"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.extract_pandas_df_column1_row_values_based_on_column2_value">[docs]</a><span class="k">def</span> <span class="nf">extract_pandas_df_column1_row_values_based_on_column2_value</span><span class="p">(</span><span class="n">pandas_dataframe</span><span class="p">,</span> <span class="n">column2_value</span><span class="p">,</span>
@@ -391,8 +424,54 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ris_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bibliography_file</span><span class="p">:</span>
         <span class="n">ris_list_of_dict</span> <span class="o">=</span> <span class="n">rispy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">bibliography_file</span><span class="p">)</span>
+        <span class="n">source_name</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_filename_from_path</span><span class="p">(</span><span class="n">ris_file_path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dictionary</span> <span class="ow">in</span> <span class="n">ris_list_of_dict</span><span class="p">:</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_name</span>
 
     <span class="k">return</span> <span class="n">ris_list_of_dict</span></div>
+
+
+<div class="viewcode-block" id="load_multiple_ris_citations_files"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.load_multiple_ris_citations_files">[docs]</a><span class="k">def</span> <span class="nf">load_multiple_ris_citations_files</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function loads all ris citations files from folder</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_files_parent_folder_path : str</span>
+<span class="sd">        this is the path of parent folder of where citations files exists.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        this is list of citations dicts inclusive of all citation files.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">citations_path_lists</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">extract_files_path_from_directories_or_subdirectories</span><span class="p">(</span>
+        <span class="n">citations_files_parent_folder_path</span><span class="p">)</span>
+    <span class="n">citations_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">citations_path_lists</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.ris&quot;</span><span class="p">):</span>
+            <span class="n">citations_list</span> <span class="o">+=</span> <span class="n">ris_to_dict_list</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">citations_list</span></div>
+
+
+<div class="viewcode-block" id="load_multiple_ris_citations_files_to_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.load_multiple_ris_citations_files_to_dataframe">[docs]</a><span class="k">def</span> <span class="nf">load_multiple_ris_citations_files_to_dataframe</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function loads all ris citations files from folder</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_files_parent_folder_path : str</span>
+<span class="sd">        this is the path of parent folder of where citations files exists.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        this is dataframe of citations dicts inclusive of all citation files.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">full_list</span> <span class="o">=</span> <span class="n">load_multiple_ris_citations_files</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">)</span>
+    <span class="n">full_list_df</span> <span class="o">=</span> <span class="n">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">full_list</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">full_list_df</span></div>
 
 
 <div class="viewcode-block" id="list_to_text_file"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.list_to_text_file">[docs]</a><span class="k">def</span> <span class="nf">list_to_text_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">list_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span><span class="p">):</span>
@@ -437,6 +516,49 @@
         <span class="n">text_string</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="n">text_string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">text_string</span></div>
+
+
+<div class="viewcode-block" id="unpack_list_of_lists"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.unpack_list_of_lists">[docs]</a><span class="k">def</span> <span class="nf">unpack_list_of_lists</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;unpack list consisting of other list to output list which will include all elements from other lists.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_of_lists : list</span>
+<span class="sd">        this is list consisting of elements and lists. example [&quot;first_element&quot;, [&quot;second_element&quot;]]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This is the resultant list consisting of only elements. example [&quot;first_element&quot;, &quot;second_element&quot;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unpacked_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">list_of_lists</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">unpacked_list</span> <span class="o">+=</span> <span class="n">element</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">unpacked_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">unpacked_list</span></div>
+
+
+<div class="viewcode-block" id="data_type_of_dict_values"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.converter.data_type_of_dict_values">[docs]</a><span class="k">def</span> <span class="nf">data_type_of_dict_values</span><span class="p">(</span><span class="n">dictionary</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This provide the data type of dictionary values by outputting dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dictionary : dict</span>
+<span class="sd">        This is the dictionary which contains different types of object in values. Example - {&quot;first&quot;: [2, 5], &quot;sec&quot;: 3}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        This will output {&quot;&lt;class &#39;list&#39;&gt;&quot;: [&quot;first&quot;], &quot;&lt;class &#39;int&#39;&gt;&quot;: [&quot;sec&quot;]}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dictionary_info</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">dictionary_info</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">))]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dictionary_info</span></div>
 </pre></div>
 
            </div>

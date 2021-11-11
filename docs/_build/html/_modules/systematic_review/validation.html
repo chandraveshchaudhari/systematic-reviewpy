@@ -160,6 +160,8 @@
 
 <span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">SequenceMatcher</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pdftotext</span>
+
 <span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">string_manipulation</span>
 <span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">converter</span>
 <span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">os_utils</span>
@@ -233,6 +235,25 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">percentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
     <span class="k">return</span> <span class="n">percentage</span></div>
+
+
+<div class="viewcode-block" id="amount_by_percentage"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.amount_by_percentage">[docs]</a><span class="k">def</span> <span class="nf">amount_by_percentage</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">percentage</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;get the amount of number based on percentage. example- 5% (percentage) of 10 (number) is 0.5 (result).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    number : float</span>
+<span class="sd">        This is the input number from which we want some percent amount</span>
+<span class="sd">    percentage : float</span>
+<span class="sd">        This is equivalent to math percentage.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        This is resultant number.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">number</span> <span class="o">*</span> <span class="n">percentage</span><span class="o">/</span><span class="mi">100</span></div>
 
 
 <div class="viewcode-block" id="add_dict_element_with_count"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.add_dict_element_with_count">[docs]</a><span class="k">def</span> <span class="nf">add_dict_element_with_count</span><span class="p">(</span><span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -392,7 +413,7 @@
     <span class="k">return</span> <span class="n">validation_bool</span></div>
 
 
-<div class="viewcode-block" id="words_percentage_checker_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.words_percentage_checker_in_text">[docs]</a><span class="k">def</span> <span class="nf">words_percentage_checker_in_text</span><span class="p">(</span><span class="n">words_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">validation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<div class="viewcode-block" id="words_percentage_checker_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.words_percentage_checker_in_text">[docs]</a><span class="k">def</span> <span class="nf">words_percentage_checker_in_text</span><span class="p">(</span><span class="n">words_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">validation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">70</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This  checks for exact match of substring in string and return True or False based on success. It also returns</span>
 <span class="sd">    matched word percentage.</span>
 <span class="sd">    Limit: this doesn&#39;t work properly if words_string have duplicate words.</span>
@@ -451,7 +472,7 @@
     <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span></div>
 
 
-<div class="viewcode-block" id="jumbled_words_percentage_checker_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.jumbled_words_percentage_checker_in_text">[docs]</a><span class="k">def</span> <span class="nf">jumbled_words_percentage_checker_in_text</span><span class="p">(</span><span class="n">words_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">validation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
+<div class="viewcode-block" id="jumbled_words_percentage_checker_in_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.jumbled_words_percentage_checker_in_text">[docs]</a><span class="k">def</span> <span class="nf">jumbled_words_percentage_checker_in_text</span><span class="p">(</span><span class="n">words_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">validation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span>
                                              <span class="n">wrong_word_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;start calculating percentage if half of words are found in sequence. This also takes in consideration of words</span>
 <span class="sd">    which got jumbled up due to pdf reading operation.</span>
@@ -508,7 +529,8 @@
 
 <div class="viewcode-block" id="validating_pdf_via_filename"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.validating_pdf_via_filename">[docs]</a><span class="k">def</span> <span class="nf">validating_pdf_via_filename</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;exact_words&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is</span>
-<span class="sd">    validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file</span>
+<span class="sd">    validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file. pdf_reader</span>
+<span class="sd">    options are pdftotext or pymupdf.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -527,7 +549,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">)</span>
     <span class="c1"># print(text)</span>
-    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_pdf_filename_from_path</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">)</span>
+    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_filename_from_path</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">)</span>
     <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">strip_string_from_right_side</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;exact_words&quot;</span><span class="p">:</span>
@@ -543,12 +565,16 @@
     <span class="k">return</span> <span class="n">validation_bool</span></div>
 
 
-<div class="viewcode-block" id="multiple_methods_validating_pdf_via_filename"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.multiple_methods_validating_pdf_via_filename">[docs]</a><span class="k">def</span> <span class="nf">multiple_methods_validating_pdf_via_filename</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<div class="viewcode-block" id="multiple_methods_validating_pdf_via_filename"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.multiple_methods_validating_pdf_via_filename">[docs]</a><span class="k">def</span> <span class="nf">multiple_methods_validating_pdf_via_filename</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span><span class="p">,</span>
+                                                 <span class="n">pdf_reader</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pdftotext&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is</span>
-<span class="sd">    validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file</span>
+<span class="sd">    validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file. pdf_reader</span>
+<span class="sd">    options are pdftotext or pymupdf.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    pdf_reader : str</span>
+<span class="sd">        This is python pdf reader package which convert pdf to text.</span>
 <span class="sd">    pdf_file_path : str</span>
 <span class="sd">        the path of the pdf file.</span>
 <span class="sd">    pages : str</span>
@@ -564,30 +590,25 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># percentage_matched = 0</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">,</span> <span class="n">pages</span><span class="p">,</span> <span class="n">pdf_reader</span><span class="p">)</span>
     <span class="c1"># print(text)</span>
-    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_pdf_filename_from_path</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">)</span>
+    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_filename_from_path</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">)</span>
 
-    <span class="n">validation_bool</span> <span class="o">=</span> <span class="n">exact_words_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;exact_words&quot;</span>
-    <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">words_percentage_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;words_percentage&quot;</span>
-    <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span> <span class="o">=</span> <span class="n">jumbled_words_percentage_checker_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">validation_bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;jumbled_words_percentage&quot;</span>
-
-    <span class="c1"># print(validation_bool)</span>
-    <span class="k">return</span> <span class="n">validation_bool</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span></div>
+    <span class="k">return</span> <span class="n">multiple_methods_validating_words_string_in_text</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="validating_multiple_pdfs_via_filenames"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.validating_multiple_pdfs_via_filenames">[docs]</a><span class="k">def</span> <span class="nf">validating_multiple_pdfs_via_filenames</span><span class="p">(</span><span class="n">list_of_pdf_files_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<div class="viewcode-block" id="validating_multiple_pdfs_via_filenames"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.validating_multiple_pdfs_via_filenames">[docs]</a><span class="k">def</span> <span class="nf">validating_multiple_pdfs_via_filenames</span><span class="p">(</span><span class="n">list_of_pdf_files_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">pages</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span><span class="p">,</span>
+                                           <span class="n">pdf_reader</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pdftotext&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This function checks pdf files in list_of_pdf_files_path and validate them with function named</span>
-<span class="sd">    &#39;validating_pdf_via_filename&#39;. Example - multiple pdf file name -&gt; check in -&gt; text of pdf file</span>
+<span class="sd">    &#39;validating_pdf_via_filename&#39;. Example - multiple pdf file name -&gt; check in -&gt; text of pdf file.</span>
+<span class="sd">    pdf_reader options are pdftotext or pymupdf.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    pages : str</span>
+<span class="sd">        This could be &#39;all&#39; to get full text of pdf and &#39;first&#39; for first page of pdf.</span>
+<span class="sd">    pdf_reader : str</span>
+<span class="sd">        This is python pdf reader package which convert pdf to text.</span>
 <span class="sd">    list_of_pdf_files_path : list</span>
 <span class="sd">        the list of the path of the pdf file.</span>
 
@@ -596,6 +617,7 @@
 <span class="sd">    tuple</span>
 <span class="sd">        validated_pdf_list - contains name of pdf files whose filename is in the pdf text</span>
 <span class="sd">        invalidated_pdf_list - list of name of files which can&#39;t be included in validated_pdf_list</span>
+<span class="sd">        manual_pdf_list - list of files which can&#39;t be opened using python pdf reader or errors opening them.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">validated_pdf_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -604,15 +626,16 @@
 
     <span class="k">for</span> <span class="n">article_name_path</span> <span class="ow">in</span> <span class="n">list_of_pdf_files_path</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">value</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="n">multiple_methods_validating_pdf_via_filename</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
+            <span class="n">value</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="n">multiple_methods_validating_pdf_via_filename</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">,</span>
+                                                                                              <span class="n">pages</span><span class="p">,</span> <span class="n">pdf_reader</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
                 <span class="c1"># print(&quot;validated&quot;)</span>
-                <span class="n">validated_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
+                <span class="n">validated_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">article_name_path</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">methods</span><span class="p">])</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
                 <span class="c1"># print(&quot;invalidated&quot;)</span>
-                <span class="n">invalidated_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="n">manual_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name_path</span><span class="p">)</span>
+                <span class="n">invalidated_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">article_name_path</span><span class="p">,</span> <span class="n">percentage_matched</span><span class="p">,</span> <span class="n">methods</span><span class="p">])</span>
+        <span class="k">except</span> <span class="n">pdftotext</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+            <span class="n">manual_pdf_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">article_name_path</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">validated_pdf_list</span><span class="p">,</span> <span class="n">invalidated_pdf_list</span><span class="p">,</span> <span class="n">manual_pdf_list</span></div>
 
@@ -681,6 +704,75 @@
         <span class="k">elif</span> <span class="n">validation_bool</span><span class="p">:</span>
             <span class="n">downloaded_articles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">missing_articles</span><span class="p">,</span> <span class="n">downloaded_articles</span></div>
+
+
+<div class="viewcode-block" id="getting_article_paths_from_validation_detail"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.getting_article_paths_from_validation_detail">[docs]</a><span class="k">def</span> <span class="nf">getting_article_paths_from_validation_detail</span><span class="p">(</span><span class="n">list_of_validation</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Getting the first element from list of lists.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_of_validation : list</span>
+<span class="sd">        This list contain list of three values where the first is article path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This output list contains the articles paths</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">article_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">list_of_validation</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">article_list</span></div>
+
+
+<div class="viewcode-block" id="validating_pdfs_using_multiple_pdf_reader"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.validating_pdfs_using_multiple_pdf_reader">[docs]</a><span class="k">def</span> <span class="nf">validating_pdfs_using_multiple_pdf_reader</span><span class="p">(</span><span class="n">pdfs_parent_dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function uses two python readers pdftotext and pymupdf for validating if the filename are present inside of</span>
+<span class="sd">    pdf file text.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pdfs_parent_dir_path : str</span>
+<span class="sd">        This is the parent directory of all the downloaded pdfs.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        validated_pdf_list - contains name of pdf files whose filename is in the pdf text</span>
+<span class="sd">        invalidated_pdf_list - list of name of files which can&#39;t be included in validated_pdf_list</span>
+<span class="sd">        manual_pdf_list - list of files which can&#39;t be opened using python pdf reader or errors opening them.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">articles_paths</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">extract_files_path_from_directories_or_subdirectories</span><span class="p">(</span>
+        <span class="n">pdfs_parent_dir_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total number of articles: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">articles_paths</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">validated_list</span><span class="p">,</span> <span class="n">invalidated_list</span><span class="p">,</span> <span class="n">manual_list</span> <span class="o">=</span> <span class="n">validating_multiple_pdfs_via_filenames</span><span class="p">(</span><span class="n">articles_paths</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using pdftotext reader to validate:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of validated articles : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validated_list</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Number of invalidated articles : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">invalidated_list</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2"> &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Number of articles to open manually: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">manual_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;validating invalidated articles using other pdf reader.&quot;</span><span class="p">)</span>
+
+    <span class="n">temp_invalidated_list</span><span class="p">,</span> <span class="n">temp_manual_list</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">invalidated_list</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">temp_invalidated_list</span> <span class="o">=</span> <span class="n">getting_article_paths_from_validation_detail</span><span class="p">(</span><span class="n">invalidated_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">manual_list</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">temp_manual_list</span> <span class="o">=</span> <span class="n">getting_article_paths_from_validation_detail</span><span class="p">(</span><span class="n">manual_list</span><span class="p">)</span>
+    <span class="n">invalidated_list</span> <span class="o">=</span> <span class="n">temp_invalidated_list</span> <span class="o">+</span> <span class="n">temp_manual_list</span>
+    <span class="n">temp_validated_list</span><span class="p">,</span> <span class="n">temp_invalidated_list</span><span class="p">,</span> <span class="n">temp_manual_list</span> <span class="o">=</span> <span class="n">validating_multiple_pdfs_via_filenames</span><span class="p">(</span>
+        <span class="n">invalidated_list</span><span class="p">,</span> <span class="n">pdf_reader</span><span class="o">=</span><span class="s2">&quot;pymupdf&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using pymupdf reader to validate:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of validated articles : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_validated_list</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Number of invalidated articles : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_invalidated_list</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2"> &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Number of articles to open manually: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_manual_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">validated_list</span> <span class="o">+=</span> <span class="n">temp_validated_list</span>
+    <span class="n">invalidated_list</span> <span class="o">=</span> <span class="n">temp_invalidated_list</span>
+    <span class="n">manual_list</span> <span class="o">=</span> <span class="n">temp_manual_list</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finally, using both python pdf readers:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of validated articles : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validated_list</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Number of invalidated articles : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">invalidated_list</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2"> &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Number of articles to open manually: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">manual_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">validated_list</span><span class="p">,</span> <span class="n">invalidated_list</span><span class="p">,</span> <span class="n">manual_list</span></div>
 
 
 <div class="viewcode-block" id="manual_validating_of_pdf"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.validation.manual_validating_of_pdf">[docs]</a><span class="k">def</span> <span class="nf">manual_validating_of_pdf</span><span class="p">(</span><span class="n">articles_path_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">manual_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>

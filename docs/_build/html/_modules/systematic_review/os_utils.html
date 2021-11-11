@@ -202,12 +202,12 @@
     <span class="k">return</span> <span class="n">tail</span> <span class="ow">or</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">head</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_pdf_filename_from_path"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.os_utils.get_pdf_filename_from_path">[docs]</a><span class="k">def</span> <span class="nf">get_pdf_filename_from_path</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="get_filename_from_path"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.os_utils.get_filename_from_path">[docs]</a><span class="k">def</span> <span class="nf">get_filename_from_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Returns the pdf filename from pdf filepath.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pdf_file_path : str</span>
+<span class="sd">    file_path : str</span>
 <span class="sd">        This is the file path of the pdf file.</span>
 
 <span class="sd">    Returns</span>
@@ -216,8 +216,9 @@
 <span class="sd">        Filename of the pdf file.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pdf_file_name</span> <span class="o">=</span> <span class="n">get_path_leaf</span><span class="p">(</span><span class="n">pdf_file_path</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pdf_file_name</span></div>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">get_path_leaf</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">file_name</span></div>
 
 
 <div class="viewcode-block" id="get_all_filenames_in_dir"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.os_utils.get_all_filenames_in_dir">[docs]</a><span class="k">def</span> <span class="nf">get_all_filenames_in_dir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>

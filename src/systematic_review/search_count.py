@@ -102,7 +102,7 @@ def construct_search_keywords_dictionary(keywords_list: list, default_string: st
     return grouped_keywords_dictionary
 
 
-def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, all_unique_keywords: bool = False) -> dict:
+def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, unique_keywords: bool = True) -> dict:
     """
     This takes keywords from {keyword_group_name: keywords,...} dict and remove symbols with spaces. it then convert
     them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:
@@ -110,7 +110,7 @@ def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, all
 
     Parameters
     ----------
-    all_unique_keywords : bool
+    unique_keywords : bool
         provide option to make keywords in all groups unique.
     grouped_keywords_dictionary : dict
         This is the input dictionary of keywords used for systematic review.
@@ -128,7 +128,7 @@ def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, all
     for keyword_group_name, keywords in grouped_keywords_dictionary.items():
         preprocessed_string = string_manipulation.preprocess_string(keywords)
         preprocessed_clean_keywords = string_manipulation.split_words_remove_duplicates(preprocessed_string.split()) if \
-            all_unique_keywords else preprocessed_string.split()
+            unique_keywords else preprocessed_string.split()
         preprocessed_clean_grouped_keywords_dictionary[keyword_group_name] = preprocessed_clean_keywords
     return preprocessed_clean_grouped_keywords_dictionary
 
@@ -212,8 +212,9 @@ def preprocess_searched_keywords(grouped_keywords_dictionary: dict, all_unique_k
         'risk' is removed from keyword_group_2.
 
     """
-    preprocessed_keywords = preprocess_search_keywords_dictionary(grouped_keywords_dictionary, all_unique_keywords)
-    preprocessed_clean_grouped_keywords_dict = remove_duplicates_keywords_from_next_groups(preprocessed_keywords)
+    preprocessed_keywords = preprocess_search_keywords_dictionary(grouped_keywords_dictionary)
+    preprocessed_clean_grouped_keywords_dict = remove_duplicates_keywords_from_next_groups(preprocessed_keywords) if \
+        all_unique_keywords else preprocessed_keywords
     return preprocessed_clean_grouped_keywords_dict
 
 

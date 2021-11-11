@@ -178,6 +178,106 @@
 This module contains functions which changes format or get details from citations. It also include functions to fix some
 typos.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.add_citation_text_column">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">add_citation_text_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe_object</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'title'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstract_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'abstract'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'keywords'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#add_citation_text_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.add_citation_text_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>This takes dataframe of citations and return the full text comprises of “title”, “abstract”, “keywords”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe_object</strong> (<em>pandas.DataFrame object</em>) – this is the object of famous python library pandas. for more lemma_info: <a class="reference external" href="https://pandas.pydata.org/docs/">https://pandas.pydata.org/docs/</a></p></li>
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title</p></li>
+<li><p><strong>abstract_column_name</strong> (<em>str</em>) – This is the name of column which contain citation abstract</p></li>
+<li><p><strong>keyword_column_name</strong> (<em>str</em>) – This is the name of column which contain citation keywords</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this is dataframe_object comprises of full text column.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.add_multiple_sources_column">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">add_multiple_sources_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citation_dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">['title',</span> <span class="pre">'year']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#add_multiple_sources_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.add_multiple_sources_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function check if citations or article title is available at more than one sources and add column named
+‘multiple_sources’ to the dataframe with list of name of sources names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>citation_dataframe</strong> (<em>pandas.DataFrame object</em>) – Input dataset which contains citations or article title with sources more than one.</p></li>
+<li><p><strong>group_by</strong> (<em>list</em>) – column label or sequence of labels, optional Only consider certain columns for citations or article title with
+sources more than one, by default use all of the columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame with additional column with list of sources names</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.add_preprocess_column">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">add_preprocess_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe_object</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'title'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#add_preprocess_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.add_preprocess_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes dataframe and column name to apply preprocess function from string_manipulation module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe_object</strong> (<em>pandas.DataFrame object</em>) – This is object with column containing column which needs to be preprocessed.</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – This is the name of the column of dataframe.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame with additional column with preprocessed column.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.complete_citations_dataframe">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">complete_citations_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_files_parent_folder_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#complete_citations_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.complete_citations_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes citation step.
+This function load all the citations from path, add required columns for next steps, and remove duplicates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>citations_files_parent_folder_path</strong> (<em>str</em>) – this is the path of parent folder of where citations files exists.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame with additional columns needed for next steps of systematic review and duplicates are removed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.complete_citations_list">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">complete_citations_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_files_parent_folder_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#complete_citations_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.complete_citations_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes citation step.
+This function load all the citations from path, add required columns for next steps, and remove duplicates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>citations_files_parent_folder_path</strong> (<em>str</em>) – this is the path of parent folder of where citations files exists.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list with additional columns needed for next steps of systematic review and duplicates are removed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.citation.csv_citations_to_ris_converter">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">csv_citations_to_ris_converter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output_ris_file.ris'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'csv'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#csv_citations_to_ris_converter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.csv_citations_to_ris_converter" title="Permalink to this definition">¶</a></dt>
 <dd><p>This asks for columns name from csv and then convert the csv to ris format.</p>
@@ -185,7 +285,7 @@ typos.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_file_path</strong> (<em>str</em>) – this is the path of input file</p></li>
-<li><p><strong>output_filename</strong> (<em>str</em>) – this is the name of the output ris file with extension.</p></li>
+<li><p><strong>output_filename</strong> (<em>str</em>) – this is the name of the output ris file with extension. output file path is also valid choice.</p></li>
 <li><p><strong>input_file_type</strong> (<em>str</em>) – this function default is csv but excel is also supported by putting ‘excel’</p></li>
 </ul>
 </dd>
@@ -194,6 +294,76 @@ typos.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.drop_columns_based_on_column_name_list">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">drop_columns_based_on_column_name_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#drop_columns_based_on_column_name_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.drop_columns_based_on_column_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function drop columns based on the column name in the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pandas.DataFrame object</em>) – This dataframe contains columns which we want to drop or remove.</p></li>
+<li><p><strong>column_name_list</strong> (<em>list</em>) – This is the name of dataframe columns to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame with columns mentioned in column_name_list removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.drop_duplicates_citations">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">drop_duplicates_citations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citation_dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">['title',</span> <span class="pre">'year']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'last'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_reset</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#drop_duplicates_citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.drop_duplicates_citations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time
+indexes are ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_reset</strong> (<em>bool</em>) – It</p></li>
+<li><p><strong>citation_dataframe</strong> (<em>pandas.DataFrame object</em>) – Input dataset which contains duplicate rows</p></li>
+<li><p><strong>subset</strong> (<em>list</em>) – column label or sequence of labels, optional Only consider certain columns for identifying duplicates, by
+default use all of the columns.</p></li>
+<li><p><strong>keep</strong> (<em>str</em>) – options includes {‘first’, ‘last’, False}, default ‘first’. Determines which duplicates (if any) to keep.
+- <code class="docutils literal notranslate"><span class="pre">first</span></code> : Drop duplicates except for the first occurrence.
+- <code class="docutils literal notranslate"><span class="pre">last</span></code> : Drop duplicates except for the last occurrence.
+- False : Drop all duplicates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame with duplicates removed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.citation.drop_keywords_count_columns">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">drop_keywords_count_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#drop_keywords_count_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.drop_keywords_count_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>removes columns created based on the keywords.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pandas.DataFrame object</em>) – This dataframe contains keywords columns which we want to drop or remove.</p></li>
+<li><p><strong>keywords</strong> (<em>dict</em>) – This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+group can not be found in any other keyword group.
+Example - {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”], ‘keyword_group_2’:
+[“corporate”, “pricing”],…}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame with keywords columns removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -222,26 +392,8 @@ citation, replace ‘DO’ with other ris classifiers such as TY, JO etc.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="systematic_review.citation.get_citation_text_from_dataframe">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">get_citation_text_from_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe_object</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#get_citation_text_from_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.get_citation_text_from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>This takes dataframe of citations and return the full text comprises of “primary_title”, “notes_abstract”,
-“keywords”</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dataframe_object</strong> (<em>pandas.DataFrame object</em>) – this is the object of famous python library pandas. for more lemma_info: <a class="reference external" href="https://pandas.pydata.org/docs/">https://pandas.pydata.org/docs/</a></p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>this is dataframe comprises of full text</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.citation.get_details_of_all_article_name_from_citations">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">get_details_of_all_article_name_from_citations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filtered_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_name_citations_path_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doi_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#get_details_of_all_article_name_from_citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.get_details_of_all_article_name_from_citations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">get_details_of_all_article_name_from_citations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filtered_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_name_citations_path_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doi_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#get_details_of_all_article_name_from_citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.get_details_of_all_article_name_from_citations" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function searches source names, doi, and url for all articles in filtered_list_of_dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,6 +402,7 @@ citation, replace ‘DO’ with other ris classifiers such as TY, JO etc.</p>
 <li><p><strong>sources_name_citations_path_list_of_dict</strong> (<em>list</em>) – This is the list of all the sources names and it’s citations at dir_path.
 Examples - {‘sources_name’: ‘all source articles citations’, …}</p></li>
 <li><p><strong>doi_url</strong> (<em>bool</em>) – This signify if we want to get the value of url and doi from citation</p></li>
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -263,7 +416,7 @@ Examples - {‘sources_name’: ‘all source articles citations’, …}</p></l
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.citation.get_details_via_article_name_from_citations">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">get_details_via_article_name_from_citations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">article_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_name_citations_path_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doi_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#get_details_via_article_name_from_citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.get_details_via_article_name_from_citations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.citation.</span></span><span class="sig-name descname"><span class="pre">get_details_via_article_name_from_citations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">article_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_name_citations_path_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doi_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/systematic_review/citation.html#get_details_via_article_name_from_citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.get_details_via_article_name_from_citations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate through citations and find article_name and put source_name in column, with doi and url being optional</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -272,6 +425,7 @@ Examples - {‘sources_name’: ‘all source articles citations’, …}</p></l
 <li><p><strong>sources_name_citations_path_list_of_dict</strong> (<em>list</em>) – This is the list of all the sources names and it’s citations at dir_path.
 Examples - {‘sources_name’: ‘all source articles citations’, …}</p></li>
 <li><p><strong>doi_url</strong> (<em>bool</em>) – This signify if we want to get the value of url and doi from citation</p></li>
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -331,35 +485,18 @@ Examples - {‘sources_name’: ‘all source articles citations’, …}</p></l
 This module contains functions related to files and data type conversion. such as list to txt file, pandas df to list of
 dicts and many more.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="systematic_review.converter.convert_dataframe_to_list_of_dicts">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">convert_dataframe_to_list_of_dicts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#convert_dataframe_to_list_of_dicts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.convert_dataframe_to_list_of_dicts" title="Permalink to this definition">¶</a></dt>
-<dd><p>converts pandas dataframe to the list of dictionaries.</p>
+<dt class="sig sig-object py" id="systematic_review.converter.data_type_of_dict_values">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">data_type_of_dict_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#data_type_of_dict_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.data_type_of_dict_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>This provide the data type of dictionary values by outputting dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pd.DataFrame</strong> – This is the pandas dataframe consisted of all data from dictionaries converted into respective rows.</p>
+<dd class="field-odd"><p><strong>dictionary</strong> (<em>dict</em>) – This is the dictionary which contains different types of object in values. Example - {“first”: [2, 5], “sec”: 3}</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>This list contains the dictionaries inside as elements. Example - [{‘primary_title’ : “this is the title”}]</p>
+<dd class="field-even"><p>This will output {“&lt;class ‘list’&gt;”: [“first”], “&lt;class ‘int’&gt;”: [“sec”]}</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="systematic_review.converter.convert_list_of_dicts_to_dataframe">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">convert_list_of_dicts_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_dicts</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#convert_list_of_dicts_to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.convert_list_of_dicts_to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>converts the list of dictionaries to pandas dataframe.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>list_of_dicts</strong> (<em>list</em>) – This list contains the dictionaries inside as elements. Example - [{‘primary_title’ : “this is the title”}]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>This is the pandas dataframe consisted of all data from dictionaries converted into respective rows.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -375,6 +512,23 @@ dicts and many more.</p>
 <li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .csv extension</p></li>
 <li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output csv file or not.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.converter.dataframe_to_list_of_dicts">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">dataframe_to_list_of_dicts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#dataframe_to_list_of_dicts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.dataframe_to_list_of_dicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts pandas dataframe to the list of dictionaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pd.DataFrame</strong> – This is the pandas dataframe consisted of all data from dictionaries converted into respective rows.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This list contains the dictionaries inside as elements. Example - [{‘primary_title’ : “this is the title”}]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -420,11 +574,12 @@ dicts and many more.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.converter.get_text_from_pdf">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">get_text_from_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#get_text_from_pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.get_text_from_pdf" title="Permalink to this definition">¶</a></dt>
-<dd><p>This Function try to get text from pdf files using pdftotext or pymupdf. It raises no exception.</p>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">get_text_from_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_reader</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pdftotext'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#get_text_from_pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.get_text_from_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Function get text from pdf files using pdftotext or pymupdf.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>pdf_reader</strong> (<em>str</em>) – This is python pdf reader package which convert pdf to text.</p></li>
 <li><p><strong>pdf_file_path</strong> (<em>str</em>) – This is the path of pdf file.</p></li>
 <li><p><strong>pages</strong> (<em>str</em>) – This could be ‘all’ to get full text of pdf and ‘first’ for first page of pdf.</p></li>
 </ul>
@@ -479,6 +634,23 @@ dicts and many more.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.converter.list_of_dicts_to_dataframe">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">list_of_dicts_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_dicts</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#list_of_dicts_to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.list_of_dicts_to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts the list of dictionaries to pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_dicts</strong> (<em>list</em>) – This list contains the dictionaries inside as elements. Example - [{‘primary_title’ : “this is the title”}]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the pandas dataframe consisted of all data from dictionaries converted into respective rows.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.converter.list_to_string">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">list_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#list_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.list_to_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>This converts list to text_string and put each element in new line.</p>
@@ -512,6 +684,40 @@ dicts and many more.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.converter.load_multiple_ris_citations_files">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">load_multiple_ris_citations_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_files_parent_folder_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#load_multiple_ris_citations_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.load_multiple_ris_citations_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function loads all ris citations files from folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>citations_files_parent_folder_path</strong> (<em>str</em>) – this is the path of parent folder of where citations files exists.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this is list of citations dicts inclusive of all citation files.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.converter.load_multiple_ris_citations_files_to_dataframe">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">load_multiple_ris_citations_files_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_files_parent_folder_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#load_multiple_ris_citations_files_to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.load_multiple_ris_citations_files_to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function loads all ris citations files from folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>citations_files_parent_folder_path</strong> (<em>str</em>) – this is the path of parent folder of where citations files exists.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this is dataframe of citations dicts inclusive of all citation files.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -551,13 +757,104 @@ For more lemma_info on ris format, visit: <a class="reference external" href="ht
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.converter.try_convert_dataframe_column_elements_to_list">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">try_convert_dataframe_column_elements_to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/converter.html#try_convert_dataframe_column_elements_to_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.try_convert_dataframe_column_elements_to_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>try statement for converting each element of dataframe column to list object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pd.DataFrame</em>) – The dataframe with column to convert into list</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – Name of column for conversion</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is list with each element of type list.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.converter.unpack_list_of_lists">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">unpack_list_of_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_lists</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#unpack_list_of_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.unpack_list_of_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>unpack list consisting of other list to output list which will include all elements from other lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_lists</strong> (<em>list</em>) – this is list consisting of elements and lists. example [“first_element”, [“second_element”]]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the resultant list consisting of only elements. example [“first_element”, “second_element”]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-systematic_review.filter_sort">
 <span id="systematic-review-filter-sort-module"></span><h2>systematic_review.filter_sort module<a class="headerlink" href="#module-systematic_review.filter_sort" title="Permalink to this headline">¶</a></h2>
 <p>Module: filter_sort
-Description for filter: we have 3 types of keywords and I want to include all those with same kind of condition such as
-keywords &gt;= some values and filter them until I have required number of articles that I can manually read and filter.</p>
+Description for filter: each searched keywords group can be used to filter using conditions such as
+searched keywords &gt;= some count values and filter them until you have required number of articles that can be manually read and filter.</p>
 <p>Description for sort: This converts the data into sorted manner so it is easier for humans to understand.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.filter_sort.dataframe_sorting_criterion_list">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">dataframe_sorting_criterion_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_grouped_keywords_counts_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting_keywords_criterion_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#dataframe_sorting_criterion_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.dataframe_sorting_criterion_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide a sorting criterion list for dataframe columns. put citations columns to the left and keyword counts on
+the right. On making reverse equal to true it put keywords on the left.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reverse</strong> (<em>bool</em>) – default to False to output citations columns to the left and keyword counts on the right. On True it does
+opposite.</p></li>
+<li><p><strong>citations_grouped_keywords_counts_df</strong> (<em>pd.DataFrame</em>) – This dataframe contains all columns with counts of keywords.</p></li>
+<li><p><strong>sorting_keywords_criterion_list</strong> (<em>list</em>) – This is the sorting criterion list which contains column in logical manner we desire.It contains
+total_keywords, group_keywords_counts, and keywords_counts in the last.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the dataframe sorting criterion list which contains column in logical manner we desire. It contains
+citations details in the left while total_keywords, group_keywords_counts, and keywords_counts in the right.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.filter_sort.filter_and_sort">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">filter_and_sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_grouped_keywords_counts_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#filter_and_sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.filter_and_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute filter and sort step.
+creates sorting criterion list, sort the dataframe based on the sorting criterion list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>required_number</strong> (<em>int</em>) – This is the least number of documents we want.</p></li>
+<li><p><strong>citations_grouped_keywords_counts_df</strong> (<em>pd.DataFrame</em>) – This dataframe contains all columns with counts of keywords.</p></li>
+<li><p><strong>preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+group can not be found in any other keyword group.
+Example - {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”], ‘keyword_group_2’:
+[“corporate”, “pricing”],…}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>This is the sorted dataframe which contains columns in this sequential manner. It contains citation df,</dt><dd><p>total_keywords, group_keywords_counts, and keywords_counts in the last.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.filter_sort.filter_dataframe_on_keywords_group_name_count">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe_on_keywords_group_name_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_grouped_keywords_counts_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">common_word</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'_count'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'suffix'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#filter_dataframe_on_keywords_group_name_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.filter_dataframe_on_keywords_group_name_count" title="Permalink to this definition">¶</a></dt>
@@ -654,9 +951,33 @@ total_keywords, group_keywords_counts, and keywords_counts in the last.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.filter_sort.get_sorting_keywords_criterion_list">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">get_sorting_keywords_criterion_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#get_sorting_keywords_criterion_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.get_sorting_keywords_criterion_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>This sorting criteria list is based on the keywords got from the main input keywords. It contains total_keywords,
+group_keywords_counts, keywords_counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unique_preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – his is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+group can not be found in any other keyword group.
+Example - {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”], ‘keyword_group_2’:
+[“corporate”, “pricing”],…}.
+‘risk’ is removed from keyword_group_2.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the sorting criterion list which contains column in logical manner we desire. It contains
+total_keywords, group_keywords_counts, and keywords in the last.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.filter_sort.manually_check_filter_by_min_limit_changes">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">manually_check_filter_by_min_limit_changes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_grouped_keywords_counts_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_number_of_articles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addition</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#manually_check_filter_by_min_limit_changes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.manually_check_filter_by_min_limit_changes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>manual method to check number of articles based on changing min_limit.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>citations_grouped_keywords_counts_df</strong> (<em>pd.DataFrame</em>) – This is input dataframe which contains some columns which have prefix or suffix in names.</p></li>
@@ -671,6 +992,31 @@ total_keywords, group_keywords_counts, and keywords_counts in the last.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.filter_sort.return_finding_near_required_article_by_changing_min_limit_while_loop">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">return_finding_near_required_article_by_changing_min_limit_while_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_grouped_keywords_counts_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_number_of_articles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#return_finding_near_required_article_by_changing_min_limit_while_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.return_finding_near_required_article_by_changing_min_limit_while_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function increases the min_limit value to reach unto required_number_of_articles. this function return the
+min_limit value of exact required_number_of_articles can be extracted from dataframe else it provide the lower and
+upper limit of min_limit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>citations_grouped_keywords_counts_df</strong> (<em>pd.DataFrame</em>) – This is input dataframe which contains some columns which have prefix or suffix in names.</p></li>
+<li><p><strong>required_number_of_articles</strong> (<em>int</em>) – This is the number of articles you want after filtration process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This tuple consists of following values in same order
+exact match values: min_limit, total_articles_rows
+lower_info : min_limit, lower_total_articles_rows
+upper_info : min_limit, upper_total_articles_rows</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -707,13 +1053,13 @@ upper_info : min_limit, upper_total_articles_rows</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.filter_sort.sort_citations_grouped_keywords_counts_df">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">sort_citations_grouped_keywords_counts_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_grouped_keywords_counts_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting_criterion_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#sort_citations_grouped_keywords_counts_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.sort_citations_grouped_keywords_counts_df" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">sort_citations_grouped_keywords_counts_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_grouped_keywords_counts_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting_keywords_criterion_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#sort_citations_grouped_keywords_counts_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.sort_citations_grouped_keywords_counts_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function sort the dataframe based on the sorting criterion list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>citations_grouped_keywords_counts_df</strong> (<em>pd.DataFrame</em>) – This dataframe contains all columns with counts of keywords.</p></li>
-<li><p><strong>sorting_criterion_list</strong> (<em>list</em>) – This is the sorting criterion list which contains column in logical manner we desire.It contains
+<li><p><strong>sorting_keywords_criterion_list</strong> (<em>list</em>) – This is the sorting criterion list which contains column in logical manner we desire.It contains
 total_keywords, group_keywords_counts, and keywords_counts in the last.</p></li>
 </ul>
 </dd>
@@ -723,6 +1069,27 @@ total_keywords, group_keywords_counts, and keywords_counts in the last.</p></li>
 <li><p><em>group_keywords_counts, and keywords_counts in the last.</em></p></li>
 </ul>
 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.filter_sort.sort_dataframe_based_on_column">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">sort_dataframe_based_on_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ascending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#sort_dataframe_based_on_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.sort_dataframe_based_on_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>sort the dataframe based on column values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ascending</strong> (<em>bool</em>) – This decide increasing or decreasing order of sort. default to ascending a-z, 1-9.</p></li>
+<li><p><strong>dataframe</strong> (<em>pd.DataFrame</em>) – This is unsorted dataframe.</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – This is the name of column which is used to sort the dataframe.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is sorted dataframe based on column_name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -936,6 +1303,23 @@ This module contains functions related to getting directories, files, and filena
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.os_utils.get_filename_from_path">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.os_utils.</span></span><span class="sig-name descname"><span class="pre">get_filename_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/systematic_review/os_utils.html#get_filename_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.os_utils.get_filename_from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the pdf filename from pdf filepath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – This is the file path of the pdf file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Filename of the pdf file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.os_utils.get_path_leaf">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.os_utils.</span></span><span class="sig-name descname"><span class="pre">get_path_leaf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/systematic_review/os_utils.html#get_path_leaf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.os_utils.get_path_leaf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract file name from path.
@@ -946,23 +1330,6 @@ for more details visit: <a class="reference external" href="https://stackoverflo
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>This is name of file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="systematic_review.os_utils.get_pdf_filename_from_path">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.os_utils.</span></span><span class="sig-name descname"><span class="pre">get_pdf_filename_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/systematic_review/os_utils.html#get_pdf_filename_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.os_utils.get_pdf_filename_from_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the pdf filename from pdf filepath.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pdf_file_path</strong> (<em>str</em>) – This is the file path of the pdf file.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Filename of the pdf file.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -995,6 +1362,41 @@ files.</p>
 This module contains all necessary functions for searching the citations, articles text and count number of keywords
 present.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.adding_citation_details_with_keywords_count_in_pdf_full_text">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">adding_citation_details_with_keywords_count_in_pdf_full_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_sorted_citations_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_full_text_search_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'cleaned_title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#adding_citation_details_with_keywords_count_in_pdf_full_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.adding_citation_details_with_keywords_count_in_pdf_full_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combining the pdf keywords counts with the citation details from filtered and sorted citation full text
+dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title.</p></li>
+<li><p><strong>filter_sorted_citations_df</strong> (<em>pandas.DataFrame object</em>) – <dl class="simple">
+<dt>This is the sorted dataframe which contains columns in this sequential manner. It contains citation df,</dt><dd><p>total_keywords, group_keywords_counts, and keywords_counts in the last.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>pdf_full_text_search_count</strong> (<em>list</em>) – This is the list of all citations search result which contains our all keywords count.
+Examples - [{‘article’: ‘article_name’, ‘total_keywords’: count, ‘keyword_group_1_count’: count,
+“management”: count, “investing: count”, “risk: count”, ‘keyword_group_2_count’: count, “corporate”: count,
+“pricing”: count,…}]</p></li>
+<li><p><strong>unique_preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+group can not be found in any other keyword group.
+Example - {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”], ‘keyword_group_2’:
+[“corporate”, “pricing”],…}.
+‘risk’ is removed from keyword_group_2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This dataframe contains citations details from filtered and sorted citation full text dataframe and keywords
+counts from searching in pdf file text.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.search_count.adding_dict_key_or_increasing_value">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">adding_dict_key_or_increasing_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dict_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/search_count.html#adding_dict_key_or_increasing_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.adding_dict_key_or_increasing_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase the value of dict(key:value) by step using key. If key not present then it get initialised with default
@@ -1013,6 +1415,56 @@ dict value</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.citation_list_of_dict_search_count_to_df">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">citation_list_of_dict_search_count_to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#citation_list_of_dict_search_count_to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.citation_list_of_dict_search_count_to_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop over articles to calculate keywords counts and return dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>citations_list</strong> (<em>list</em>) – list with additional columns needed for next steps of systematic review and duplicates are removed</p></li>
+<li><p><strong>keywords</strong> (<em>dict</em>) – This is output dictionary which contains processed non-duplicate keywords dict.
+Example - {‘keyword_group_name’: [“management”, “investing”, “corporate”, “pricing”, “risk”, “pre”,
+“process”],…}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is pandas object of all citations search result which contains our all keywords count.
+Examples - [{‘primary_title’: ‘name’, ‘total_keywords’: count, ‘keyword_group_1_count’: count,
+“management”: count, “investing: count”, “risk: count”, ‘keyword_group_2_count’: count, “corporate”: count,
+“pricing”: count,…}]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.citation_search_count_dataframe">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">citation_search_count_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#citation_search_count_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.citation_search_count_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop over articles to calculate keywords counts and return dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>citations_df</strong> (<em>pandas.DataFrame object</em>) – DataFrame with additional columns needed for next steps of systematic review and duplicates are removed</p></li>
+<li><p><strong>keywords</strong> (<em>dict</em>) – This is output dictionary which contains processed non-duplicate keywords dict.
+Example - {‘keyword_group_name’: [“management”, “investing”, “corporate”, “pricing”, “risk”, “pre”,
+“process”],…}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is pandas object of all citations search result which contains our all keywords count.
+Examples - [{‘primary_title’: ‘name’, ‘total_keywords’: count, ‘keyword_group_1_count’: count,
+“management”: count, “investing: count”, “risk: count”, ‘keyword_group_2_count’: count, “corporate”: count,
+“pricing”: count,…}]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1044,7 +1496,7 @@ Examples - {‘keyword_group_1’: ‘keyword1 keyword2 keyword3’, ‘keyword_
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.search_count.count_keywords_in_citations_full_text">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">count_keywords_in_citations_full_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe_citations_with_fulltext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#count_keywords_in_citations_full_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.count_keywords_in_citations_full_text" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">count_keywords_in_citations_full_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe_citations_with_fulltext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#count_keywords_in_citations_full_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.count_keywords_in_citations_full_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loop over articles to calculate keywords counts</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1056,6 +1508,36 @@ article name, abstract and keyword.</p></li>
 </dd>
 </dl>
 </p></li>
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the list of all citations search result which contains our all keywords count.
+Examples - [{‘primary_title’: ‘name’, ‘total_keywords’: count, ‘keyword_group_1_count’: count,
+“management”: count, “investing: count”, “risk: count”, ‘keyword_group_2_count’: count, “corporate”: count,
+“pricing”: count,…}]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.count_keywords_in_citations_full_text_list">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">count_keywords_in_citations_full_text_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_with_fulltext_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#count_keywords_in_citations_full_text_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.count_keywords_in_citations_full_text_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop over articles to calculate keywords counts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>citations_with_fulltext_list</strong> (<em>list</em>) – This list contains all the citations details with column named ‘full_text’ containing full text like
+article name, abstract and keyword.</p></li>
+<li><p><strong>unique_preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – <dl class="simple">
+<dt>looks like this {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”],</dt><dd><p>’keyword_group_2’: [“corporate”, “pricing”],…}</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1072,11 +1554,12 @@ Examples - [{‘primary_title’: ‘name’, ‘total_keywords’: count, ‘ke
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.search_count.count_keywords_in_pdf_full_text">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">count_keywords_in_pdf_full_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_downloaded_articles_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#count_keywords_in_pdf_full_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.count_keywords_in_pdf_full_text" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">count_keywords_in_pdf_full_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_downloaded_articles_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'cleaned_title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#count_keywords_in_pdf_full_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.count_keywords_in_pdf_full_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loop over articles pdf files to calculate keywords counts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title</p></li>
 <li><p><strong>list_of_downloaded_articles_path</strong> (<em>list</em>) – This list contains path of all the pdf files contained in directory_path.</p></li>
 <li><p><strong>unique_preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – <dl class="simple">
 <dt>looks like this {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”],</dt><dd><p>’keyword_group_2’: [“corporate”, “pricing”],…}</p>
@@ -1093,6 +1576,44 @@ Examples - [{‘article’: ‘article_name’, ‘total_keywords’: count, ‘
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.count_words_in_list_of_lists">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">count_words_in_list_of_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_lists</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#count_words_in_list_of_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.count_words_in_list_of_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>count words in list containing other lists with words.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_lists</strong> (<em>list</em>) – This list contains each element of type list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary with key as words and value as counts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.creating_keyword_count_dict">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">creating_keyword_count_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/search_count.html#creating_keyword_count_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.creating_keyword_count_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise keyword count dict with value 0 for every keyword.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unique_preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – <dl class="simple">
+<dt>looks like this {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”],</dt><dd><p>’keyword_group_2’: [“corporate”, “pricing”],…}</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This contains key as keyword and value as 0.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1115,20 +1636,76 @@ Examples - [{‘article’: ‘article_name’, ‘total_keywords’: count, ‘
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.pdf_full_text_search_count_dataframe">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">pdf_full_text_search_count_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_downloaded_articles_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'cleaned_title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#pdf_full_text_search_count_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.pdf_full_text_search_count_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop over articles pdf files to calculate keywords counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title</p></li>
+<li><p><strong>list_of_downloaded_articles_path</strong> (<em>list</em>) – This list contains path of all the pdf files contained in directory_path.</p></li>
+<li><p><strong>unique_preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – <dl class="simple">
+<dt>looks like this {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”],</dt><dd><p>’keyword_group_2’: [“corporate”, “pricing”],…}</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the dataframe of all citations search result which contains our all keywords count.
+Examples - [{‘article’: ‘article_name’, ‘total_keywords’: count, ‘keyword_group_1_count’: count,
+“management”: count, “investing: count”, “risk: count”, ‘keyword_group_2_count’: count, “corporate”: count,
+“pricing”: count,…}]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.search_count.preprocess_search_keywords_dictionary">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">preprocess_search_keywords_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grouped_keywords_dictionary</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#preprocess_search_keywords_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.preprocess_search_keywords_dictionary" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">preprocess_search_keywords_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grouped_keywords_dictionary</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_unique_keywords</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#preprocess_search_keywords_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.preprocess_search_keywords_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>This takes keywords from {keyword_group_name: keywords,…} dict and remove symbols with spaces. it then convert
 them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:
 [clean_keywords],…}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>grouped_keywords_dictionary</strong> (<em>dict</em>) – This is the input dictionary of keywords used for systematic review.
-Example - {‘keyword_group_name’: “Management investing corporate pricing risk Risk Pre-process”,…}</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_unique_keywords</strong> (<em>bool</em>) – provide option to make keywords in all groups unique.</p></li>
+<li><p><strong>grouped_keywords_dictionary</strong> (<em>dict</em>) – This is the input dictionary of keywords used for systematic review.
+Example - {‘keyword_group_name’: “Management investing corporate pricing risk Risk Pre-process”,…}</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>This is output dictionary which contains processed non-duplicate keywords dict.
 Example - {‘keyword_group_name’: [“management”, “investing”, “corporate”, “pricing”, “risk”, “pre”,
 “process”],…}</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.preprocess_searched_keywords">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">preprocess_searched_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grouped_keywords_dictionary</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_unique_keywords</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#preprocess_searched_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.preprocess_searched_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove duplicate instances of keywords in other keywords groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_unique_keywords</strong> (<em>bool</em>) – provide option to make keywords in all groups unique.</p></li>
+<li><p><strong>grouped_keywords_dictionary</strong> (<em>dict</em>) – This is the input dictionary of keywords used for systematic review.
+Example - {‘keyword_group_name’: “Management investing corporate pricing risk Risk Pre-process”,…}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+group can not be found in any other keyword group.
+Example - {‘keyword_group_1’: [“management”, “investing”, “risk”, “pre”, “process”], ‘keyword_group_2’:
+[“corporate”, “pricing”],…}
+‘risk’ is removed from keyword_group_2.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -1156,7 +1733,10 @@ Example - {‘keyword_group_name’: [“management”, “investing”, “corp
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.search_count.remove_duplicates_keywords_from_next_groups">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">remove_duplicates_keywords_from_next_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preprocessed_clean_grouped_keywords_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#remove_duplicates_keywords_from_next_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.remove_duplicates_keywords_from_next_groups" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove duplicate instances of keywords in other keywords groups.</p>
+<dd><p>Execute keywords step.
+This takes keywords from {keyword_group_name: keywords,…} dict and remove symbols with spaces. it then convert
+them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:
+[clean_keywords],…} and then Remove duplicate instances of keywords in other keywords groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>preprocessed_clean_grouped_keywords_dict</strong> (<em>dict</em>) – This is output dictionary which contains processed non-duplicate keywords dict.
@@ -1191,6 +1771,28 @@ Example - {‘keyword_group_name’: [“management”, “investing”, “corp
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.search_count.validate_column_details_between_two_record_list">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.search_count.</span></span><span class="sig-name descname"><span class="pre">validate_column_details_between_two_record_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_list_of_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'cleaned_title'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/search_count.html#validate_column_details_between_two_record_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.validate_column_details_between_two_record_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>It produce list of matched columns rows and unmatched column rows based on same column from both.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>first_list_of_dict</strong> (<em>list</em>) – Iterable object pandas.DataFrame or list which contains title_column_name</p></li>
+<li><p><strong>second_list_of_dict</strong> (<em>list</em>) – Iterable object pandas.DataFrame or list which contains title_column_name</p></li>
+<li><p><strong>title_column_name</strong> (<em>str</em>) – This is the name of column which contain citation title.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>matched_list - It contains column’s row which are matched in both data object.
+unmatched_list - It contains column’s row which are unmatched in both data object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1424,6 +2026,26 @@ module default dict with value 1.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.validation.amount_by_percentage">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">amount_by_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#amount_by_percentage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.amount_by_percentage" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the amount of number based on percentage. example- 5% (percentage) of 10 (number) is 0.5 (result).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number</strong> (<em>float</em>) – This is the input number from which we want some percent amount</p></li>
+<li><p><strong>percentage</strong> (<em>float</em>) – This is equivalent to math percentage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is resultant number.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.validation.calculate_percentage">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">calculate_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#calculate_percentage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.calculate_percentage" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate percentage of value in total.</p>
@@ -1567,8 +2189,25 @@ Validated_articles - This is list of validated downloaded articles list.</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.validation.getting_article_paths_from_validation_detail">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">getting_article_paths_from_validation_detail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_validation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#getting_article_paths_from_validation_detail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.getting_article_paths_from_validation_detail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting the first element from list of lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_validation</strong> (<em>list</em>) – This list contain list of three values where the first is article path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This output list contains the articles paths</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.validation.jumbled_words_percentage_checker_in_text">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">jumbled_words_percentage_checker_in_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrong_word_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#jumbled_words_percentage_checker_in_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.jumbled_words_percentage_checker_in_text" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">jumbled_words_percentage_checker_in_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrong_word_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#jumbled_words_percentage_checker_in_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.jumbled_words_percentage_checker_in_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>start calculating percentage if half of words are found in sequence. This also takes in consideration of words
 which got jumbled up due to pdf reading operation.</p>
 <dl class="field-list simple">
@@ -1616,12 +2255,14 @@ external_invalidated_list - This is the list to be saved externally for invalida
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.validation.multiple_methods_validating_pdf_via_filename">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">multiple_methods_validating_pdf_via_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'first'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#multiple_methods_validating_pdf_via_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.multiple_methods_validating_pdf_via_filename" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">multiple_methods_validating_pdf_via_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'first'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_reader</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pdftotext'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#multiple_methods_validating_pdf_via_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.multiple_methods_validating_pdf_via_filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is
-validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file</p>
+validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file. pdf_reader
+options are pdftotext or pymupdf.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>pdf_reader</strong> (<em>str</em>) – This is python pdf reader package which convert pdf to text.</p></li>
 <li><p><strong>pdf_file_path</strong> (<em>str</em>) – the path of the pdf file.</p></li>
 <li><p><strong>pages</strong> (<em>str</em>) – This could be ‘all’ to get full text of pdf and ‘first’ for first page of pdf.</p></li>
 </ul>
@@ -1684,16 +2325,22 @@ is executed to validate.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.validation.validating_multiple_pdfs_via_filenames">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">validating_multiple_pdfs_via_filenames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_pdf_files_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#validating_multiple_pdfs_via_filenames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.validating_multiple_pdfs_via_filenames" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">validating_multiple_pdfs_via_filenames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_pdf_files_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'first'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_reader</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pdftotext'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#validating_multiple_pdfs_via_filenames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.validating_multiple_pdfs_via_filenames" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function checks pdf files in list_of_pdf_files_path and validate them with function named
-‘validating_pdf_via_filename’. Example - multiple pdf file name -&gt; check in -&gt; text of pdf file</p>
+‘validating_pdf_via_filename’. Example - multiple pdf file name -&gt; check in -&gt; text of pdf file.
+pdf_reader options are pdftotext or pymupdf.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>list_of_pdf_files_path</strong> (<em>list</em>) – the list of the path of the pdf file.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pages</strong> (<em>str</em>) – This could be ‘all’ to get full text of pdf and ‘first’ for first page of pdf.</p></li>
+<li><p><strong>pdf_reader</strong> (<em>str</em>) – This is python pdf reader package which convert pdf to text.</p></li>
+<li><p><strong>list_of_pdf_files_path</strong> (<em>list</em>) – the list of the path of the pdf file.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>validated_pdf_list - contains name of pdf files whose filename is in the pdf text
-invalidated_pdf_list - list of name of files which can’t be included in validated_pdf_list</p>
+invalidated_pdf_list - list of name of files which can’t be included in validated_pdf_list
+manual_pdf_list - list of files which can’t be opened using python pdf reader or errors opening them.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple</p>
@@ -1705,7 +2352,8 @@ invalidated_pdf_list - list of name of files which can’t be included in valida
 <dt class="sig sig-object py" id="systematic_review.validation.validating_pdf_via_filename">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">validating_pdf_via_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'first'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'exact_words'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#validating_pdf_via_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.validating_pdf_via_filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function checks name of file and find the name in the text of pdf file. if it become successful then pdf is
-validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file</p>
+validated as downloaded else not downloaded. Example - pdf file name -&gt; check in -&gt; text of pdf file. pdf_reader
+options are pdftotext or pymupdf.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1724,8 +2372,28 @@ validated as downloaded else not downloaded. Example - pdf file name -&gt; check
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.validation.validating_pdfs_using_multiple_pdf_reader">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">validating_pdfs_using_multiple_pdf_reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdfs_parent_dir_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#validating_pdfs_using_multiple_pdf_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.validating_pdfs_using_multiple_pdf_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function uses two python readers pdftotext and pymupdf for validating if the filename are present inside of
+pdf file text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pdfs_parent_dir_path</strong> (<em>str</em>) – This is the parent directory of all the downloaded pdfs.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>validated_pdf_list - contains name of pdf files whose filename is in the pdf text
+invalidated_pdf_list - list of name of files which can’t be included in validated_pdf_list
+manual_pdf_list - list of files which can’t be opened using python pdf reader or errors opening them.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.validation.words_percentage_checker_in_text">
-<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">words_percentage_checker_in_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#words_percentage_checker_in_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.words_percentage_checker_in_text" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">words_percentage_checker_in_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">70</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#words_percentage_checker_in_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.words_percentage_checker_in_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>This  checks for exact match of substring in string and return True or False based on success. It also returns
 matched word percentage.
 Limit: this doesn’t work properly if words_string have duplicate words.</p>
