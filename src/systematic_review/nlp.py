@@ -4,9 +4,10 @@ import the supporting AI model only when they are executed.
 For more Examples and info visit: https://www.machinelearningplus.com/nlp/lemmatization-examples-python/ and
 https://www.machinelearningplus.com/nlp/lemmatization-examples-python/
 """
+from typing import List
 
 
-def remove_stopwords(text: str) -> str:
+def nltk_remove_stopwords(text: str) -> str:
     """Remove unnecessary words such as she, are, of, which, and in.
 
     Parameters
@@ -40,7 +41,7 @@ def remove_stopwords(text: str) -> str:
     return filtered_text
 
 
-def get_lemma_or_lemmatize_text(input_text: str, lemma_info: bool = False) -> str:
+def pattern_lemma_or_lemmatize_text(input_text: str, lemma_info: bool = False) -> str:
     """This return lemma if lemma_info is True else it returns lemmatize text. Uses pattern.en lemma
 
     Parameters
@@ -68,7 +69,11 @@ def get_lemma_or_lemmatize_text(input_text: str, lemma_info: bool = False) -> st
         from pattern.en import parse
         return parse(input_text, lemmata=True, tags=False, chunks=False)
     else:
-        return " ".join([lemma(wd) for wd in input_text.split()])
+        try:
+            output = " ".join([lemma(wd) for wd in input_text.split()])
+        except RuntimeError:
+            output = " ".join([lemma(wd) for wd in input_text.split()])
+    return output
 
 
 def nltk_word_net_lemmatizer(input_text: str) -> str:
@@ -177,7 +182,7 @@ def spacy_lemma(input_text: str) -> str:
     return filtered_text
 
 
-def string_list_filter_lemma(string_list_lower: str) -> str:
+def nltk_remove_stopwords_spacy_lemma(string_list_lower: str) -> List[str]:
     """This function returns lemmatize text of lowercase input string. Uses spacy en_core_web_sm
 
     Parameters
@@ -187,34 +192,14 @@ def string_list_filter_lemma(string_list_lower: str) -> str:
 
     Returns
     -------
-    str
+    List[str]
         This output text contains word-forms which are linguistically valid lemmas.
 
     """
     string_list_lower_filter_lemma = []
     for string in string_list_lower:
-        string_lower_filter = remove_stopwords(string)
+        string_lower_filter = nltk_remove_stopwords(string)
         string_lower_filter_lemma = spacy_lemma(string_lower_filter)
         string_list_lower_filter_lemma.append(str(string_lower_filter_lemma))
     return string_list_lower_filter_lemma
-
-
-def string_lower_lemma(string: str) -> str:
-    """This function returns lemmatize text by first converting input string into lowercase. Uses spacy en_core_web_sm
-
-    Parameters
-    ----------
-    string : str
-        This may contains all words in dictionary.
-
-    Returns
-    -------
-    str
-        This output text contains word-forms which are linguistically valid lemmas.
-
-    """
-    string_lower = string.lower()
-    string_lower_filter_lemma = spacy_lemma(string_lower)
-    return str(string_lower_filter_lemma)
-
 

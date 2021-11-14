@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: systematic-reviewpy-CHANDRAVESH-CHAUDHARI
-Version: 0.0.47
+Version: 0.0.51
 Summary: A Python framework for systematic Review.
 Home-page: https://github.com/chandraveshchaudhari/systematic-reviewpy
 Author: Chandravesh Chaudhari
@@ -24,7 +24,7 @@ Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
-Requires-Python: >=3.6, <4
+Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 

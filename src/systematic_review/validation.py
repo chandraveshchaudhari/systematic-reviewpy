@@ -5,7 +5,6 @@ contains functions to get articles source name and create list of missed or dupl
 
 from difflib import SequenceMatcher
 import pandas as pd
-import pdftotext
 
 from systematic_review import string_manipulation
 from systematic_review import converter

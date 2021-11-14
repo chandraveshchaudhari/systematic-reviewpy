@@ -5,7 +5,7 @@ present.
 
 import pandas as pd
 import json
-from systematic_review import string_manipulation, citation, filter_sort, validation
+from systematic_review import string_manipulation, citation, filter_sort, validation, nlp
 from systematic_review import converter
 
 
@@ -64,7 +64,7 @@ def get_sample_keywords_json(output_file_path: str = "sample_keywords_template.j
 
     """
     sample_dict = {'keywords_finance': 'Management investing corporate pricing risk', 'keywords_machine_learning':
-                   'neural fuzzy inference system artificial intelligence artificial computational neural networks',
+        'neural fuzzy inference system artificial intelligence artificial computational neural networks',
                    'keywords_common_words': 'accuracy classification cross sectional cross-section expected metrics '
                                             'prediction predict expert system'}
     write_json_file_with_dict(output_file_path, sample_dict)
@@ -102,7 +102,8 @@ def construct_search_keywords_dictionary(keywords_list: list, default_string: st
     return grouped_keywords_dictionary
 
 
-def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, unique_keywords: bool = True) -> dict:
+def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, unique_keywords: bool = True,
+                                          method: str = "preprocess_string") -> dict:
     """
     This takes keywords from {keyword_group_name: keywords,...} dict and remove symbols with spaces. it then convert
     them to lowercase and remove any duplicate keyword inside of keywords. outputs the {keyword_group_name:
@@ -110,6 +111,12 @@ def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, uni
 
     Parameters
     ----------
+    method : str
+        provides the options to use any text manipulation function.
+        preprocess_string (default and applied before all other implemented functions)
+        custom - for putting your custom function to preprocess the text
+        nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+        nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma
     unique_keywords : bool
         provide option to make keywords in all groups unique.
     grouped_keywords_dictionary : dict
@@ -126,7 +133,7 @@ def preprocess_search_keywords_dictionary(grouped_keywords_dictionary: dict, uni
     """
     preprocessed_clean_grouped_keywords_dictionary = {}
     for keyword_group_name, keywords in grouped_keywords_dictionary.items():
-        preprocessed_string = string_manipulation.preprocess_string(keywords)
+        preprocessed_string = text_manipulation_methods(keywords, method)
         preprocessed_clean_keywords = string_manipulation.split_words_remove_duplicates(preprocessed_string.split()) if \
             unique_keywords else preprocessed_string.split()
         preprocessed_clean_grouped_keywords_dictionary[keyword_group_name] = preprocessed_clean_keywords
@@ -296,13 +303,17 @@ def count_words_in_list_of_lists(list_of_lists: list) -> dict:
 def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.DataFrame,
                                           unique_preprocessed_clean_grouped_keywords_dict: dict,
                                           title_column_name: str = "title",
-                                          method: str = "preprocess") -> list:
+                                          method: str = "preprocess_string") -> list:
     """Loop over articles to calculate keywords counts
 
     Parameters
     ----------
     method : str
         provides the options to use any text manipulation function.
+        preprocess_string (default and applied before all other implemented functions)
+        custom - for putting your custom function to preprocess the text
+        nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+        nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma
     dataframe_citations_with_fulltext : pd.DataFrame
         This dataframe contains all the citations details with column named 'full_text' containing full text like
         article name, abstract and keyword.
@@ -349,16 +360,23 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
     return final_list_of_full_keywords_counts_citations_dict
 
 
-def text_manipulation_methods(text: str, method: str = "preprocess"):
+def text_manipulation_methods(text: str, method: str = "preprocess_string", custom=None):
     """This convert text or string using options like preprocess, nlp module function, for more info each respective
     methods methods implemented.
 
     Parameters
     ----------
+    custom : function
+        This is optional custom function if you want to implement this yourself. pass as custom = function_name. it will
+        take text as parameter with no default preprocess_string operation.
     text : str
-        string type text which is needed to be converted
+        string type text which is needed to be converted.
     method : str
         provides the options to use any text manipulation function.
+        preprocess_string (default and applied before all other implemented functions)
+        custom - for putting your custom function to preprocess the text
+        nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+        nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma
 
     Returns
     -------
@@ -366,8 +384,25 @@ def text_manipulation_methods(text: str, method: str = "preprocess"):
         this return the converted text
 
     """
-    if method == "preprocess".lower():
-        return string_manipulation.preprocess_string(text)
+    preprocessed_text = string_manipulation.preprocess_string(text)
+    if method == "preprocess_string".lower():
+        return preprocessed_text
+    elif method == "custom".lower():
+        return custom(text)
+    elif method == "nltk_remove_stopwords".lower():
+        return nlp.nltk_remove_stopwords(preprocessed_text)
+    elif method == "pattern_lemma_or_lemmatize_text".lower():
+        return nlp.pattern_lemma_or_lemmatize_text(preprocessed_text)
+    elif method == "nltk_word_net_lemmatizer".lower():
+        return nlp.nltk_word_net_lemmatizer(preprocessed_text)
+    elif method == "nltk_porter_stemmer".lower():
+        return nlp.nltk_porter_stemmer(preprocessed_text)
+    elif method == "nltk_lancaster_stemmer".lower():
+        return nlp.nltk_lancaster_stemmer(preprocessed_text)
+    elif method == "spacy_lemma".lower():
+        return nlp.spacy_lemma(preprocessed_text)
+    elif method == "nltk_remove_stopwords_spacy_lemma".lower():
+        return nlp.nltk_remove_stopwords_spacy_lemma(preprocessed_text)
     else:
         print("Not implemented yet.")
 
@@ -375,13 +410,17 @@ def text_manipulation_methods(text: str, method: str = "preprocess"):
 def count_keywords_in_citations_full_text_list(citations_with_fulltext_list: list,
                                                unique_preprocessed_clean_grouped_keywords_dict: dict,
                                                title_column_name: str = "title",
-                                               method: str = "preprocess") -> list:
+                                               method: str = "preprocess_string") -> list:
     """Loop over articles to calculate keywords counts
 
     Parameters
     ----------
     method : str
         provides the options to use any text manipulation function.
+        preprocess_string (default and applied before all other implemented functions)
+        custom - for putting your custom function to preprocess the text
+        nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+        nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma
     citations_with_fulltext_list : list
         This list contains all the citations details with column named 'full_text' containing full text like
         article name, abstract and keyword.
@@ -483,13 +522,17 @@ def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict) 
 def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
                                     unique_preprocessed_clean_grouped_keywords_dict: dict,
                                     title_column_name: str = "cleaned_title",
-                                    method: str = "preprocess") -> list:
+                                    method: str = "preprocess_string") -> list:
     """Loop over articles pdf files to calculate keywords counts.
 
     Parameters
     ----------
     method : str
         provides the options to use any text manipulation function.
+        preprocess_string (default and applied before all other implemented functions)
+        custom - for putting your custom function to preprocess the text
+        nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+        nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma
     title_column_name : str
         This is the name of column which contain citation title
     list_of_downloaded_articles_path : list

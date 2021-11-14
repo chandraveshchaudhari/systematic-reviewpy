@@ -6,9 +6,7 @@ from collections import defaultdict
 from typing import Union
 
 import pandas as pd
-import pdftotext
 import rispy
-import fitz
 
 from systematic_review import os_utils
 
@@ -158,6 +156,28 @@ def get_pdf_object_from_pdf_path(pdf_file_path: str) -> object:
         This is pdf object with Extracted text.
 
     """
+    try:
+        import pdftotext
+    except ImportError:
+        print("""This function requires pdftotext library to read pdfs.
+        
+        step 1. install OS Dependencies:
+        These instructions assume you're using Python 3 on a recent OS.
+        - Debian, Ubuntu, and friends
+        sudo apt install build-essential libpoppler-cpp-dev pkg-config python3-dev
+        - Fedora, Red Hat, and friends
+        sudo yum install gcc-c++ pkgconfig poppler-cpp-devel python3-devel
+        - macOS
+        brew install pkg-config poppler python
+        - Windows (Install poppler through conda)
+        conda install -c conda-forge poppler
+        
+        step 2. Install pdftotext
+        pip install pdftotext
+        
+        for more info, please visit https://pypi.org/project/pdftotext/""")
+        return ""
+
     with open(pdf_file_path, "rb") as pdf_file:
         pdf_text_object = pdftotext.PDF(pdf_file)
     return pdf_text_object
@@ -179,6 +199,18 @@ def get_text_from_pdf_pymupdf(pdf_file_path: str, pages: str = 'all') -> str:
         This is the required text from pdf file.
 
     """
+    try:
+        import fitz
+    except ImportError:
+        print("""This function requires pymupdf library to read pdfs.
+
+        Install pymupdf using: 
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade pymupdf
+
+        for more info, please visit https://pypi.org/project/PyMuPDF/""")
+        return ""
+
     with fitz.open(pdf_file_path) as doc:
         text = ""
         if pages == "first":

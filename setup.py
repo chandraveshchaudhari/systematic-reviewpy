@@ -20,8 +20,6 @@ with open("README.md", "r", encoding="utf-8") as fh:
 # long_description = (here / 'README.md').read_text(encoding='utf-8')
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
-
-
 setuptools.setup(
     # This is the name of your project. The first time you publish this
     # package, this name will be registered for you. It will determine how
@@ -43,7 +41,7 @@ setuptools.setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.47',  # Required
+    version='0.0.51',  # Required
 
     # version="0.0.14",
     # This is a one-line description or tagline of what your project does. This
@@ -149,7 +147,7 @@ setuptools.setup(
     # 'Programming Language' classifiers above, 'pip install' will check this
     # and refuse to install the project if the version does not match. See
     # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
-    python_requires='>=3.6, <4',
+    python_requires='>=3.6',
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -157,14 +155,8 @@ setuptools.setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['numpy',
-                      'pandas',
-                      'pdftotext',
-                      'PyMuPDF',
-                      'python-dateutil',
-                      'pytz',
+    install_requires=['pandas',
                       'rispy',
-                      'six',
                       ],  # Optional
 
     # List additional groups of dependencies here (e.g. development
@@ -222,3 +214,5 @@ setuptools.setup(
         'Source': 'https://github.com/chandraveshchaudhari/systematic-reviewpy/',
     },
 )
+
+
