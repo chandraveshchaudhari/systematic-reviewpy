@@ -250,7 +250,7 @@ def get_text_from_pdf(pdf_file_path: str, pages: str = 'all', pdf_reader: str = 
             return pdf_text
         else:
             print("Not Implemented")
-    except pdftotext.Error or Exception:
+    except Exception:
         return ""
 
 

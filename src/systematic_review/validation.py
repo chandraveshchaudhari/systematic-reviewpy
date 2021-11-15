@@ -468,6 +468,27 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: 
     invalidated_pdf_list = []
     manual_pdf_list = []
 
+    try:
+        import pdftotext
+    except ImportError:
+        print("""This function requires pdftotext library to read pdfs.
+
+        step 1. install OS Dependencies:
+        These instructions assume you're using Python 3 on a recent OS.
+        - Debian, Ubuntu, and friends
+        sudo apt install build-essential libpoppler-cpp-dev pkg-config python3-dev
+        - Fedora, Red Hat, and friends
+        sudo yum install gcc-c++ pkgconfig poppler-cpp-devel python3-devel
+        - macOS
+        brew install pkg-config poppler python
+        - Windows (Install poppler through conda)
+        conda install -c conda-forge poppler
+
+        step 2. Install pdftotext
+        pip install pdftotext
+
+        for more info, please visit https://pypi.org/project/pdftotext/""")
+
     for article_name_path in list_of_pdf_files_path:
         try:
             value, percentage_matched, methods = multiple_methods_validating_pdf_via_filename(article_name_path,
@@ -478,7 +499,7 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: 
             elif not value:
                 # print("invalidated")
                 invalidated_pdf_list.append([article_name_path, percentage_matched, methods])
-        except pdftotext.Error:
+        except Exception:
             manual_pdf_list.append([article_name_path, 0, None])
 
     return validated_pdf_list, invalidated_pdf_list, manual_pdf_list
