@@ -198,6 +198,7 @@ class TextInBox:
     """This is matplotlib text in box class to make it easier to use text boxes.
 
     """
+
     def __init__(self, figure_axes, x_coordinate, y_coordinate, text=""):
         """It needs pyplot figure axes to add boxes, and x and y coordinate with any text to put into box.
 
@@ -246,6 +247,7 @@ class Annotate:
     """This class makes it easier to draw arrows into matplotlib.pyplot.axes figure
 
     """
+
     def __init__(self, figure_axes, start_coordinate, end_coordinate, arrow_style="<|-"):
         """This takes matplotlib.pyplot.axes and location of x and y coordinate for both start and end point. end point
         is the arrow head target.
@@ -291,6 +293,7 @@ class SystematicReviewInfo:
     """This analyse whole systematic review process and takes all produced file to generate tables, figure.
 
     """
+
     def __init__(self, citations_files_parent_folder_path: str = None, filter_sorted_citations_df: pd.DataFrame = None,
                  sorted_final_df: pd.DataFrame = None, downloaded_articles_path: str = None):
         """This class contains all necessary information for systematic review flow.
@@ -315,9 +318,11 @@ class SystematicReviewInfo:
             converter.load_multiple_ris_citations_files_to_dataframe(citations_files_parent_folder_path)) if \
             citations_files_parent_folder_path is not None else ""
 
-        self.screened = int(self.sources["total"]) - int(self.duplicates) if (self.sources is not None) and (self.duplicates is not None) else ""
+        self.screened = int(self.sources["total"]) - int(self.duplicates) if (self.sources is not None) and (
+                    self.duplicates is not None) else ""
         self.for_retrieval = len(filter_sorted_citations_df) if filter_sorted_citations_df is not None else ""
-        self.screened_out = self.screened - self.for_retrieval if (self.screened is not None) and (self.for_retrieval is not None) else ""
+        self.screened_out = self.screened - self.for_retrieval if (self.screened is not None) and (
+                    self.for_retrieval is not None) else ""
 
         self.not_retrieved = missed_article_count(filter_sorted_citations_df, downloaded_articles_path) if \
             (filter_sorted_citations_df is not None) and (downloaded_articles_path is not None) else ""
@@ -486,6 +491,7 @@ class CitationAnalysis:
     """This takes any pandas dataframe containing citation details and produces analyses on various columns.
 
     """
+
     def __init__(self, dataframe):
         """This requires citation dataframe.
 

@@ -374,6 +374,29 @@ def list_to_text_file(filename: str, list_name: str, permission: str = "w"):
             file.write("\n")
 
 
+def load_text_file_to_list(file_path: str, permission: str = "r"):
+    """This converts text file to list and put each line in list as single element. get first line of text file by
+    list[0].
+
+    Parameters
+    ----------
+    file_path : str
+        This is the name to be given for text file.
+    permission : str
+        These are the os permissions given for the file. check more lemma_info on python library 'os'.
+
+    Returns
+    -------
+    list
+        This contains all lines loaded into list with one line per list element. [first line, second line,.... ]
+
+    """
+    with open(file_path, permission) as file:
+        file_object = file.read()
+
+    return file_object.split("\n")
+
+
 def list_to_string(list_name):
     """This converts list to text_string and put each element in new line.
 

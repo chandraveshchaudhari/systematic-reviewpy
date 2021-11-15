@@ -31,17 +31,6 @@ def get_dataframe_column_as_list(dataframe: pd.DataFrame, column_name: str = 'pr
     return column_values_list
 
 
-def get_missed_articles_list(original_article_list: list, downloaded_article_list: list) -> list:
-    missed_articles_list = []
-    for article_name in original_article_list:
-        if article_name in set(downloaded_article_list):
-            pass
-        else:
-            missed_articles_list.append(article_name)
-
-    return missed_articles_list
-
-
 def similarity_sequence_matcher(string_a: str, string_b: str) -> float:
     """Shows the percentage similarity between two strings like 0.9836065573770492 that means 98.35%
 
@@ -97,7 +86,7 @@ def amount_by_percentage(number: float, percentage: float) -> float:
         This is resultant number.
 
     """
-    return number * percentage/100
+    return number * percentage / 100
 
 
 def add_dict_element_with_count(dictionary: dict, key: str) -> dict:
@@ -569,6 +558,48 @@ def finding_missed_articles_from_downloading(validated_pdf_list: list, original_
         elif validation_bool:
             downloaded_articles.append(article_name)
     return missing_articles, downloaded_articles
+
+
+def get_missed_original_articles_list(original_article_list: list, downloaded_article_list: list) -> list:
+    missed_articles_list = []
+    for article_name in original_article_list:
+        if article_name in set(downloaded_article_list):
+            pass
+        else:
+            missed_articles_list.append(article_name)
+
+    return missed_articles_list
+
+
+def get_missed_articles_dataframe(filter_sorted_citations_df: pd.DataFrame, downloaded_articles_path: str,
+                                  title_column_name: str = "cleaned_title") -> list:
+    """return list of missed articles from downloading by checking original list of articles from
+    filter_sorted_citations_df using downloaded articles path.
+
+    Parameters
+    ----------
+    title_column_name : str
+        contains name of column which contain the name of article.
+    filter_sorted_citations_df : pd.DataFrame
+        This dataframe contains records of selected articles including name of articles.
+    downloaded_articles_path : str
+        contains parent folder of all the downloaded articles files.
+
+    Returns
+    -------
+    list
+        list of the missed articles from downloading.
+
+    """
+    original_list = [i for i in filter_sorted_citations_df[title_column_name]]
+    validated_articles_list, invalidated_list, manual_list = validating_pdfs_using_multiple_pdf_reader(
+        downloaded_articles_path)
+    articles_list = getting_article_paths_from_validation_detail(validated_articles_list)
+    downloaded_list = [
+        string_manipulation.preprocess_string(os_utils.get_filename_from_path(k))
+        for k in articles_list]
+    missed_articles = finding_missed_articles_from_downloading(downloaded_list, original_list)
+    return missed_articles[0]
 
 
 def getting_article_paths_from_validation_detail(list_of_validation: list) -> list:
