@@ -29,7 +29,7 @@ def write_json_file_with_dict(output_file_path: str, input_dict: dict) -> None:
         json.dump(input_dict, outfile)
 
 
-def read_json_file_from_path(json_file_path: str) -> None:
+def read_json_file_from_path(json_file_path: str) -> dict:
     """Read the json file from the path given. Convert json file data to the python dictionary.
 
     Parameters

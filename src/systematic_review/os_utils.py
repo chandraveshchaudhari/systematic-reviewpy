@@ -22,8 +22,29 @@ def extract_files_path_from_directories_or_subdirectories(directory_path: str) -
 
     """
     list_of_downloaded_articles_path = []
-    for path, subdirs, files in os.walk(directory_path):
+    for path, sub_dirs, files in os.walk(directory_path):
         for name in files:
+            list_of_downloaded_articles_path.append(os.path.join(path, name))
+    return list_of_downloaded_articles_path
+
+
+def extract_subdirectories_path_from_directory(directory_path: str) -> list:
+    """Getting all sub directories paths from the directory.
+
+    Parameters
+    ----------
+    directory_path : str
+        This is the directory path of sub directories we require.
+
+    Returns
+    -------
+    list
+        This list contains path of all the sub directories contained in directory_path.
+
+    """
+    list_of_downloaded_articles_path = []
+    for path, sub_dirs, files in os.walk(directory_path):
+        for name in sub_dirs:
             list_of_downloaded_articles_path.append(os.path.join(path, name))
     return list_of_downloaded_articles_path
 
