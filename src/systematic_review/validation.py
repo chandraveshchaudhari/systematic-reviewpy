@@ -215,6 +215,8 @@ def exact_words_checker_in_text(words_string: str, text_string: str) -> bool:
         This returns True if exact words_string found in text_string else False.
 
     """
+    if (type(words_string) != str) or (type(text_string) != str):
+        raise TypeError
     words_list = string_manipulation.split_preprocess_string(words_string)
     words_list_length = len(words_list)
     words_list_end_element_index = words_list_length - 1

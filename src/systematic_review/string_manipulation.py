@@ -48,6 +48,24 @@ def string_list_to_lower(string_list: list) -> list:
     return lower_string_list
 
 
+def string_to_space_separated_words(text: str) -> str:
+    """takes text string and outputs space separated words.
+
+    Parameters
+    ----------
+    text : str
+        This text contains multiple spaces or trailing whitespaces
+
+    Returns
+    -------
+    str
+        This is space separated word string with no trailing whitespaces.
+
+    """
+    temp_text = text.lower().split()
+    return " ".join(temp_text)
+
+
 def remove_non_ascii(string_list: list) -> list:
     """Remove non-ASCII characters from list of tokenized words
 
@@ -109,6 +127,26 @@ def preprocess_string(string: str) -> str:
     """
     string = replace_symbols_with_space(string)
     string = convert_string_to_lowercase(string)
+    return string
+
+
+def preprocess_string_to_space_separated_words(string: str) -> str:
+    """replace symbols in string with spaces and Lowercase the given input string. Example - 'Df%$df' -> 'df  df' and
+    convert 'df  df' to single spaced 'df df'.
+
+    Parameters
+    ----------
+    string : str
+        This can contain string words mixed with spaces and symbols.
+
+    Returns
+    -------
+    str
+        remove the spaces and symbols and arrange the words single spaces.
+
+    """
+    string = preprocess_string(string)
+    string = string_to_space_separated_words(string)
     return string
 
 
