@@ -3,7 +3,7 @@ This module contains functions related to files and data type conversion. such a
 dicts and many more.
 """
 from collections import defaultdict
-from typing import Union
+from typing import Union, List
 
 import pandas as pd
 import rispy
@@ -94,6 +94,58 @@ def try_convert_dataframe_column_elements_to_list(dataframe: pd.DataFrame, colum
         except TypeError:
             print(f"'{keyword_list}' can not be converted to list")
     return keyword_list_of_list
+
+
+def unpack_list_of_lists_with_optional_apply_custom_function(list_of_lists: List[list], custom_function=None) -> list:
+    """unpack lists inside of list to new list containing all the elements from list_of_lists with optional
+    custom_function applied on all elements. example- [[1,2,3], [3,4,5]] to [1,2,3,3,4,5]
+
+    Parameters
+    ----------
+    list_of_lists : List[list]
+        This list contains lists as elements which might contains other elements.
+    custom_function
+        This is optional function to be applied on each element of list_of_lists
+
+    Returns
+    -------
+    list
+        list containing all the elements with any optional transformation using custom_function.
+
+    """
+    unpacked_list = []
+    for element_list in list_of_lists:
+        if custom_function:
+            temp_list = [custom_function(i) for i in element_list]
+            unpacked_list.extend(temp_list)
+        else:
+            unpacked_list.extend(element_list)
+    return unpacked_list
+
+
+def dict_key_value_to_records(dictionary: dict, key_column_name: str, value_column_name: str):
+    """converts {'key':value, key1: value1},etc to record = [{'key_column_name': key, value_column_name: value}, etc].
+    that is used to convert to pd.DataFrame
+
+    Parameters
+    ----------
+    dictionary : dict
+        hash map or dictionary that contains key and value pairs.
+    key_column_name : str
+        name of records column
+    value_column_name : str
+        name of records column
+
+    Returns
+    -------
+    list
+        This list is in records format.
+
+    """
+    keywords_list_of_dicts = []
+    for key, value in dictionary.items():
+        keywords_list_of_dicts.append({key_column_name: key, value_column_name: value})
+    return keywords_list_of_dicts
 
 
 def list_of_dicts_to_dataframe(list_of_dicts: list) -> pd.DataFrame:
@@ -224,7 +276,7 @@ def get_text_from_pdf_pymupdf(pdf_file_path: str, pages: str = 'all') -> str:
 
 
 def get_text_from_pdf(pdf_file_path: str, pages: str = 'all', pdf_reader: str = 'pdftotext') -> Union[str, bool]:
-    """This Function get text from pdf files using pdftotext or pymupdf.
+    """This Function get text from pdf files using either pdftotext or pymupdf.
 
     Parameters
     ----------
@@ -252,6 +304,65 @@ def get_text_from_pdf(pdf_file_path: str, pages: str = 'all', pdf_reader: str = 
             print("Not Implemented")
     except Exception:
         return ""
+
+
+def apply_custom_function_on_dataframe_column(dataframe: pd.DataFrame, column_name: str, custom_function,
+                                              new_column_name: str = None) -> pd.DataFrame:
+    """This apply custom function to all element of dataframe column.
+
+    Parameters
+    ----------
+    new_column_name : str
+        This is the new name you want to give your modified column and new column will be added to dataframe without
+        modifying original column.
+    dataframe : pd.DataFrame
+        This is the pandas dataframe consisting of column name with elements capable to be transformed with custom
+        function.
+    column_name : str
+        name of dataframe column whose elements are needed to be transformed
+    custom_function
+        This is custom function to be applied on each elements of the pandas column elements.
+
+    Returns
+    -------
+    pd.DataFrame
+        This is transformed dataframe.
+
+    """
+    if new_column_name:
+        dataframe[new_column_name] = dataframe[column_name].apply(lambda x: custom_function(x))
+    else:
+        dataframe[column_name] = dataframe[column_name].apply(lambda x: custom_function(x))
+    return dataframe
+
+
+def get_text_from_multiple_pdf_reader(pdf_file_path: str, pages: str = 'all') -> Union[str, bool]:
+    """This Function get text from pdf files using pdftotext. if failed then text comes from pymupdf.
+
+    Parameters
+    ----------
+    pdf_file_path : str
+        This is the path of pdf file.
+    pages : str
+        This could be 'all' to get full text of pdf and 'first' for first page of pdf.
+
+    Returns
+    -------
+    str
+        This is the required text from pdf file.
+
+    """
+    pdf_text = ""
+    try:
+        pdf_text = get_text_from_pdf_pdftotext(pdf_file_path, pages)
+    except Exception:
+        pass
+    if pdf_text == "":
+        try:
+            pdf_text = get_text_from_pdf_pymupdf(pdf_file_path, pages)
+        except Exception:
+            pass
+    return pdf_text
 
 
 def extract_pandas_df_column1_row_values_based_on_column2_value(pandas_dataframe, column2_value,

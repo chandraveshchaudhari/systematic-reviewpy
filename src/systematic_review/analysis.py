@@ -319,10 +319,10 @@ class SystematicReviewInfo:
             citations_files_parent_folder_path is not None else ""
 
         self.screened = int(self.sources["total"]) - int(self.duplicates) if (self.sources is not None) and (
-                    self.duplicates is not None) else ""
+                self.duplicates is not None) else ""
         self.for_retrieval = len(filter_sorted_citations_df) if filter_sorted_citations_df is not None else ""
         self.screened_out = self.screened - self.for_retrieval if (self.screened is not None) and (
-                    self.for_retrieval is not None) else ""
+                self.for_retrieval is not None) else ""
 
         self.not_retrieved = missed_article_count(filter_sorted_citations_df, downloaded_articles_path) if \
             (filter_sorted_citations_df is not None) and (downloaded_articles_path is not None) else ""
@@ -698,27 +698,40 @@ class CitationAnalysis:
         else:
             print("Please provide method value as 'seaborn' or 'pandas'.")
 
-    def keywords_info(self, column_name: str = "keywords", top_result=None):
+    def extract_keywords(self, column_name: str = "keywords"):
+        """return dataframe with keywords column containing single keyword in row that are used in the articles.
+
+        Parameters
+        ----------
+        column_name : str
+            column name of keywords detail in citation dataframe
+
+        Returns
+        -------
+
+        """
+        keywords_list_of_lists = converter.try_convert_dataframe_column_elements_to_list(
+            self.dataframe, column_name)
+        keywords_list = converter.unpack_list_of_lists_with_optional_apply_custom_function(keywords_list_of_lists,
+                                                                                           string_manipulation.string_to_space_separated_words)
+
+        keywords_pandas_df = pd.DataFrame(data={column_name: keywords_list})
+
+        return keywords_pandas_df
+
+    def keywords_info(self, column_name: str = "keywords"):
         """return keywords and number of times they are used in the articles
 
         Parameters
         ----------
         column_name : str
             column name of keywords detail in citation dataframe
-        top_result : int
-            This limits the number of column unique elements to be shown
 
         Returns
         -------
 
         """
-        keywords_list_of_lists = converter.try_convert_dataframe_column_elements_to_list(self.dataframe, column_name)
-        dict_with_words_count = search_count.count_words_in_list_of_lists(keywords_list_of_lists)
-        sorted_dict_with_words_count = dict(
-            sorted(dict_with_words_count.items(), key=lambda item: item[1], reverse=True))
-        keyword_series = pd.Series(sorted_dict_with_words_count, name=column_name)
-
-        return keyword_series[:top_result] if top_result else keyword_series
+        return dataframe_column_counts(self.extract_keywords(), column_name)
 
     def keyword_diagram(self, column_name: str = "keywords",
                         top_result=None, method: str = "seaborn", theme_style="darkgrid",
@@ -745,12 +758,12 @@ class CitationAnalysis:
 
         """
         if method.lower() == "seaborn":
-            seaborn_countplot_with_pandas_dataframe_column(self.keywords_info().to_frame(), column_name,
+            seaborn_countplot_with_pandas_dataframe_column(self.extract_keywords(), column_name,
                                                            theme_style=theme_style,
                                                            xaxis_label_rotation=xaxis_label_rotation,
                                                            top_result=top_result)
         elif method.lower() == "pandas":
-            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
+            self.extract_keywords()[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
             plt.show()
         else:
             print("Please provide method value as 'seaborn' or 'pandas'.")

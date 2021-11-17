@@ -611,7 +611,7 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
         total_keywords_counts = 0
 
         try:
-            pdf_text = converter.get_text_from_pdf(pdf_path)
+            pdf_text = converter.get_text_from_multiple_pdf_reader(pdf_path)
         except FileNotFoundError:
             continue
 
@@ -678,8 +678,9 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
 
 def validate_column_details_between_two_record_list(first_list_of_dict: list, second_list_of_dict: list,
                                                     title_column_name: str = "cleaned_title") -> tuple:
-    """It produce list of matched columns rows and unmatched column rows based on same column from both. emphasis on
-    first list as function check all records of first list of dict in second list of dict.
+    """It produce list of matched columns rows and unmatched column rows based on same column from first list of dict.
+    Note- emphasis on first list as function check all records of first list of dict in second list of dict.
+    title column of second_list_of_dict is kept by merging with first.
 
     Parameters
     ----------
@@ -714,7 +715,49 @@ def validate_column_details_between_two_record_list(first_list_of_dict: list, se
         if not validation_bool:
             unmatched_list.append([article_name[title_column_name], percentage_matched, method])
 
-    print(len(matched_list), len(unmatched_list))
+    print(f"matched_list count = {len(matched_list)}, unmatched_list count = {len(unmatched_list)}")
+    return matched_list, unmatched_list
+
+
+def deep_validate_column_details_between_two_record_list(first_list_of_dict: list, second_list_of_dict: list,
+                                                         title_column_name: str = "cleaned_title") -> tuple:
+    """It produce list of matched columns rows and unmatched column rows based on same column from both.
+
+    Parameters
+    ----------
+    first_list_of_dict : list
+        Iterable object pandas.DataFrame or list which contains title_column_name
+    second_list_of_dict : list
+        Iterable object pandas.DataFrame or list which contains title_column_name
+    title_column_name : str
+        This is the name of column which contain citation title.
+
+    Returns
+    -------
+    tuple
+        matched_list - It contains column's row which are matched in both data object.
+        unmatched_list - It contains column's row which are unmatched in both data object.
+
+    """
+    import copy
+    temp_first_list_of_dict = copy.deepcopy(first_list_of_dict)
+    temp_second_list_of_dict = copy.deepcopy(second_list_of_dict)
+
+    matched_list = []
+    for first_dict in temp_first_list_of_dict:
+        if title_column_name in first_dict:
+
+            for second_dict in temp_second_list_of_dict:
+                if title_column_name in second_dict:
+                    if first_dict[title_column_name] == second_dict[title_column_name]:
+                        article_name_count = {**first_dict, **second_dict}
+                        matched_list.append(article_name_count)
+                        temp_first_list_of_dict.remove(first_dict)
+                        temp_second_list_of_dict.remove(second_dict)
+                        break
+
+    unmatched_list = temp_first_list_of_dict + temp_second_list_of_dict
+
     return matched_list, unmatched_list
 
 
@@ -755,8 +798,9 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
     filter_sorted_citations_details = filter_sorted_citations_df.drop(columns=criteria_list)
 
     citations_list = converter.dataframe_to_list_of_dicts(filter_sorted_citations_details)
-    matched_list, unmatched_list = validate_column_details_between_two_record_list(pdf_full_text_search_count,
-                                                                                   citations_list, title_column_name)
+    matched_list, unmatched_list = validate_column_details_between_two_record_list(citations_list,
+                                                                                   pdf_full_text_search_count,
+                                                                                   title_column_name)
     final_review_df = converter.list_of_dicts_to_dataframe(matched_list)
     final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[title_column_name])
     return final_review_df

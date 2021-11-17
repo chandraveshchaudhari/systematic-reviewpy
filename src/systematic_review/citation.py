@@ -372,7 +372,9 @@ def add_preprocess_column(dataframe_object: pd.DataFrame, column_name: str = "ti
 
     """
     new_column_name = "cleaned_" + column_name
-    dataframe_object[new_column_name] = dataframe_object[column_name].apply(lambda x: string_manipulation.preprocess_string_to_space_separated_words(x))
+    dataframe_object = converter.apply_custom_function_on_dataframe_column(dataframe_object, column_name,
+                                                                           string_manipulation.preprocess_string_to_space_separated_words,
+                                                                           new_column_name)
     return dataframe_object
 
 
