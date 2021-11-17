@@ -366,11 +366,13 @@ class SystematicReviewInfo:
         for index in order:
             print(temp_text[index], "\n")
 
-    def systematic_review_diagram(self, fig_width=10, fig_height=10):
+    def systematic_review_diagram(self, fig_width=10, fig_height=10, diagram_fname: str = None, **kwargs):
         """This outputs the systematic review diagram resembling PRISMA guidelines.
 
         Parameters
         ----------
+        diagram_fname : str
+            filename or path of diagram image to be saved, kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
         fig_width : float
             This is width of figure in inches.
         fig_height : float
@@ -435,6 +437,9 @@ class SystematicReviewInfo:
         for arrow in all_arrows:
             arrow.add_arrow()
 
+        if diagram_fname:
+            plt.savefig(diagram_fname, kwargs)
+
         plt.show()
 
 
@@ -457,12 +462,44 @@ def dataframe_column_counts(dataframe, column_name):
     return dataframe[column_name].value_counts()
 
 
+def pandas_countplot_with_pandas_dataframe_column(dataframe, column_name, top_result, plot_kind: str = "bar",
+                                                  diagram_fname: str = None, **kwargs):
+    """generate pandas count chart using dataframe column.
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        dataframe which contains column whose value counts to be shown.
+    column_name : str
+        Name of pandas column elements are supposed to be counted.
+    top_result : int
+            This limits the number of column unique elements to be shown
+    plot_kind : str
+        pandas plot option of kind of chart needed. defaults to 'bar' in this implementation
+    diagram_fname : str
+            filename or path of diagram image to be saved.
+    kwargs : dict
+        kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+
+    Returns
+    -------
+
+    """
+    dataframe[column_name].value_counts()[:top_result].plot(kind=plot_kind)
+    if diagram_fname:
+        plt.savefig(diagram_fname, kwargs)
+    plt.show()
+
+
 def seaborn_countplot_with_pandas_dataframe_column(dataframe, column_name, theme_style="darkgrid",
-                                                   xaxis_label_rotation=90, top_result=None):
+                                                   xaxis_label_rotation=90, top_result=None,
+                                                   diagram_fname: str = None, **kwargs):
     """generate seaborn count bar chart using dataframe column.
 
     Parameters
     ----------
+    diagram_fname : str
+            filename or path of diagram image to be saved.
     dataframe : pd.DataFrame
         dataframe which contains column whose value counts to be shown.
     column_name : str
@@ -473,6 +510,8 @@ def seaborn_countplot_with_pandas_dataframe_column(dataframe, column_name, theme
         rotate the column elements shown on x axis or horizontally.
     top_result : int
         This limits the number of column unique elements to be shown
+    kwargs : dict
+        kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
 
     Returns
     -------
@@ -484,6 +523,8 @@ def seaborn_countplot_with_pandas_dataframe_column(dataframe, column_name, theme
     sns.set_theme(style=theme_style)
     plt.xticks(rotation=xaxis_label_rotation)
     ax.bar_label(ax.containers[0])
+    if diagram_fname:
+        plt.savefig(diagram_fname, kwargs)
     plt.show()
 
 
@@ -522,7 +563,7 @@ class CitationAnalysis:
 
     def publication_year_diagram(self, column_name: str = "year",
                                  top_result=None, method: str = "seaborn", theme_style="darkgrid",
-                                 xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+                                 xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
         """generates chart showing how many articles are published each year.
 
         Parameters
@@ -539,18 +580,21 @@ class CitationAnalysis:
             This limits the number of column unique elements to be shown
         method : str
             provide option to plot chart using either 'seaborn' or 'pandas'
+        diagram_fname : str
+            filename or path of diagram image to be saved.
+        kwargs : dict
+            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
 
         Returns
         -------
 
         """
         if method.lower() == "seaborn":
-            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style=theme_style,
-                                                           xaxis_label_rotation=xaxis_label_rotation,
-                                                           top_result=top_result)
+            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style,
+                                                           xaxis_label_rotation, top_result, diagram_fname, **kwargs)
         elif method.lower() == "pandas":
-            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
-            plt.show()
+            pandas_countplot_with_pandas_dataframe_column(self.dataframe, column_name, top_result, pandas_bar_kind,
+                                                          diagram_fname, **kwargs)
         else:
             print("Please provide method value as 'seaborn' or 'pandas'.")
 
@@ -616,7 +660,7 @@ class CitationAnalysis:
 
     def publication_place_diagram(self, column_name: str = "place_published",
                                   top_result=None, method: str = "seaborn", theme_style="darkgrid",
-                                  xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+                                  xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
         """generates chart showing how many articles are published from different places or countries.
 
         Parameters
@@ -633,18 +677,21 @@ class CitationAnalysis:
             This limits the number of column unique elements to be shown
         method : str
             provide option to plot chart using either 'seaborn' or 'pandas'
+        diagram_fname : str
+            filename or path of diagram image to be saved.
+        kwargs : dict
+            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
 
         Returns
         -------
 
         """
         if method.lower() == "seaborn":
-            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style=theme_style,
-                                                           xaxis_label_rotation=xaxis_label_rotation,
-                                                           top_result=top_result)
+            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style,
+                                                           xaxis_label_rotation, top_result, diagram_fname, **kwargs)
         elif method.lower() == "pandas":
-            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
-            plt.show()
+            pandas_countplot_with_pandas_dataframe_column(self.dataframe, column_name, top_result, pandas_bar_kind,
+                                                          diagram_fname, **kwargs)
         else:
             print("Please provide method value as 'seaborn' or 'pandas'.")
 
@@ -666,7 +713,7 @@ class CitationAnalysis:
 
     def publisher_diagram(self, column_name: str = "publisher",
                           top_result=None, method: str = "seaborn", theme_style="darkgrid",
-                          xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+                          xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
         """generates chart showing how many articles are published by different publishers.
 
         Parameters
@@ -683,18 +730,21 @@ class CitationAnalysis:
             This limits the number of column unique elements to be shown
         method : str
             provide option to plot chart using either 'seaborn' or 'pandas'
+        diagram_fname : str
+            filename or path of diagram image to be saved.
+        kwargs : dict
+            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
 
         Returns
         -------
 
         """
         if method.lower() == "seaborn":
-            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style=theme_style,
-                                                           xaxis_label_rotation=xaxis_label_rotation,
-                                                           top_result=top_result)
+            seaborn_countplot_with_pandas_dataframe_column(self.dataframe, column_name, theme_style,
+                                                           xaxis_label_rotation, top_result, diagram_fname, **kwargs)
         elif method.lower() == "pandas":
-            self.dataframe[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
-            plt.show()
+            pandas_countplot_with_pandas_dataframe_column(self.dataframe, column_name, top_result, pandas_bar_kind,
+                                                          diagram_fname, **kwargs)
         else:
             print("Please provide method value as 'seaborn' or 'pandas'.")
 
@@ -735,7 +785,7 @@ class CitationAnalysis:
 
     def keyword_diagram(self, column_name: str = "keywords",
                         top_result=None, method: str = "seaborn", theme_style="darkgrid",
-                        xaxis_label_rotation=90, pandas_bar_kind: str = "bar"):
+                        xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
         """generates chart showing how many articles are published by different publishers.
 
         Parameters
@@ -752,18 +802,20 @@ class CitationAnalysis:
             This limits the number of column unique elements to be shown
         method : str
             provide option to plot chart using either 'seaborn' or 'pandas'
+        diagram_fname : str
+            filename or path of diagram image to be saved.
+        kwargs : dict
+            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
 
         Returns
         -------
 
         """
         if method.lower() == "seaborn":
-            seaborn_countplot_with_pandas_dataframe_column(self.extract_keywords(), column_name,
-                                                           theme_style=theme_style,
-                                                           xaxis_label_rotation=xaxis_label_rotation,
-                                                           top_result=top_result)
+            seaborn_countplot_with_pandas_dataframe_column(self.extract_keywords(), column_name, theme_style,
+                                                           xaxis_label_rotation, top_result, diagram_fname, **kwargs)
         elif method.lower() == "pandas":
-            self.extract_keywords()[column_name].value_counts()[:top_result].plot(kind=pandas_bar_kind)
-            plt.show()
+            pandas_countplot_with_pandas_dataframe_column(self.extract_keywords(), column_name, top_result,
+                                                          pandas_bar_kind, diagram_fname, **kwargs)
         else:
             print("Please provide method value as 'seaborn' or 'pandas'.")
