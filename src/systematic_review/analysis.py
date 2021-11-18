@@ -184,6 +184,7 @@ def custom_box(**kwargs) -> dict:
         contains options
 
     """
+    # "boxstyle": "square,pad=10" for extra padding use pad=amount.
     custom_options = {"bbox": {"boxstyle": "square", "facecolor": "white"}, "horizontalalignment": "center",
                       "verticalalignment": "center", "color": "midnightblue"}
 
@@ -366,13 +367,26 @@ class SystematicReviewInfo:
         for index in order:
             print(temp_text[index], "\n")
 
-    def systematic_review_diagram(self, fig_width=10, fig_height=10, diagram_fname: str = None, **kwargs):
+    def systematic_review_diagram(self, fig_width=10, fig_height=10, diagram_fname: str = None, color: bool = True,
+                                  color_info: bool = True,
+                                  auto_fig_size: bool = True,
+                                  hide_border: bool = True, **kwargs):
         """This outputs the systematic review diagram resembling PRISMA guidelines.
 
         Parameters
         ----------
+        kwargs : dict
+            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+        hide_border : bool
+            border is line outside of diagram
+        auto_fig_size : bool
+            this sets the figure size automatically based on given data.
+        color : bool
+            This is color inside of diagram boxes. turn this off by putting False.
+        color_info : bool
+            This show meaning of color in diagram.
         diagram_fname : str
-            filename or path of diagram image to be saved, kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+            filename or path of diagram image to be saved.
         fig_width : float
             This is width of figure in inches.
         fig_height : float
@@ -382,6 +396,52 @@ class SystematicReviewInfo:
         -------
 
         """
+        text_list = self.get_text_list()
+        width_of_one_char = 0.067
+        width_of_one_line = 0.165
+
+        top_spaces = width_of_one_line * 2
+        top_outer_spaces = width_of_one_line * 4
+
+        left_spaces = width_of_one_char * 10
+        left_outer_spaces = width_of_one_char * 15
+
+        height = 0
+        height += 2 * top_outer_spaces
+        height += 4 * top_spaces
+        height += (width_of_one_line * max(text_padding_for_visualise(text_list[0])[1],
+                                           text_padding_for_visualise(text_list[5])[1]))
+        height += (width_of_one_line * max(text_padding_for_visualise(text_list[1])[1],
+                                           text_padding_for_visualise(text_list[6])[1]))
+        height += (width_of_one_line * max(text_padding_for_visualise(text_list[2])[1],
+                                           text_padding_for_visualise(text_list[7])[1]))
+        height += (width_of_one_line * max(text_padding_for_visualise(text_list[3])[1],
+                                           text_padding_for_visualise(text_list[8])[1]))
+        height += (width_of_one_line * text_padding_for_visualise(text_list[4])[1])
+
+        width = 0
+        width += 2 * left_outer_spaces
+        width += left_spaces
+
+        max_left_width = (
+                width_of_one_char * max(text_padding_for_visualise(text_list[0])[2],
+                                        text_padding_for_visualise(text_list[1])[2],
+                                        text_padding_for_visualise(text_list[2])[2],
+                                        text_padding_for_visualise(text_list[3])[2],
+                                        text_padding_for_visualise(text_list[3])[2]))
+
+        max_right_width = (
+                width_of_one_char * max(text_padding_for_visualise(text_list[5])[2],
+                                        text_padding_for_visualise(text_list[6])[2],
+                                        text_padding_for_visualise(text_list[7])[2],
+                                        text_padding_for_visualise(text_list[8])[2]))
+
+        width += (max_left_width + max_right_width)
+
+        if auto_fig_size:
+            fig_width = width
+            fig_height = height
+
         fig = plt.figure(figsize=(fig_width, fig_height))
         ax = fig.add_axes((0, 0, 1, 1))
         ax.set_xlim(0, fig_width)
@@ -392,33 +452,116 @@ class SystematicReviewInfo:
         ax.tick_params(labelbottom=False, labeltop=False,
                        labelleft=False, labelright=False)
 
-        text_list = self.get_text_list()
+        x_position_left = left_outer_spaces + (max_left_width / 2)
+        x_position_right = left_outer_spaces + max_left_width + left_spaces + (max_right_width / 2)
 
         # draw rectangles with text in the center
-        # box 0 to 8
+        all_boxes = []
 
-        all_boxes = [
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
-                      validation.amount_by_percentage(fig_height, 85), text_list[0]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
-                      validation.amount_by_percentage(fig_height, 70), text_list[1]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
-                      validation.amount_by_percentage(fig_height, 50), text_list[2]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
-                      validation.amount_by_percentage(fig_height, 30), text_list[3]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 30),
-                      validation.amount_by_percentage(fig_height, 15), text_list[4]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
-                      validation.amount_by_percentage(fig_height, 85), text_list[5]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
-                      validation.amount_by_percentage(fig_height, 70), text_list[6]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
-                      validation.amount_by_percentage(fig_height, 50), text_list[7]),
-            TextInBox(ax, validation.amount_by_percentage(fig_width, 70),
-                      validation.amount_by_percentage(fig_height, 30), text_list[8])]
+        # box 0 to 4
+        all_boxes.append(TextInBox(ax,
+                                   x_position_left,
+                                   (fig_height - top_outer_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[0])[1] / 2),
+                                       (text_padding_for_visualise(text_list[5])[1] / 2)))
+                                    ),
+                                   text_list[0]
+                                   )
+                         )
 
-        for box in all_boxes:
-            box.add_box()
+        all_boxes.append(TextInBox(ax,
+                                   x_position_left,
+                                   (all_boxes[0].bottom[1] - top_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[1])[1] / 2),
+                                       (text_padding_for_visualise(text_list[6])[1] / 2)))
+                                    ),
+                                   text_list[1]
+                                   )
+                         )
+
+        all_boxes.append(TextInBox(ax,
+                                   x_position_left,
+                                   (all_boxes[1].bottom[1] - top_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[2])[1] / 2),
+                                       (text_padding_for_visualise(text_list[7])[1] / 2)))
+                                    ),
+                                   text_list[2]
+                                   )
+                         )
+
+        all_boxes.append(TextInBox(ax,
+                                   x_position_left,
+                                   (all_boxes[2].bottom[1] - top_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[3])[1] / 2),
+                                       (text_padding_for_visualise(text_list[8])[1] / 2)))
+                                    ),
+                                   text_list[3]
+                                   )
+                         )
+
+        all_boxes.append(TextInBox(ax,
+                                   x_position_left,
+                                   (all_boxes[3].bottom[1] - top_spaces - (
+                                               width_of_one_line * text_padding_for_visualise(text_list[4])[1] / 2)),
+                                   text_list[4]
+                                   )
+                         )
+
+        # box 5 to 8
+
+        all_boxes.append(TextInBox(ax,
+                                   x_position_right,
+                                   (fig_height - top_outer_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[0])[1] / 2),
+                                       (text_padding_for_visualise(text_list[5])[1] / 2)))
+                                    ),
+                                   text_list[5]
+                                   )
+                         )
+
+        all_boxes.append(TextInBox(ax,
+                                   x_position_right,
+                                   (all_boxes[0].bottom[1] - top_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[1])[1] / 2),
+                                       (text_padding_for_visualise(text_list[6])[1] / 2)))
+                                    ),
+                                   text_list[6]
+                                   )
+                         )
+
+        all_boxes.append(TextInBox(ax,
+                                   x_position_right,
+                                   (all_boxes[1].bottom[1] - top_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[2])[1] / 2),
+                                       (text_padding_for_visualise(text_list[7])[1] / 2)))
+                                    ),
+                                   text_list[7]
+                                   )
+                         )
+
+        all_boxes.append(TextInBox(ax,
+                                   x_position_right,
+                                   (all_boxes[2].bottom[1] - top_spaces - (width_of_one_line * max(
+                                       (text_padding_for_visualise(text_list[3])[1] / 2),
+                                       (text_padding_for_visualise(text_list[8])[1] / 2)))
+                                    ),
+                                   text_list[8]
+                                   )
+                         )
+
+        if color:
+            for all_boxes_index in range(len(all_boxes)):
+                if all_boxes_index == 4:
+                    all_boxes[all_boxes_index].add_box(
+                        bbox={"boxstyle": "square", "facecolor": 'red', "alpha": 0.3, "edgecolor": "red"},
+                        color="black")
+                else:
+                    all_boxes[all_boxes_index].add_box(
+                        bbox={"boxstyle": "square", "facecolor": 'lightgreen', "alpha": 0.3, "edgecolor": "green"},
+                        color="black")
+        else:
+            for box in all_boxes:
+                box.add_box()
 
         # Draw arrows
         all_arrows = [Annotate(ax, all_boxes[0].bottom, all_boxes[1].top),
@@ -430,12 +573,40 @@ class SystematicReviewInfo:
                       Annotate(ax, all_boxes[2].right, all_boxes[7].left),
                       Annotate(ax, all_boxes[3].right, all_boxes[8].left)]
 
-        # vertical arrows
-
-        # Horizontal arrows
-
+        # vertical arrows 0-1 to 3-4
+        # Horizontal arrows 0-5 to 3-8
         for arrow in all_arrows:
             arrow.add_arrow()
+
+        if color_info:
+            ax.text(x_position_right,
+                    (all_boxes[8].bottom[1] + width_of_one_line - top_spaces - (width_of_one_line * (
+                            text_padding_for_visualise(text_list[4])[1] / 2))
+                     ), "Automated step")
+            ax.text(x_position_right,
+                    (all_boxes[8].bottom[1] - width_of_one_line - top_spaces - (width_of_one_line * (
+                            text_padding_for_visualise(text_list[4])[1] / 2))
+                     ), "Manual step")
+
+            # Create a Rectangle box
+            import matplotlib.patches as patches
+            green_rect = patches.Rectangle((x_position_right - (width_of_one_char * 3),
+                                            (all_boxes[8].bottom[1] + width_of_one_line
+                                             - top_spaces
+                                             - (width_of_one_line * (text_padding_for_visualise(text_list[4])[1] / 2)))),
+                                           .1, .1, linewidth=1, facecolor='green', alpha=0.6)
+            red_rect = patches.Rectangle((x_position_right - (width_of_one_char * 3),
+                                          (all_boxes[8].bottom[1] - width_of_one_line - top_spaces
+                                           - (width_of_one_line * (text_padding_for_visualise(text_list[4])[1] / 2)))),
+                                         .1, .1, linewidth=1, facecolor='red', alpha=0.5)
+
+            # Add the rectangular box patch to the Axes
+            ax.add_patch(green_rect)
+            ax.add_patch(red_rect)
+
+        # makes border invisible
+        if hide_border:
+            ax.axis('off')
 
         if diagram_fname:
             plt.savefig(diagram_fname, kwargs)
@@ -563,7 +734,8 @@ class CitationAnalysis:
 
     def publication_year_diagram(self, column_name: str = "year",
                                  top_result=None, method: str = "seaborn", theme_style="darkgrid",
-                                 xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
+                                 xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None,
+                                 **kwargs):
         """generates chart showing how many articles are published each year.
 
         Parameters
@@ -660,7 +832,8 @@ class CitationAnalysis:
 
     def publication_place_diagram(self, column_name: str = "place_published",
                                   top_result=None, method: str = "seaborn", theme_style="darkgrid",
-                                  xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
+                                  xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None,
+                                  **kwargs):
         """generates chart showing how many articles are published from different places or countries.
 
         Parameters
