@@ -256,7 +256,7 @@ def get_missed_articles_source_names(missed_articles_list: list, all_articles_ti
     return missed_article_name_and_source_name_list
 
 
-def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ['title', 'year'], keep: str = 'last',
+def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ['title', 'year'], keep: str = 'first',
                               index_reset: bool = True) -> pd.DataFrame:
     """Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time
     indexes are ignored.

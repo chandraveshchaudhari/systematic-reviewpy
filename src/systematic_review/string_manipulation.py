@@ -62,7 +62,7 @@ def string_to_space_separated_words(text: str) -> str:
         This is space separated word string with no trailing whitespaces.
 
     """
-    temp_text = text.lower().split()
+    temp_text = text.split()
     return " ".join(temp_text)
 
 
@@ -211,7 +211,7 @@ def split_preprocess_string(text: str) -> list:
     return text_list
 
 
-def cleaned_pdf_filename_from_filepath(article_path: str) -> str:
+def pdf_filename_from_filepath(article_path: str) -> str:
     """This takes the pdf path as input and clean the name of pdf by applying preprocess function from
     string_manipulation module.
 
@@ -223,12 +223,12 @@ def cleaned_pdf_filename_from_filepath(article_path: str) -> str:
     Returns
     -------
     str
-        This is the cleaned filename of the pdf. It contains no symbols and uppercase characters.
+        This is the cleaned filename of the pdf.
 
     """
     article_filename = os_utils.get_filename_from_path(article_path)
     article_name = strip_string_from_right_side(article_filename)
-    article_name = preprocess_string(article_name)
+
     return article_name
 
 

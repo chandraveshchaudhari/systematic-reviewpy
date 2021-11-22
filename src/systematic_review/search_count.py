@@ -568,7 +568,7 @@ def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict, 
 
 def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
                                     unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                    title_column_name: str = "cleaned_title",
+                                    title_column_name: str = "cleaned_title_pdf",
                                     method: str = "preprocess_string", custom=None) -> list:
     """Loop over articles pdf files to calculate keywords counts.
 
@@ -604,7 +604,8 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
     keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
     # iterating through each pdf path one by one.
     for pdf_path in list_of_downloaded_articles_path:
-        article_name = string_manipulation.cleaned_pdf_filename_from_filepath(pdf_path)
+        article_name = string_manipulation.preprocess_string_to_space_separated_words(
+            string_manipulation.pdf_filename_from_filepath(pdf_path))
         print("article: ", article_name)
         full_keywords_counts_dict = {title_column_name: str(article_name)}
         full_keywords_counts_dict.update(keyword_count_dict)
@@ -688,9 +689,9 @@ def validate_column_details_between_two_record_list(first_list_of_dict: list, se
     second_column_name : str
         This is the name of column which contain pdf article title.
     first_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains title_column_name
+        Iterable object pandas.DataFrame or list which contains first_column_name
     second_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains title_column_name
+        Iterable object pandas.DataFrame or list which contains first_column_name
     first_column_name : str
         This is the name of column which contain citation title.
 
@@ -723,16 +724,19 @@ def validate_column_details_between_two_record_list(first_list_of_dict: list, se
 
 
 def deep_validate_column_details_between_two_record_list(first_list_of_dict: list, second_list_of_dict: list,
-                                                         title_column_name: str = "cleaned_title") -> tuple:
+                                                         first_column_name: str = "cleaned_title",
+                                                         second_column_name: str = 'cleaned_title_pdf') -> tuple:
     """It produce list of matched columns rows and unmatched column rows based on same column from both.
 
     Parameters
     ----------
+    second_column_name : str
+        This is the name of column which contain pdf article title.
     first_list_of_dict : list
         Iterable object pandas.DataFrame or list which contains first_column_name
     second_list_of_dict : list
         Iterable object pandas.DataFrame or list which contains first_column_name
-    title_column_name : str
+    first_column_name : str
         This is the name of column which contain citation title.
 
     Returns
@@ -748,11 +752,11 @@ def deep_validate_column_details_between_two_record_list(first_list_of_dict: lis
 
     matched_list = []
     for first_dict in temp_first_list_of_dict:
-        if title_column_name in first_dict:
+        if first_column_name in first_dict:
 
             for second_dict in temp_second_list_of_dict:
-                if title_column_name in second_dict:
-                    if first_dict[title_column_name] == second_dict[title_column_name]:
+                if second_column_name in second_dict:
+                    if first_dict[first_column_name] == second_dict[second_column_name]:
                         article_name_count = {**first_dict, **second_dict}
                         matched_list.append(article_name_count)
                         temp_first_list_of_dict.remove(first_dict)
@@ -805,9 +809,10 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
     filter_sorted_citations_details = filter_sorted_citations_df.drop(columns=criteria_list)
 
     citations_list = converter.dataframe_to_list_of_dicts(filter_sorted_citations_details)
-    matched_list, unmatched_list = validate_column_details_between_two_record_list(citations_list,
-                                                                                   pdf_full_text_search_count,
-                                                                                   first_column_name, second_column_name)
+    matched_list, unmatched_list = deep_validate_column_details_between_two_record_list(citations_list,
+                                                                                        pdf_full_text_search_count,
+                                                                                        first_column_name,
+                                                                                        second_column_name)
     final_review_df = converter.list_of_dicts_to_dataframe(matched_list)
-    final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[second_column_name])
+
     return final_review_df
