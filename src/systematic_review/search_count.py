@@ -809,5 +809,5 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
                                                                                    pdf_full_text_search_count,
                                                                                    first_column_name, second_column_name)
     final_review_df = converter.list_of_dicts_to_dataframe(matched_list)
-    final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[first_column_name, second_column_name])
+    final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[second_column_name])
     return final_review_df
