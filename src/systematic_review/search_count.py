@@ -677,18 +677,21 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
 
 
 def validate_column_details_between_two_record_list(first_list_of_dict: list, second_list_of_dict: list,
-                                                    title_column_name: str = "cleaned_title") -> tuple:
+                                                    first_column_name: str = "cleaned_title", second_column_name: str =
+                                                    'cleaned_title_pdf') -> tuple:
     """It produce list of matched columns rows and unmatched column rows based on same column from first list of dict.
     Note- emphasis on first list as function check all records of first list of dict in second list of dict.
     title column of second_list_of_dict is kept by merging with first.
 
     Parameters
     ----------
+    second_column_name : str
+        This is the name of column which contain pdf article title.
     first_list_of_dict : list
         Iterable object pandas.DataFrame or list which contains title_column_name
     second_list_of_dict : list
         Iterable object pandas.DataFrame or list which contains title_column_name
-    title_column_name : str
+    first_column_name : str
         This is the name of column which contain citation title.
 
     Returns
@@ -705,7 +708,7 @@ def validate_column_details_between_two_record_list(first_list_of_dict: list, se
         for article_count in second_list_of_dict:
 
             validation_bool, percentage_matched, method = validation.multiple_methods_validating_words_string_in_text(
-                article_name[title_column_name], article_count[title_column_name])
+                article_name[first_column_name], article_count[second_column_name])
             # print(f"validation_bool: {validation_bool}, percentage_matched: {percentage_matched}, method: {method}")
             if validation_bool:
                 article_name_count = {**article_name, **article_count}
@@ -713,7 +716,7 @@ def validate_column_details_between_two_record_list(first_list_of_dict: list, se
                 break
 
         if not validation_bool:
-            unmatched_list.append([article_name[title_column_name], percentage_matched, method])
+            unmatched_list.append([article_name[first_column_name], percentage_matched, method])
 
     print(f"matched_list count = {len(matched_list)}, unmatched_list count = {len(unmatched_list)}")
     return matched_list, unmatched_list
@@ -726,9 +729,9 @@ def deep_validate_column_details_between_two_record_list(first_list_of_dict: lis
     Parameters
     ----------
     first_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains title_column_name
+        Iterable object pandas.DataFrame or list which contains first_column_name
     second_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains title_column_name
+        Iterable object pandas.DataFrame or list which contains first_column_name
     title_column_name : str
         This is the name of column which contain citation title.
 
@@ -764,13 +767,17 @@ def deep_validate_column_details_between_two_record_list(first_list_of_dict: lis
 def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_citations_df: pd.DataFrame,
                                                                  pdf_full_text_search_count: list,
                                                                  unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                                                 title_column_name: str = "cleaned_title") -> pd.DataFrame:
+                                                                 first_column_name: str = "cleaned_title",
+                                                                 second_column_name: str =
+                                                                 'cleaned_title_pdf') -> pd.DataFrame:
     """Combining the pdf keywords counts with the citation details from filtered and sorted citation full text
     dataframe.
 
     Parameters
     ----------
-    title_column_name : str
+    second_column_name : str
+        This is the name of column which contain pdf article title.
+    first_column_name : str
         This is the name of column which contain citation title.
     filter_sorted_citations_df : pandas.DataFrame object
         This is the sorted dataframe which contains columns in this sequential manner. It contains citation df,
@@ -800,7 +807,7 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
     citations_list = converter.dataframe_to_list_of_dicts(filter_sorted_citations_details)
     matched_list, unmatched_list = validate_column_details_between_two_record_list(citations_list,
                                                                                    pdf_full_text_search_count,
-                                                                                   title_column_name)
+                                                                                   first_column_name, second_column_name)
     final_review_df = converter.list_of_dicts_to_dataframe(matched_list)
-    final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[title_column_name])
+    final_review_df = citation.drop_duplicates_citations(final_review_df, subset=[first_column_name, second_column_name])
     return final_review_df
