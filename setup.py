@@ -49,7 +49,7 @@ setuptools.setup(
     # https://packaging.python.org/specifications/core-metadata/#summary
     description='A Python framework for systematic Review.',  # Optional
 
-    # description="A python project for easily launching custom automated browser to reduce repetitive boring work.",
+    # description="A python project for easily launching custom_text_manipulation_function automated browser to reduce repetitive boring work.",
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
     #

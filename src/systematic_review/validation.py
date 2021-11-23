@@ -5,6 +5,7 @@ contains functions to get articles source name and create list of missed or dupl
 
 from difflib import SequenceMatcher
 import pandas as pd
+from typing import List
 
 from systematic_review import string_manipulation
 from systematic_review import converter
@@ -374,7 +375,7 @@ def validating_pdf_via_filename(pdf_file_path: str, pages: str = "first", method
     pages : str
         This could be 'all' to get full text of pdf and 'first' for first page of pdf.
     method : str
-        This is the switch option to select method from exact_words, words_percentage, jumbled_words_percentage.
+        This is the switch option to select text_manipulation_method_name from exact_words, words_percentage, jumbled_words_percentage.
 
     Returns
     -------
@@ -395,7 +396,7 @@ def validating_pdf_via_filename(pdf_file_path: str, pages: str = "first", method
         validation_bool, percentage_matched = jumbled_words_percentage_checker_in_text(pdf_filename, text)
     else:
         validation_bool = False
-        print("Please properly write the method name, as method name is not available")
+        print("Please properly write the text_manipulation_method_name name, as text_manipulation_method_name name is not available")
 
     return validation_bool
 
@@ -420,7 +421,7 @@ def multiple_methods_validating_pdf_via_filename(pdf_file_path: str, pages: str 
     tuple
         True and False value depicting validated article with True value.
         This also shows percentage matched
-        Last it shows the method used. like exact_words, words_percentage, jumbled_words_percentage, all if every method
+        Last it shows the text_manipulation_method_name used. like exact_words, words_percentage, jumbled_words_percentage, all if every text_manipulation_method_name
         is executed to validate.
 
     """
@@ -497,7 +498,7 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: 
 
 
 def multiple_methods_validating_words_string_in_text(article_name: str, text: str) -> tuple:
-    """This method uses different methods to validate the article_name(substring) in text. Example - exact_words,
+    """This text_manipulation_method_name uses different methods to validate the article_name(substring) in text. Example - exact_words,
     words_percentage, jumbled_words_percentage.
 
     Parameters
@@ -512,7 +513,7 @@ def multiple_methods_validating_words_string_in_text(article_name: str, text: st
     tuple
         True and False value depicting validated article with True value.
         This also shows percentage matched
-        Last it shows the method used. like exact_words, words_percentage, jumbled_words_percentage, all if every method
+        Last it shows the text_manipulation_method_name used. like exact_words, words_percentage, jumbled_words_percentage, all if every text_manipulation_method_name
         is executed to validate.
 
     """
@@ -707,3 +708,23 @@ def manual_validating_of_pdf(articles_path_list: list, manual_index: int) -> tup
         print("input should be 'y' or 'n'")
     manual_index += 1
     return external_validation_list, external_invalidated_list
+
+
+class Validation:
+    def __init__(self, citations_records_list: List[dict], parents_directory_of_research_papers_files: str,
+                 text_file_path_of_inaccessible_research_papers: str = None):
+        self.text_file_path_of_inaccessible_research_papers = text_file_path_of_inaccessible_research_papers
+        self.parents_directory_of_research_papers_files = parents_directory_of_research_papers_files
+        self.citations_records_list = citations_records_list
+        self.research_papers_list = self.add_downloaded_flag_column_and_file_location_column()
+
+    def add_downloaded_flag_column_and_file_location_column(self):
+        pass
+
+
+
+    articles_paths = os_utils.extract_files_path_from_directories_or_subdirectories(
+        pdfs_parent_dir_path)
+    article_name = os_utils.get_filename_from_path(articles_paths[0])
+    string_manipulation.text_manipulation_methods(article_name, "preprocess_string_to_space_separated_words")
+

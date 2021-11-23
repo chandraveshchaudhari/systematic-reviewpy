@@ -5,7 +5,7 @@ typos.
 
 import re
 import pandas as pd
-from systematic_review import string_manipulation, filter_sort
+from systematic_review import string_manipulation, filter_sort, search_count
 from systematic_review import converter
 
 
@@ -123,33 +123,6 @@ def edit_ris_citation_paste_values_after_regex_pattern(input_file_path: str, out
     output_file.close()
 
 
-def add_citation_text_column(dataframe_object: pd.DataFrame, title_column_name: str = "title",
-                             abstract_column_name: str = "abstract",
-                             keyword_column_name: str = "keywords") -> pd.DataFrame:
-    """This takes dataframe of citations and return the full text comprises of "title", "abstract", "keywords"
-
-    Parameters
-    ----------
-    dataframe_object : pandas.DataFrame object
-        this is the object of famous python library pandas. for more lemma_info: https://pandas.pydata.org/docs/
-    title_column_name : str
-        This is the name of column which contain citation title
-    abstract_column_name : str
-        This is the name of column which contain citation abstract
-    keyword_column_name : str
-        This is the name of column which contain citation keywords
-
-    Returns
-    -------
-    pd.DataFrame
-        this is dataframe_object comprises of full text column.
-
-    """
-    dataframe_object["full_text"] = dataframe_object[title_column_name].astype(str) + " " + dataframe_object[
-        abstract_column_name].astype(str) + " " + dataframe_object[keyword_column_name].astype(str)
-
-    return dataframe_object
-
 
 def get_details_via_article_name_from_citations(article_name: str, sources_name_citations_path_list_of_dict: list,
                                                 doi_url: bool = False, title_column_name: str = "title") -> dict:
@@ -256,6 +229,103 @@ def get_missed_articles_source_names(missed_articles_list: list, all_articles_ti
     return missed_article_name_and_source_name_list
 
 
+
+def drop_columns_based_on_column_name_list(dataframe: pd.DataFrame, column_name_list: list) -> pd.DataFrame:
+    """This function drop columns based on the column name in the list.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame object
+        This dataframe contains columns which we want to drop or remove.
+    column_name_list : list
+        This is the name of dataframe columns to be removed
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with columns mentioned in column_name_list removed.
+
+    """
+    output_df = dataframe.drop(column_name_list, axis=1)
+    return output_df
+
+
+def drop_search_words_count_columns(dataframe, search_words_object: search_count.SearchWords) -> pd.DataFrame:
+    """removes columns created based on the keywords.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame object
+        This dataframe contains keywords columns which we want to drop or remove.
+    search_words_object : dict
+        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+        group can not be found in any other keyword group.
+        Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
+        ["corporate", "pricing"],...}
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with keywords columns removed.
+
+    """
+    keywords_count_cols = search_words_object.get_sorting_keywords_criterion_list()
+    cleaned_dataframe = drop_columns_based_on_column_name_list(dataframe, keywords_count_cols)
+    return cleaned_dataframe
+
+
+def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list = ('title', 'year')) -> pd.DataFrame:
+    """This function check if citations or article title is available at more than one sources and add column named
+    'multiple_sources' to the dataframe with list of name of sources names.
+
+    Parameters
+    ----------
+    citation_dataframe : pandas.DataFrame object
+        Input dataset which contains citations or article title with sources more than one.
+    group_by : list
+        column label or sequence of labels, optional Only consider certain columns for citations or article title with
+        sources more than one, by default use all of the columns.
+
+    Returns
+    -------
+    pandas.DataFrame object
+        DataFrame with additional column with list of sources names
+
+    """
+    df = citation_dataframe.groupby(group_by)['source'].apply(list).reset_index()
+    df = df.rename(columns={"source": "multiple_sources"})
+    citation_dataframe_with_multiple_sources_column = citation_dataframe.merge(df, how='left', on=group_by)
+    return citation_dataframe_with_multiple_sources_column
+
+
+def add_citation_text_column(dataframe_object: pd.DataFrame, title_column_name: str = "title",
+                             abstract_column_name: str = "abstract",
+                             keyword_column_name: str = "search_words_object") -> pd.DataFrame:
+    """This takes dataframe of citations and return the full text comprises of "title", "abstract", "search_words_object"
+
+    Parameters
+    ----------
+    dataframe_object : pandas.DataFrame object
+        this is the object of famous python library pandas. for more lemma_info: https://pandas.pydata.org/docs/
+    title_column_name : str
+        This is the name of column which contain citation title
+    abstract_column_name : str
+        This is the name of column which contain citation abstract
+    keyword_column_name : str
+        This is the name of column which contain citation search_words_object
+
+    Returns
+    -------
+    pd.DataFrame
+        this is dataframe_object comprises of full text column.
+
+    """
+    dataframe_object["citation_text"] = dataframe_object[title_column_name].astype(str) + " " + dataframe_object[
+        abstract_column_name].astype(str) + " " + dataframe_object[keyword_column_name].astype(str)
+
+    return dataframe_object
+
+
 def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ['title', 'year'], keep: str = 'first',
                               index_reset: bool = True) -> pd.DataFrame:
     """Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time
@@ -287,141 +357,55 @@ def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = [
     return clean_df
 
 
-def drop_columns_based_on_column_name_list(dataframe: pd.DataFrame, column_name_list: list) -> pd.DataFrame:
-    """This function drop columns based on the column name in the list.
+class Citations:
+    def __init__(self, citations_files_parent_folder_path, title_column_name: str = "title",
+                 text_manipulation_method_name: str = "preprocess_string_to_space_separated_words"):
+        self.text_manipulation_method_name = text_manipulation_method_name
+        self.title_column_name = title_column_name
+        self.citations_files_parent_folder_path = citations_files_parent_folder_path
 
-    Parameters
-    ----------
-    dataframe : pandas.DataFrame object
-        This dataframe contains columns which we want to drop or remove.
-    column_name_list : list
-        This is the name of dataframe columns to be removed
+    def complete_citations_dataframe(self):
+        """Executes citation step.
+        This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
-    Returns
-    -------
-    pandas.DataFrame object
-        DataFrame with columns mentioned in column_name_list removed.
+        Parameters
+        ----------
+        citations_files_parent_folder_path : str
+            this is the path of parent folder of where citations files exists.
 
-    """
-    output_df = dataframe.drop(column_name_list, axis=1)
-    return output_df
+        Returns
+        -------
+        pandas.DataFrame object
+            DataFrame with additional columns needed for next steps of systematic review and duplicates are removed
 
+        """
+        full_list = converter.load_multiple_ris_citations_files(self.citations_files_parent_folder_path)
+        full_list_df = converter.list_of_dicts_to_dataframe(full_list)
+        complete_df = add_multiple_sources_column(full_list_df)
+        complete_df = add_citation_text_column(complete_df)
+        new_column_name = "cleaned_" + self.title_column_name
+        complete_df = converter.apply_custom_function_on_dataframe_column(complete_df,
+                                                                          self.title_column_name,
+                                                                          string_manipulation.text_manipulation_methods,
+                                                                          new_column_name,
+                                                                          self.text_manipulation_method_name)
+        complete_citations_df = drop_duplicates_citations(complete_df)
+        return complete_citations_df
 
-def drop_keywords_count_columns(dataframe, keywords):
-    """removes columns created based on the keywords.
+    def complete_citations_list(self):
+        """Executes citation step.
+        This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
-    Parameters
-    ----------
-    dataframe : pandas.DataFrame object
-        This dataframe contains keywords columns which we want to drop or remove.
-    keywords : dict
-        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
-        group can not be found in any other keyword group.
-        Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
-        ["corporate", "pricing"],...}
+        Parameters
+        ----------
+        citations_files_parent_folder_path : str
+            this is the path of parent folder of where citations files exists.
 
-    Returns
-    -------
-    pandas.DataFrame object
-        DataFrame with keywords columns removed.
+        Returns
+        -------
+        list
+            list with additional columns needed for next steps of systematic review and duplicates are removed
 
-    """
-    keywords_count_cols = filter_sort.get_sorting_keywords_criterion_list(keywords)
-    cleaned_dataframe = drop_columns_based_on_column_name_list(dataframe, keywords_count_cols)
-    return cleaned_dataframe
+        """
 
-
-def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list = ['title', 'year']) -> pd.DataFrame:
-    """This function check if citations or article title is available at more than one sources and add column named
-    'multiple_sources' to the dataframe with list of name of sources names.
-
-    Parameters
-    ----------
-    citation_dataframe : pandas.DataFrame object
-        Input dataset which contains citations or article title with sources more than one.
-    group_by : list
-        column label or sequence of labels, optional Only consider certain columns for citations or article title with
-        sources more than one, by default use all of the columns.
-
-    Returns
-    -------
-    pandas.DataFrame object
-        DataFrame with additional column with list of sources names
-
-    """
-    df = citation_dataframe.groupby(group_by)['source'].apply(list).reset_index()
-    df = df.rename(columns={"source": "multiple_sources"})
-    citation_dataframe_with_multiple_sources_column = citation_dataframe.merge(df, how='left', on=group_by)
-    return citation_dataframe_with_multiple_sources_column
-
-
-def add_preprocess_column(dataframe_object: pd.DataFrame, column_name: str = "title"):
-    """Takes dataframe and column name to apply preprocess function from string_manipulation module.
-
-    Parameters
-    ----------
-    dataframe_object : pandas.DataFrame object
-        This is object with column containing column which needs to be preprocessed.
-    column_name : str
-        This is the name of the column of dataframe.
-
-    Returns
-    -------
-    pandas.DataFrame object
-        DataFrame with additional column with preprocessed column.
-
-    """
-    new_column_name = "cleaned_" + column_name
-    dataframe_object = converter.apply_custom_function_on_dataframe_column(dataframe_object, column_name,
-                                                                           string_manipulation.preprocess_string_to_space_separated_words,
-                                                                           new_column_name)
-    return dataframe_object
-
-
-def complete_citations_dataframe(citations_files_parent_folder_path):
-    """Executes citation step.
-    This function load all the citations from path, add required columns for next steps, and remove duplicates.
-
-    Parameters
-    ----------
-    citations_files_parent_folder_path : str
-        this is the path of parent folder of where citations files exists.
-
-    Returns
-    -------
-    pandas.DataFrame object
-        DataFrame with additional columns needed for next steps of systematic review and duplicates are removed
-
-    """
-    full_list = converter.load_multiple_ris_citations_files(citations_files_parent_folder_path)
-    full_list_df = converter.list_of_dicts_to_dataframe(full_list)
-    complete_df = add_multiple_sources_column(full_list_df)
-    complete_df = add_citation_text_column(complete_df)
-    complete_df = add_preprocess_column(complete_df)
-    complete_citations_df = drop_duplicates_citations(complete_df)
-    return complete_citations_df
-
-
-def complete_citations_list(citations_files_parent_folder_path):
-    """Executes citation step.
-    This function load all the citations from path, add required columns for next steps, and remove duplicates.
-
-    Parameters
-    ----------
-    citations_files_parent_folder_path : str
-        this is the path of parent folder of where citations files exists.
-
-    Returns
-    -------
-    list
-        list with additional columns needed for next steps of systematic review and duplicates are removed
-
-    """
-    full_list = converter.load_multiple_ris_citations_files(citations_files_parent_folder_path)
-    full_list_df = converter.list_of_dicts_to_dataframe(full_list)
-    complete_df = add_multiple_sources_column(full_list_df)
-    complete_df = add_citation_text_column(complete_df)
-    complete_df = add_preprocess_column(complete_df)
-    complete_citations_df = drop_duplicates_citations(complete_df)
-    citations_list = converter.dataframe_to_list_of_dicts(complete_citations_df)
-    return citations_list
+        return converter.dataframe_to_list_of_dicts(self.complete_citations_dataframe())

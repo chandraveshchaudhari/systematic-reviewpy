@@ -235,7 +235,7 @@ class TextInBox:
         Parameters
         ----------
         kwargs : dict
-            This taken any custom options to be set into box.
+            This taken any custom_text_manipulation_function options to be set into box.
 
         Returns
         -------
@@ -768,7 +768,7 @@ class CitationAnalysis:
             pandas_countplot_with_pandas_dataframe_column(self.dataframe, column_name, top_result, pandas_bar_kind,
                                                           diagram_fname, **kwargs)
         else:
-            print("Please provide method value as 'seaborn' or 'pandas'.")
+            print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")
 
     def authors_analysis(self, authors_column_name="authors"):
         """generates the details based on pandas dataframe column of article authors. example- Number of authors,
@@ -866,7 +866,7 @@ class CitationAnalysis:
             pandas_countplot_with_pandas_dataframe_column(self.dataframe, column_name, top_result, pandas_bar_kind,
                                                           diagram_fname, **kwargs)
         else:
-            print("Please provide method value as 'seaborn' or 'pandas'.")
+            print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")
 
     def publisher_info(self, column_name: str = "publisher"):
         """shows how many articles are published by different publishers.
@@ -919,15 +919,15 @@ class CitationAnalysis:
             pandas_countplot_with_pandas_dataframe_column(self.dataframe, column_name, top_result, pandas_bar_kind,
                                                           diagram_fname, **kwargs)
         else:
-            print("Please provide method value as 'seaborn' or 'pandas'.")
+            print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")
 
-    def extract_keywords(self, column_name: str = "keywords"):
-        """return dataframe with keywords column containing single keyword in row that are used in the articles.
+    def extract_keywords(self, column_name: str = "search_words_object"):
+        """return dataframe with search_words_object column containing single keyword in row that are used in the articles.
 
         Parameters
         ----------
         column_name : str
-            column name of keywords detail in citation dataframe
+            column name of search_words_object detail in citation dataframe
 
         Returns
         -------
@@ -942,13 +942,13 @@ class CitationAnalysis:
 
         return keywords_pandas_df
 
-    def keywords_info(self, column_name: str = "keywords"):
-        """return keywords and number of times they are used in the articles
+    def keywords_info(self, column_name: str = "search_words_object"):
+        """return search_words_object and number of times they are used in the articles
 
         Parameters
         ----------
         column_name : str
-            column name of keywords detail in citation dataframe
+            column name of search_words_object detail in citation dataframe
 
         Returns
         -------
@@ -956,7 +956,7 @@ class CitationAnalysis:
         """
         return dataframe_column_counts(self.extract_keywords(), column_name)
 
-    def keyword_diagram(self, column_name: str = "keywords",
+    def keyword_diagram(self, column_name: str = "search_words_object",
                         top_result=None, method: str = "seaborn", theme_style="darkgrid",
                         xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
         """generates chart showing how many articles are published by different publishers.
@@ -966,7 +966,7 @@ class CitationAnalysis:
         pandas_bar_kind : str
             pandas plot option of kind of chart needed. defaults to 'bar' in this implementation
         column_name : str
-            column name of keywords detail in citation dataframe
+            column name of search_words_object detail in citation dataframe
         theme_style : str
             name of the bar chart theme
         xaxis_label_rotation : float
@@ -991,4 +991,4 @@ class CitationAnalysis:
             pandas_countplot_with_pandas_dataframe_column(self.extract_keywords(), column_name, top_result,
                                                           pandas_bar_kind, diagram_fname, **kwargs)
         else:
-            print("Please provide method value as 'seaborn' or 'pandas'.")
+            print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")

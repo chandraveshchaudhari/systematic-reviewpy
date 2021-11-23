@@ -3,7 +3,7 @@ This module contains functions related to string case change, preprocess, and re
 """
 
 import unicodedata
-from systematic_review import os_utils
+from systematic_review import os_utils, nlp
 
 
 def string_dict_to_lower(string_map: dict) -> dict:
@@ -251,3 +251,55 @@ def strip_string_from_right_side(string: str, value_to_be_stripped: str = ".pdf"
     """
     stripped_string = string.rstrip(value_to_be_stripped)
     return stripped_string
+
+
+def text_manipulation_methods(text: str, text_manipulation_method_name: str = "preprocess_string", custom=None):
+    """This convert text or string using options like preprocess, nlp module function, for more info each respective
+    methods methods implemented.
+
+    Parameters
+    ----------
+    custom : function
+        This is optional custom_text_manipulation_function function if you want to implement this yourself. pass as
+        custom_text_manipulation_function = function_name. it will take text as parameter with no default preprocess_string operation.
+    text : str
+        string type text which is needed to be converted.
+    text_manipulation_method_name : str
+        provides the options to use any text manipulation function.
+        preprocess_string (default and applied before all other implemented functions)
+        custom_text_manipulation_function - for putting your custom_text_manipulation_function function to preprocess the text
+        nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+        nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma, convert_string_to_lowercase,
+        preprocess_string_to_space_separated_words
+
+    Returns
+    -------
+    str
+        this return the converted text
+
+    """
+    preprocessed_text = preprocess_string(text)
+    if text_manipulation_method_name == "preprocess_string".lower():
+        return preprocessed_text
+    elif text_manipulation_method_name == "convert_string_to_lowercase".lower():
+        return convert_string_to_lowercase(text)
+    elif text_manipulation_method_name == "custom_text_manipulation_function".lower():
+        return custom(text)
+    elif text_manipulation_method_name == "preprocess_string_to_space_separated_words".lower():
+        return preprocess_string_to_space_separated_words(text)
+    elif text_manipulation_method_name == "nltk_remove_stopwords".lower():
+        return nlp.nltk_remove_stopwords(preprocessed_text)
+    elif text_manipulation_method_name == "pattern_lemma_or_lemmatize_text".lower():
+        return nlp.pattern_lemma_or_lemmatize_text(preprocessed_text)
+    elif text_manipulation_method_name == "nltk_word_net_lemmatizer".lower():
+        return nlp.nltk_word_net_lemmatizer(preprocessed_text)
+    elif text_manipulation_method_name == "nltk_porter_stemmer".lower():
+        return nlp.nltk_porter_stemmer(preprocessed_text)
+    elif text_manipulation_method_name == "nltk_lancaster_stemmer".lower():
+        return nlp.nltk_lancaster_stemmer(preprocessed_text)
+    elif text_manipulation_method_name == "spacy_lemma".lower():
+        return nlp.spacy_lemma(preprocessed_text)
+    elif text_manipulation_method_name == "nltk_remove_stopwords_spacy_lemma".lower():
+        return nlp.nltk_remove_stopwords_spacy_lemma(preprocessed_text)
+    else:
+        print("Not implemented yet.")

@@ -1,12 +1,14 @@
 """Module: filter_sort
-Description for filter: each searched keywords group can be used to filter using conditions such as 
-searched keywords >= some count values and filter them until you have required number of articles that can be manually read and filter.
+Description for filter: each searched search_words_object group can be used to filter using conditions such as
+searched search_words_object >= some count values and filter them until you have required number of articles that can be manually read and filter.
 
 Description for sort: This converts the data into sorted manner so it is easier for humans to understand.
 """
 
 import pandas as pd
-from systematic_review import converter
+from typing import List
+
+from systematic_review import converter, search_count
 
 
 def sort_dataframe_based_on_column(dataframe, column_name, ascending=True):
@@ -24,7 +26,7 @@ def sort_dataframe_based_on_column(dataframe, column_name, ascending=True):
     Returns
     -------
     pd.DataFrame
-        This is sorted dataframe based on column_name.
+        This is sorted dataframe based on title_column_name.
 
     """
     column_sorted_df = dataframe.sort_values(by=column_name, ascending=ascending)
@@ -57,13 +59,13 @@ def get_pd_df_columns_names_with_prefix_suffix(input_pandas_dataframe: pd.DataFr
         columns_name_df_index = input_pandas_dataframe.loc[:, input_pandas_dataframe.columns.str.endswith(common_word)]
     else:
         columns_name_df_index = []
-        print("method is not available. Please input 'prefix' or 'suffix'.")
+        print("text_manipulation_method_name is not available. Please input 'prefix' or 'suffix'.")
     columns_name_list = [column_name for column_name in columns_name_df_index]
     return columns_name_list
 
 
 def filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df: pd.DataFrame, min_limit: int,
-                                                  common_word: str = "_count", method: str = "suffix"):
+                                                  common_word: str = "_count", method: str = "suffix") -> List[dict]:
     """This function gets  columns name from pandas dataframe which contains given prefix or suffix. It then filter
     dataframe to the point where all prefix and suffix column name have values more than min_limit.
 
@@ -72,7 +74,7 @@ def filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_cou
     citations_grouped_keywords_counts_df : pd.DataFrame
         This is input dataframe which contains some columns which have prefix or suffix in names.
     min_limit : int
-        This is the least value we want in all keywords group names.
+        This is the least value we want in all search_words_object group names.
     common_word : str
         This is the similar word string in many column names.
     method : str
@@ -80,7 +82,7 @@ def filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_cou
 
     Returns
     -------
-    list
+    List[dict]
         This is the filtered citations list based on min_limit of grouped_keywords_counts.
 
     """
@@ -291,7 +293,7 @@ def return_finding_required_article_by_changing_min_limit_recursively(
 def manually_check_filter_by_min_limit_changes(citations_grouped_keywords_counts_df: pd.DataFrame,
                                                required_number_of_articles: int, min_limit: int = 1,
                                                iterations: int = 20, addition: int = 20):
-    """manual method to check number of articles based on changing min_limit.
+    """manual text_manipulation_method_name to check number of articles based on changing min_limit.
 
     Parameters
     ----------
@@ -300,7 +302,7 @@ def manually_check_filter_by_min_limit_changes(citations_grouped_keywords_counts
     required_number_of_articles : int
         This is the number of articles you want after filtration process.
     min_limit : int
-        This is the least value we want in all keywords group names.
+        This is the least value we want in all search_words_object group names.
     iterations : int
         This is the number of iterations in for underling loop.
     addition : int
@@ -323,16 +325,16 @@ def manually_check_filter_by_min_limit_changes(citations_grouped_keywords_counts
             min_limit += addition
 
 
-def get_sorting_criterion_list(citations_grouped_keywords_counts_df, unique_preprocessed_clean_grouped_keywords_dict):
-    """This sorting criteria list is based on the keywords got from the main input keywords. It contains total_keywords,
+def get_dataframe_sorting_criterion_list(citations_grouped_keywords_counts_df, unique_preprocessed_clean_grouped_keywords_dict):
+    """This sorting criteria list is based on the search_words_object got from the main input search_words_object. It contains total_keywords,
     group_keywords_counts, keywords_counts.
 
     Parameters
     ----------
     citations_grouped_keywords_counts_df : pd.DataFrame
-        This dataframe contains all columns with counts of keywords.
+        This dataframe contains all columns with counts of search_words_object.
     unique_preprocessed_clean_grouped_keywords_dict : dict
-        his is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
+        his is the dictionary comprised of unique search_words_object in each keyword groups. It means keyword from first keyword
         group can not be found in any other keyword group.
         Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
         ["corporate", "pricing"],...}.
@@ -353,41 +355,13 @@ def get_sorting_criterion_list(citations_grouped_keywords_counts_df, unique_prep
     return sorting_criterion_list
 
 
-def get_sorting_keywords_criterion_list(unique_preprocessed_clean_grouped_keywords_dict: dict) -> list:
-    """This sorting criteria list is based on the keywords got from the main input keywords. It contains total_keywords,
-    group_keywords_counts, keywords_counts.
 
-    Parameters
-    ----------
-    unique_preprocessed_clean_grouped_keywords_dict : dict
-        his is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
-        group can not be found in any other keyword group.
-        Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
-        ["corporate", "pricing"],...}.
-        'risk' is removed from keyword_group_2.
-
-    Returns
-    -------
-    list
-        This is the sorting criterion list which contains column in logical manner we desire. It contains
-        total_keywords, group_keywords_counts, and keywords in the last.
-
-    """
-    sorting_keywords_criterion_list = ["total_keywords"]
-    for keyword_group_name in unique_preprocessed_clean_grouped_keywords_dict.keys():
-        group_name_count = str(keyword_group_name) + "_count"
-        sorting_keywords_criterion_list.append(group_name_count)
-
-    for keywords_list in unique_preprocessed_clean_grouped_keywords_dict.values():
-        for keyword in keywords_list:
-            sorting_keywords_criterion_list.append(keyword)
-    return sorting_keywords_criterion_list
 
 
 def dataframe_sorting_criterion_list(citations_grouped_keywords_counts_df: pd.DataFrame,
                                      sorting_keywords_criterion_list: list, reverse: bool = False):
     """Provide a sorting criterion list for dataframe columns. put citations columns to the left and keyword counts on
-    the right. On making reverse equal to true it put keywords on the left.
+    the right. On making reverse equal to true it put search_words_object on the left.
 
     Parameters
     ----------
@@ -395,7 +369,7 @@ def dataframe_sorting_criterion_list(citations_grouped_keywords_counts_df: pd.Da
         default to False to output citations columns to the left and keyword counts on the right. On True it does
         opposite.
     citations_grouped_keywords_counts_df : pd.DataFrame
-        This dataframe contains all columns with counts of keywords.
+        This dataframe contains all columns with counts of search_words_object.
     sorting_keywords_criterion_list : list
         This is the sorting criterion list which contains column in logical manner we desire.It contains
         total_keywords, group_keywords_counts, and keywords_counts in the last.
@@ -428,7 +402,7 @@ def sort_citations_grouped_keywords_counts_df(citations_grouped_keywords_counts_
     Parameters
     ----------
     citations_grouped_keywords_counts_df : pd.DataFrame
-        This dataframe contains all columns with counts of keywords.
+        This dataframe contains all columns with counts of search_words_object.
     sorting_keywords_criterion_list : list
         This is the sorting criterion list which contains column in logical manner we desire.It contains
         total_keywords, group_keywords_counts, and keywords_counts in the last.
@@ -450,7 +424,7 @@ def sort_citations_grouped_keywords_counts_df(citations_grouped_keywords_counts_
 
 
 def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
-                    preprocessed_clean_grouped_keywords_dict: dict, required_number: int) -> pd.DataFrame:
+                    search_words_object: search_count.SearchWords, required_number: int) -> pd.DataFrame:
     """Execute filter and sort step.
     creates sorting criterion list, sort the dataframe based on the sorting criterion list.
 
@@ -459,10 +433,10 @@ def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
     required_number : int
         This is the least number of documents we want.
     citations_grouped_keywords_counts_df : pd.DataFrame
-        This dataframe contains all columns with counts of keywords.
-    preprocessed_clean_grouped_keywords_dict : dict
-        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword
-        group can not be found in any other keyword group.
+        This dataframe contains all columns with counts of search_words_object.
+    search_words_object : object
+        search_words_object should contain dictionary comprised of unique search_words_object in each keyword groups. It means
+        keyword from first keyword group can not be found in any other keyword group.
         Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
         ["corporate", "pricing"],...}
 
@@ -477,7 +451,7 @@ def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
         citations_grouped_keywords_counts_df, required_number)
     min_limit = min_limit_tuple[0][0] if min_limit_tuple[0] else min_limit_tuple[2][0]
     filtered_list = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df, min_limit)
-    criteria_list = get_sorting_keywords_criterion_list(preprocessed_clean_grouped_keywords_dict)
+    criteria_list = search_words_object.get_sorting_keywords_criterion_list()
     filtered_df = converter.list_of_dicts_to_dataframe(filtered_list)
     filtered_sorted_df = sort_citations_grouped_keywords_counts_df(filtered_df, criteria_list)
 
