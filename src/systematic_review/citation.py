@@ -64,31 +64,6 @@ def csv_citations_to_ris_converter(input_file_path: str, output_filename: str = 
     print("ris file has been generated")
 
 
-def remove_empty_lines(input_file_path: str, output_filename: str = "output_file.ris") -> None:
-    """
-    This function removes the blank lines from the input file and output new file.
-
-    Parameters
-    ----------
-    input_file_path : str
-        this is the path of input file
-    output_filename : str
-        this is the name of the output ris file with extension.
-
-    Returns
-    -------
-    None
-
-    """
-    input_file = open(input_file_path, "r")
-    output_file = open(output_filename, "a")
-    for line in input_file:
-        if line != "\n":
-            output_file.write(line)
-    input_file.close()
-    output_file.close()
-
-
 def edit_ris_citation_paste_values_after_regex_pattern(input_file_path: str, output_filename: str = "output_file.ris",
                                                        edit_line_regex: str = r'^DO ', paste_value: str = "ER  - ") \
         -> None:
@@ -121,7 +96,6 @@ def edit_ris_citation_paste_values_after_regex_pattern(input_file_path: str, out
 
     input_file.close()
     output_file.close()
-
 
 
 def get_details_via_article_name_from_citations(article_name: str, sources_name_citations_path_list_of_dict: list,
@@ -227,7 +201,6 @@ def get_missed_articles_source_names(missed_articles_list: list, all_articles_ti
                 {"article_name": dict_element[article_column_name], "source_name": dict_element[source_column_name]})
 
     return missed_article_name_and_source_name_list
-
 
 
 def drop_columns_based_on_column_name_list(dataframe: pd.DataFrame, column_name_list: list) -> pd.DataFrame:

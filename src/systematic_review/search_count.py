@@ -778,95 +778,10 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
     return pdf_full_text_search_count_df
 
 
-def validate_column_details_between_two_record_list(first_list_of_dict: list, second_list_of_dict: list,
-                                                    first_column_name: str = "cleaned_title", second_column_name: str =
-                                                    'cleaned_title_pdf') -> tuple:
-    """It produce list of matched columns rows and unmatched column rows based on same column from first list of dict.
-    Note- emphasis on first list as function check all records of first list of dict in second list of dict.
-    title column of second_list_of_dict is kept by merging with first.
-
-    Parameters
-    ----------
-    second_column_name : str
-        This is the name of column which contain pdf article title.
-    first_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains first_column_name
-    second_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains first_column_name
-    first_column_name : str
-        This is the name of column which contain citation title.
-
-    Returns
-    -------
-    tuple
-        matched_list - It contains column's row which are matched in both data object.
-        unmatched_list - It contains column's row which are unmatched in both data object.
-
-    """
-    matched_list = []
-    unmatched_list = []
-    for article_name in first_list_of_dict:
-        validation_bool, percentage_matched, method = True, 0, None
-        for article_count in second_list_of_dict:
-
-            validation_bool, percentage_matched, method = validation.multiple_methods_validating_words_string_in_text(
-                article_name[first_column_name], article_count[second_column_name])
-            # print(f"validation_bool: {validation_bool}, percentage_matched: {percentage_matched}, text_manipulation_method_name: {text_manipulation_method_name}")
-            if validation_bool:
-                article_name_count = {**article_name, **article_count}
-                matched_list.append(article_name_count)
-                break
-
-        if not validation_bool:
-            unmatched_list.append([article_name[first_column_name], percentage_matched, method])
-
-    print(f"matched_list count = {len(matched_list)}, unmatched_list count = {len(unmatched_list)}")
-    return matched_list, unmatched_list
 
 
-def deep_validate_column_details_between_two_record_list(first_list_of_dict: list, second_list_of_dict: list,
-                                                         first_column_name: str = "cleaned_title",
-                                                         second_column_name: str = 'cleaned_title_pdf') -> tuple:
-    """It produce list of matched columns rows and unmatched column rows based on same column from both.
 
-    Parameters
-    ----------
-    second_column_name : str
-        This is the name of column which contain pdf article title.
-    first_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains first_column_name
-    second_list_of_dict : list
-        Iterable object pandas.DataFrame or list which contains first_column_name
-    first_column_name : str
-        This is the name of column which contain citation title.
 
-    Returns
-    -------
-    tuple
-        matched_list - It contains column's row which are matched in both data object.
-        unmatched_list - It contains column's row which are unmatched in both data object.
-
-    """
-    import copy
-    temp_first_list_of_dict = copy.deepcopy(first_list_of_dict)
-    temp_second_list_of_dict = copy.deepcopy(second_list_of_dict)
-
-    matched_list = []
-    for first_dict in temp_first_list_of_dict:
-        if first_column_name in first_dict:
-
-            for second_dict in temp_second_list_of_dict:
-                if second_column_name in second_dict:
-                    if first_dict[first_column_name] == second_dict[second_column_name]:
-                        article_name_count = {**first_dict, **second_dict}
-                        matched_list.append(article_name_count)
-                        temp_first_list_of_dict.remove(first_dict)
-                        temp_second_list_of_dict.remove(second_dict)
-                        break
-
-    unmatched_list = temp_first_list_of_dict + temp_second_list_of_dict
-
-    return matched_list, unmatched_list
 
 
 def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_citations_df: pd.DataFrame,

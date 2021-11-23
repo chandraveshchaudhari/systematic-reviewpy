@@ -429,6 +429,31 @@ def text_file_to_list(file_path: str, permission: str = "r"):
     return file_object.split("\n")
 
 
+def remove_empty_lines(input_file_path: str, output_filename: str = "output_file.ris") -> None:
+    """
+    This function removes the blank lines from the input file and output new file.
+
+    Parameters
+    ----------
+    input_file_path : str
+        this is the path of input file
+    output_filename : str
+        this is the name of the output ris file with extension.
+
+    Returns
+    -------
+    None
+
+    """
+    input_file = open(input_file_path, "r")
+    output_file = open(output_filename, "a")
+    for line in input_file:
+        if line != "\n":
+            output_file.write(line)
+    input_file.close()
+    output_file.close()
+
+
 def write_json_file_with_dict(output_file_path: str, input_dict: dict) -> None:
     """Write json file at output_file_path with the help of input dictionary.
 
