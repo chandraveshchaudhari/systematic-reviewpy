@@ -69,21 +69,44 @@ def get_path_leaf(file_path: str) -> str:
 
 
 def get_filename_from_path(file_path: str) -> str:
-    """Returns the pdf filename from pdf filepath.
+    """Returns the filename from pdf filepath.
 
     Parameters
     ----------
     file_path : str
-        This is the file path of the pdf file.
+        A path is a string of characters used to uniquely identify a location in a directory structure. for more info
+        visit- https://en.wikipedia.org/wiki/Path_(computing)
 
     Returns
     -------
     str
-        Filename of the pdf file.
+        A filename or file name is a name used to uniquely identify a computer file in a directory structure. for more info
+        visit- https://en.wikipedia.org/wiki/Filename
 
     """
     file_name = get_path_leaf(file_path)
     file_name = file_name.split(".")[0]
+    return file_name
+
+
+def get_file_extension_from_path(file_path: str) -> str:
+    """Returns the file extension from pdf filepath.
+
+    Parameters
+    ----------
+    file_path : str
+        A path is a string of characters used to uniquely identify a location in a directory structure. for more info
+        visit- https://en.wikipedia.org/wiki/Path_(computing)
+
+    Returns
+    -------
+    str
+        A filename extension, file extension or file type is an identifier specified as a suffix to the name of a
+        computer file. for more info visit- https://en.wikipedia.org/wiki/Filename_extension
+
+    """
+    file_name = get_path_leaf(file_path)
+    file_name = file_name.split(".")[1]
     return file_name
 
 

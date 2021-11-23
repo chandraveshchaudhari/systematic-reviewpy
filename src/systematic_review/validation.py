@@ -802,20 +802,25 @@ def manual_validating_of_pdf(articles_path_list: list, manual_index: int) -> tup
 
 
 class Validation:
+    download_flag_column_name = 'downloaded'
+    research_paper_file_location_column_name = 'file location'
+    cleaned_article_column_name = 'cleaned_title'
     def __init__(self, citations_records_list: List[dict], parents_directory_of_research_papers_files: str,
                  text_file_path_of_inaccessible_research_papers: str = None):
+
         self.text_file_path_of_inaccessible_research_papers = text_file_path_of_inaccessible_research_papers
         self.parents_directory_of_research_papers_files = parents_directory_of_research_papers_files
         self.citations_records_list = citations_records_list
         self.research_papers_list = self.add_downloaded_flag_column_and_file_location_column()
+        self.file_name_and_path_mapping = self.file_name_and_path_dict()
 
     def add_downloaded_flag_column_and_file_location_column(self):
         import copy
         complete_citations_records_list = copy.deepcopy(self.citations_records_list)
 
         for record in complete_citations_records_list:
-            record['downloaded'] = False
-            record['file location'] = ""
+            record[self.download_flag_column_name] = False
+            record[self.research_paper_file_location_column_name] = ""
 
         return complete_citations_records_list
 
@@ -832,7 +837,15 @@ class Validation:
         return file_name_and_path
 
     def check(self):
-        pass
+        for citation in self.research_papers_list:
+            if not citation[self.download_flag_column_name]:
+                if citation[self.cleaned_article_column_name] in self.file_name_and_path_mapping:
+                    ###### validate ###### self.file_name_and_path_mapping[self.cleaned_article_column_name]
+                    citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[self.cleaned_article_column_name]
+
+
+
+
 
 
 

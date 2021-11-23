@@ -9,10 +9,10 @@ from systematic_review import string_manipulation, filter_sort, search_count
 from systematic_review import converter
 
 
-def csv_citations_to_ris_converter(input_file_path: str, output_filename: str = "output_ris_file.ris",
-                                   input_file_type: str = "csv") -> None:
+def citations_to_ris_converter(input_file_path: str, output_filename: str = "output_ris_file.ris",
+                               input_file_type: str = "read_csv") -> None:
     """
-    This asks for columns name from csv and then convert the csv to ris format.
+    This asks for citations columns name from tabular data and then convert the data to ris format.
 
     Parameters
     ----------
@@ -21,22 +21,21 @@ def csv_citations_to_ris_converter(input_file_path: str, output_filename: str = 
     output_filename : str
         this is the name of the output ris file with extension. output file path is also valid choice.
     input_file_type : str
-        this function default is csv but excel is also supported by putting 'excel'
+        this function default is csv but other formats are also supported by putting 'read_{file_type}'. such as
+        input_file_type = 'read_excel' all file type supported by pandas can be used by putting pandas IO tools methods.
+        for more info visit- https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html
 
     Returns
     -------
     None
 
     """
-    if input_file_type == 'excel':
-        df = pd.read_excel(input_file_path)
-    else:
-        df = pd.read_csv(input_file_path)
+    df = getattr(pd, input_file_type)(input_file_path)
 
     pd.set_option("display.max_columns", None)
     print(df.head())
-    print("please specify columns of following in input file:")
-    article_type = input("specify the type of given citations. if it's journal article, input :JOUR")
+    print("please specify column names for following data in input file:")
+    article_type = input("specify column for type of given citations. if it's journal article, input :JOUR")
     authors = input("provide name of authors column")
     publication_year = input("provide name of Publication Year column")
     item_title = input("provide name of Item Title column")
