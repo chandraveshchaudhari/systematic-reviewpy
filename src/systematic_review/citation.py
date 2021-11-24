@@ -352,7 +352,7 @@ class Citations:
 
         """
         full_list = converter.load_multiple_ris_citations_files(self.citations_files_parent_folder_path)
-        full_list_df = converter.list_of_dicts_to_dataframe(full_list)
+        full_list_df = converter.records_list_to_dataframe(full_list)
         complete_df = add_multiple_sources_column(full_list_df)
         complete_df = add_citation_text_column(complete_df)
         new_column_name = "cleaned_" + self.title_column_name

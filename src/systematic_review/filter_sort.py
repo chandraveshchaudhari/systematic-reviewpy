@@ -452,7 +452,46 @@ def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
     min_limit = min_limit_tuple[0][0] if min_limit_tuple[0] else min_limit_tuple[2][0]
     filtered_list = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df, min_limit)
     criteria_list = search_words_object.get_sorting_keywords_criterion_list()
-    filtered_df = converter.list_of_dicts_to_dataframe(filtered_list)
+    filtered_df = converter.records_list_to_dataframe(filtered_list)
     filtered_sorted_df = sort_citations_grouped_keywords_counts_df(filtered_df, criteria_list)
 
     return filtered_sorted_df
+
+
+class FilterSort:
+    def __init__(self):
+        pass
+
+    def filter_and_sort(self, citations_grouped_keywords_counts_df: pd.DataFrame,
+                        search_words_object: search_count.SearchWords, required_number: int) -> pd.DataFrame:
+        """Execute filter and sort step.
+        creates sorting criterion list, sort the dataframe based on the sorting criterion list.
+
+        Parameters
+        ----------
+        required_number : int
+            This is the least number of documents we want.
+        citations_grouped_keywords_counts_df : pd.DataFrame
+            This dataframe contains all columns with counts of search_words_object.
+        search_words_object : object
+            search_words_object should contain dictionary comprised of unique search_words_object in each keyword groups. It means
+            keyword from first keyword group can not be found in any other keyword group.
+            Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
+            ["corporate", "pricing"],...}
+
+        Returns
+        -------
+        pd.DataFrame
+            This is the sorted dataframe which contains columns in this sequential manner. It contains citation df,
+             total_keywords, group_keywords_counts, and keywords_counts in the last.
+
+        """
+        min_limit_tuple = return_finding_near_required_article_by_changing_min_limit_while_loop(
+            citations_grouped_keywords_counts_df, required_number)
+        min_limit = min_limit_tuple[0][0] if min_limit_tuple[0] else min_limit_tuple[2][0]
+        filtered_list = filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_counts_df, min_limit)
+        criteria_list = search_words_object.get_sorting_keywords_criterion_list()
+        filtered_df = converter.records_list_to_dataframe(filtered_list)
+        filtered_sorted_df = sort_citations_grouped_keywords_counts_df(filtered_df, criteria_list)
+
+        return filtered_sorted_df

@@ -4,7 +4,7 @@ dicts and many more.
 """
 import json
 from collections import defaultdict
-from typing import Union, List
+from typing import Union, List, Dict
 
 import pandas as pd
 import rispy
@@ -237,7 +237,7 @@ def unpack_list_of_lists(list_of_lists):
     return unpacked_list
 
 
-def list_of_dicts_to_dataframe(list_of_dicts: list) -> pd.DataFrame:
+def records_list_to_dataframe(list_of_dicts: List[Dict[str, ...]]) -> pd.DataFrame:
     """converts the list of dictionaries to pandas dataframe.
 
     Parameters
@@ -296,7 +296,7 @@ def ris_file_to_pandas_dataframe(ris_file_path: str) -> pd.DataFrame:
     """
     with open(ris_file_path, 'r') as bibliography_file:
         entries = rispy.load(bibliography_file)
-        df = pd.DataFrame.from_dict(entries)
+        df = records_list_to_dataframe(entries)
         return df
 
 
@@ -338,7 +338,7 @@ def load_multiple_ris_citations_files_to_dataframe(citations_files_parent_folder
 
     """
     full_list = load_multiple_ris_citations_files(citations_files_parent_folder_path)
-    full_list_df = list_of_dicts_to_dataframe(full_list)
+    full_list_df = records_list_to_dataframe(full_list)
 
     return full_list_df
 
@@ -705,7 +705,7 @@ class ASReview:
             dataframe['label_included'] = ""
             dataframe_to_csv_file(dataframe, output_filename, index)
         elif type(self.data) == list:
-            df = list_of_dicts_to_dataframe(self.data)
+            df = records_list_to_dataframe(self.data)
             dataframe = df.copy()
             dataframe['label_included'] = ""
             dataframe_to_csv_file(dataframe, output_filename, index)
