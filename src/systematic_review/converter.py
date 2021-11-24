@@ -544,6 +544,7 @@ def get_text_from_pdf_pdftotext(pdf_file_path: str, pages: str = "all") -> str:
         text = pdf_object[pages]
     return text
 
+
 def get_pdf_object_from_pdf_path(pdf_file_path: str) -> object:
     """Extract text as pdf object from the pdf file where loop and indexing can show text per pages.
 
@@ -584,6 +585,7 @@ def get_pdf_object_from_pdf_path(pdf_file_path: str) -> object:
         pdf_text_object = pdftotext.PDF(pdf_file)
     return pdf_text_object
 
+
 def get_text_from_pdf_pymupdf(pdf_file_path: str, pages: str = 'all') -> str:
     """Extract the text from pdf file via fitz(PyMuPDF). for more lemma_info, visit: https://pypi.org/project/PyMuPDF/
 
@@ -622,6 +624,7 @@ def get_text_from_pdf_pymupdf(pdf_file_path: str, pages: str = 'all') -> str:
             for page in doc:
                 text += page.getText()
     return text
+
 
 def get_text_from_pdf(pdf_file_path: str, pages: str = 'all', pdf_reader: str = 'pdftotext') -> Union[str, bool]:
     """This Function get text from pdf files using either pdftotext or pymupdf.
@@ -717,5 +720,32 @@ class Reader:
     def get_text(self, pages: str = 'all'):
         if self.file_extension == "pdf":
             return get_text_from_multiple_pdf_reader(self.file_path, pages)
+        elif self.file_extension == "csv":
+            return self.pandas_reader("read_csv")
+        elif self.file_extension[0] == "x":
+            return self.pandas_reader("read_excel")
+        elif self.file_extension == "json":
+            return json_file_to_dict(self.file_path)
         else:
             return load_text_file(self.file_path)
+
+    def pdf_pdftotext_reader(self, pages: str = 'all'):
+        try:
+            pdf_text = get_text_from_pdf_pdftotext(self.file_path, pages)
+        except Exception:
+            pdf_text = ""
+
+        return pdf_text
+
+    def pdf_pymupdf_reader(self, pages: str = 'all'):
+        try:
+            pdf_text = get_text_from_pdf_pymupdf(self.file_path, pages)
+        except Exception:
+            pdf_text = ""
+
+        return pdf_text
+
+    def pandas_reader(self, input_file_type):
+        dataframe = getattr(pd, input_file_type)(self.file_path)
+        return dataframe
+

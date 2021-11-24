@@ -487,7 +487,8 @@ def validating_pdf_via_filename(pdf_file_path: str, pages: str = "first", method
         validation_bool, percentage_matched = jumbled_words_percentage_checker_in_text(pdf_filename, text)
     else:
         validation_bool = False
-        print("Please properly write the text_manipulation_method_name name, as text_manipulation_method_name name is not available")
+        print(
+            "Please properly write the text_manipulation_method_name name, as text_manipulation_method_name name is not available")
 
     return validation_bool
 
@@ -805,9 +806,17 @@ class Validation:
     download_flag_column_name = 'downloaded'
     research_paper_file_location_column_name = 'file location'
     cleaned_article_column_name = 'cleaned_title'
-    def __init__(self, citations_records_list: List[dict], parents_directory_of_research_papers_files: str,
-                 text_file_path_of_inaccessible_research_papers: str = None):
+    file_manual_check_flag_name = "unreadable"
+    file_validated_flag_name = "yes"
+    file_invalidated_flag_name = "wrong"
+    file_not_downloaded_flag_name = "no"
+    file_not_accessible_flag_name = "no access"
 
+    def __init__(self, citations_records_list: List[dict], parents_directory_of_research_papers_files: str,
+                 text_file_path_of_inaccessible_research_papers: str = None,
+                 text_manipulation_method_name: str = "preprocess_string_to_space_separated_words"):
+
+        self.text_manipulation_method_name = text_manipulation_method_name
         self.text_file_path_of_inaccessible_research_papers = text_file_path_of_inaccessible_research_papers
         self.parents_directory_of_research_papers_files = parents_directory_of_research_papers_files
         self.citations_records_list = citations_records_list
@@ -817,34 +826,88 @@ class Validation:
     def add_downloaded_flag_column_and_file_location_column(self):
         import copy
         complete_citations_records_list = copy.deepcopy(self.citations_records_list)
+        inaccessible_research_papers_set = set(converter.text_file_to_list(self.text_file_path_of_inaccessible_research_papers))
 
         for record in complete_citations_records_list:
-            record[self.download_flag_column_name] = False
-            record[self.research_paper_file_location_column_name] = ""
+            if record[self.cleaned_article_column_name] in inaccessible_research_papers_set:
+                record[self.download_flag_column_name] = self.file_not_accessible_flag_name
+                record[self.research_paper_file_location_column_name] = ""
+            else:
+                record[self.download_flag_column_name] = self.file_not_downloaded_flag_name
+                record[self.research_paper_file_location_column_name] = ""
 
         return complete_citations_records_list
 
     def file_name_and_path_dict(self):
         file_name_and_path = {}
-        articles_paths = os_utils.extract_files_path_from_directories_or_subdirectories(self.parents_directory_of_research_papers_files)
+        articles_paths = os_utils.extract_files_path_from_directories_or_subdirectories(
+            self.parents_directory_of_research_papers_files)
 
         for path in articles_paths:
             article_name = os_utils.get_filename_from_path(path)
-            clean_article_name = string_manipulation.text_manipulation_methods(article_name,
-                                                                               "preprocess_string_to_space_separated_words")
+
+            clean_article_name = string_manipulation.text_manipulation_methods(
+                article_name, self.text_manipulation_method_name)
+
             file_name_and_path[clean_article_name] = path
 
         return file_name_and_path
 
     def check(self):
         for citation in self.research_papers_list:
-            if not citation[self.download_flag_column_name]:
-                if citation[self.cleaned_article_column_name] in self.file_name_and_path_mapping:
-                    ###### validate ###### self.file_name_and_path_mapping[self.cleaned_article_column_name]
-                    citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[self.cleaned_article_column_name]
+            if (not citation[self.download_flag_column_name]) and (
+                    citation[self.cleaned_article_column_name] in self.file_name_and_path_mapping):
 
+                research_paper = converter.Reader(
+                    self.file_name_and_path_mapping[self.cleaned_article_column_name])
+                file_extension = research_paper.file_extension
 
+                if file_extension == 'pdf':
+                    text = research_paper.pdf_pdftotext_reader()
 
+                    validation_result = multiple_methods_validating_words_string_in_text(
+                        citation[self.cleaned_article_column_name], text)
+
+                    if validation_result[0] == self.file_validated_flag_name:
+                        citation[self.download_flag_column_name] = self.file_validated_flag_name
+                        citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
+                            self.cleaned_article_column_name]
+                    else:
+                        text = research_paper.pdf_pymupdf_reader()
+                        if not text:
+                            citation[self.download_flag_column_name] = self.file_manual_check_flag_name
+                            continue
+
+                        validation_result = multiple_methods_validating_words_string_in_text(
+                            citation[self.cleaned_article_column_name], text)
+
+                        if validation_result[0] == self.file_validated_flag_name:
+                            citation[self.download_flag_column_name] = self.file_validated_flag_name
+                            citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
+                                self.cleaned_article_column_name]
+                        else:
+                            citation[self.download_flag_column_name] = self.file_invalidated_flag_name
+                            citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
+                                self.cleaned_article_column_name]
+                else:
+                    text = research_paper.get_text()
+                    if not text:
+                        citation[self.download_flag_column_name] = self.file_manual_check_flag_name
+                        continue
+
+                    validation_result = multiple_methods_validating_words_string_in_text(
+                        citation[self.cleaned_article_column_name], text)
+
+                    if validation_result[0] == self.file_validated_flag_name:
+                        citation[self.download_flag_column_name] = self.file_validated_flag_name
+                        citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
+                            self.cleaned_article_column_name]
+                    else:
+                        citation[self.download_flag_column_name] = self.file_invalidated_flag_name
+                        citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
+                            self.cleaned_article_column_name]
+
+        return self.research_papers_list
 
 
 

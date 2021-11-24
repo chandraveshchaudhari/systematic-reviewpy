@@ -611,9 +611,9 @@ def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict, 
 
 
 def count_keywords_in_research_papers_text(list_of_downloaded_articles_path: list,
-                                          unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                          title_column_name: str = "cleaned_title_pdf",
-                                          method: str = "preprocess_string", custom=None) -> list:
+                                           unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                           title_column_name: str = "cleaned_title_pdf",
+                                           method: str = "preprocess_string", custom=None) -> list:
     """Loop over articles pdf files to calculate search_words_object counts.
 
     Parameters
@@ -679,10 +679,10 @@ def count_keywords_in_research_papers_text(list_of_downloaded_articles_path: lis
     return final_list_of_full_keywords_counts_pdf_text_dict
 
 
-def duplicate_count_keywords_in_research_paper_text(list_of_downloaded_articles_path: list,
-                                                    unique_preprocessed_clean_grouped_keywords_dict: dict,
-                                                    title_column_name: str = "cleaned_title_pdf",
-                                                    method: str = "preprocess_string", custom=None) -> list:
+def count_search_words_in_research_paper_text(list_of_downloaded_articles_path: list,
+                                              unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                              title_column_name: str = "cleaned_title_pdf",
+                                              method: str = "preprocess_string", custom=None) -> list:
     """Loop over articles pdf files to calculate search_words_object counts.
 
     Parameters
@@ -778,12 +778,6 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
     return pdf_full_text_search_count_df
 
 
-
-
-
-
-
-
 def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_citations_df: pd.DataFrame,
                                                                  pdf_full_text_search_count: list,
                                                                  unique_preprocessed_clean_grouped_keywords_dict: dict,
@@ -832,3 +826,9 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
     final_review_df = converter.list_of_dicts_to_dataframe(matched_list)
 
     return final_review_df
+
+
+class SearchCount:
+    def __init__(self):
+        pass
+
