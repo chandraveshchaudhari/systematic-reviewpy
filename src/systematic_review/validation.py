@@ -166,9 +166,10 @@ def validate_column_details_between_two_record_list(first_list_of_dict: list, se
         validation_bool, percentage_matched, method = True, 0, None
         for article_count in second_list_of_dict:
 
-            validation_bool, percentage_matched, method = validation.multiple_methods_validating_words_string_in_text(
+            validation_bool, percentage_matched, method = multiple_methods_validating_words_string_in_text(
                 article_name[first_column_name], article_count[second_column_name])
-            # print(f"validation_bool: {validation_bool}, percentage_matched: {percentage_matched}, text_manipulation_method_name: {text_manipulation_method_name}")
+            # print(f"validation_bool: {validation_bool}, percentage_matched: {percentage_matched},
+            # text_manipulation_method_name: {text_manipulation_method_name}")
             if validation_bool:
                 article_name_count = {**article_name, **article_count}
                 matched_list.append(article_name_count)

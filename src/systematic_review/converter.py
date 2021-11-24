@@ -12,7 +12,8 @@ import rispy
 from systematic_review import os_utils, string_manipulation
 
 
-def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: str = "output.csv", index: bool = True):
+def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: Union[str, None] = "output.csv",
+                          index: bool = True):
     """
     This function saves pandas.DataFrame to csv file.
 
@@ -29,10 +30,10 @@ def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: str =
     -------
 
     """
-    dataframe_object.to_csv(output_filename, index)
+    dataframe_object.to_csv(output_filename, index=index)
 
 
-def dataframe_to_records_list(dataframe: pd.DataFrame) -> list:
+def dataframe_to_records_list(dataframe: pd.DataFrame) -> List[Dict[str, ...]]:
     """converts pandas dataframe to the list of dictionaries (records).
 
     Parameters
@@ -42,7 +43,7 @@ def dataframe_to_records_list(dataframe: pd.DataFrame) -> list:
 
     Returns
     -------
-    list
+    List[Dict[str, ...]]
         This list contains the dictionaries inside as elements. Example - [{'primary_title' : "this is first title"},
         {'primary_title' : "this is second title"}, {'primary_title' : "this is third title"}]
 
@@ -91,8 +92,8 @@ def apply_custom_function_on_dataframe_column(dataframe: pd.DataFrame, column_na
         This is the new name you want to give your modified column and new column will be added to dataframe without
         modifying original column.
     dataframe : pd.DataFrame
-        This is the pandas dataframe consisting of column name with elements capable to be transformed with custom_text_manipulation_function
-        function.
+        This is the pandas dataframe consisting of column name with elements capable to be transformed with
+        custom_text_manipulation_function function.
     column_name : str
         name of dataframe column whose elements are needed to be transformed
     custom_function
@@ -128,15 +129,13 @@ def add_preprocess_column(dataframe_object: pd.DataFrame, column_name: str = "ti
 
     """
     new_column_name = "cleaned_" + column_name
-    dataframe_object = apply_custom_function_on_dataframe_column(dataframe_object,
-                                                                 column_name,
-                                                                 string_manipulation.text_manipulation_methods(
-                                                                     text_manipulation_method_name="preprocess_string_to_space_separated_words"),
-                                                                 new_column_name)
+    dataframe_object = apply_custom_function_on_dataframe_column(
+        dataframe_object, column_name, string_manipulation.text_manipulation_methods,
+        text_manipulation_method_name="preprocess_string_to_space_separated_words", new_column_name=new_column_name)
     return dataframe_object
 
 
-def try_convert_dataframe_column_elements_to_list(dataframe: pd.DataFrame, column_name: str) -> list:
+def try_convert_dataframe_column_elements_to_list(dataframe: pd.DataFrame, column_name: str) -> List[list]:
     """try statement for converting each element of dataframe column to list object.
 
     Parameters
@@ -148,7 +147,7 @@ def try_convert_dataframe_column_elements_to_list(dataframe: pd.DataFrame, colum
 
     Returns
     -------
-    list
+    List[list]
         This is list with each element of type list.
 
     """
@@ -255,7 +254,7 @@ def records_list_to_dataframe(list_of_dicts: List[Dict[str, ...]]) -> pd.DataFra
     return dataframe
 
 
-def ris_to_dict_list(ris_file_path):
+def ris_file_to_records_list(ris_file_path: str) -> List[Dict[str, ...]]:
     """Converts .ris file to list of dictionaries of citations using rispy(https://pypi.org/project/rispy/).
     For more lemma_info on ris format, visit: https://en.wikipedia.org/wiki/RIS_(file_format)
 
@@ -266,7 +265,7 @@ def ris_to_dict_list(ris_file_path):
 
     Returns
     -------
-    list
+    List[Dict[str, ...]]
         This list contains dictionaries of citations in records format, same as in pandas.
 
     """
@@ -319,11 +318,11 @@ def load_multiple_ris_citations_files(citations_files_parent_folder_path: str) -
     citations_list = []
     for path in citations_path_lists:
         if path.endswith(".ris"):
-            citations_list += ris_to_dict_list(path)
+            citations_list += ris_file_to_records_list(path)
     return citations_list
 
 
-def load_multiple_ris_citations_files_to_dataframe(citations_files_parent_folder_path: str) -> list:
+def load_multiple_ris_citations_files_to_dataframe(citations_files_parent_folder_path: str) -> pd.DataFrame:
     """This function loads all ris citations files from folder
 
     Parameters
@@ -431,7 +430,8 @@ def text_file_to_list(file_path: str, permission: str = "r"):
 
 
 def load_text_file(file_path: str, permission: str = "r"):
-    """This reads text file. get all line of text file by file object. https://docs.python.org/3/tutorial/inputoutput.html
+    """This reads text file. get all line of text file by file object. for more info visit-
+    https://docs.python.org/3/tutorial/inputoutput.html
 
     Parameters
     ----------
@@ -450,7 +450,6 @@ def load_text_file(file_path: str, permission: str = "r"):
         file_object = file.read()
 
     return file_object
-
 
 
 def remove_empty_lines(input_file_path: str, output_filename: str = "output_file.ris") -> None:
@@ -546,7 +545,7 @@ def get_text_from_pdf_pdftotext(pdf_file_path: str, pages: str = "all") -> str:
     return text
 
 
-def get_pdf_object_from_pdf_path(pdf_file_path: str) -> object:
+def get_pdf_object_from_pdf_path(pdf_file_path: str):
     """Extract text as pdf object from the pdf file where loop and indexing can show text per pages.
 
     Parameters
@@ -556,7 +555,7 @@ def get_pdf_object_from_pdf_path(pdf_file_path: str) -> object:
 
     Returns
     -------
-    object
+
         This is pdf object with Extracted text.
 
     """
@@ -749,4 +748,3 @@ class Reader:
     def pandas_reader(self, input_file_type):
         dataframe = getattr(pd, input_file_type)(self.file_path)
         return dataframe
-

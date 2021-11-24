@@ -4,8 +4,10 @@ typos.
 """
 
 import re
+from typing import Literal, List, Dict
+
 import pandas as pd
-from systematic_review import string_manipulation, filter_sort, search_count
+from systematic_review import string_manipulation, search_count
 from systematic_review import converter
 
 
@@ -273,7 +275,8 @@ def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list
 def add_citation_text_column(dataframe_object: pd.DataFrame, title_column_name: str = "title",
                              abstract_column_name: str = "abstract",
                              keyword_column_name: str = "search_words_object") -> pd.DataFrame:
-    """This takes dataframe of citations and return the full text comprises of "title", "abstract", "search_words_object"
+    """This takes dataframe of citations and return the full text comprises of "title", "abstract",
+    "search_words_object"
 
     Parameters
     ----------
@@ -298,7 +301,8 @@ def add_citation_text_column(dataframe_object: pd.DataFrame, title_column_name: 
     return dataframe_object
 
 
-def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ['title', 'year'], keep: str = 'first',
+def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ('title', 'year'),
+                              keep: Literal["first", "last", False] = 'first',
                               index_reset: bool = True) -> pd.DataFrame:
     """Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time
     indexes are ignored.
@@ -332,18 +336,22 @@ def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = [
 class Citations:
     def __init__(self, citations_files_parent_folder_path, title_column_name: str = "title",
                  text_manipulation_method_name: str = "preprocess_string_to_space_separated_words"):
-        self.text_manipulation_method_name = text_manipulation_method_name
-        self.title_column_name = title_column_name
-        self.citations_files_parent_folder_path = citations_files_parent_folder_path
-
-    def create_citations_dataframe(self):
-        """Executes citation step.
-        This function load all the citations from path, add required columns for next steps, and remove duplicates.
+        """
 
         Parameters
         ----------
         citations_files_parent_folder_path : str
             this is the path of parent folder of where citations files exists.
+        title_column_name
+        text_manipulation_method_name
+        """
+        self.text_manipulation_method_name = text_manipulation_method_name
+        self.title_column_name = title_column_name
+        self.citations_files_parent_folder_path = citations_files_parent_folder_path
+
+    def create_citations_dataframe(self) -> pd.DataFrame:
+        """Executes citation step.
+        This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
         Returns
         -------
@@ -364,18 +372,13 @@ class Citations:
         complete_citations_df = drop_duplicates_citations(complete_df)
         return complete_citations_df
 
-    def get_records_list(self):
+    def get_records_list(self) -> List[Dict[str, ...]]:
         """Executes citation step.
         This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
-        Parameters
-        ----------
-        citations_files_parent_folder_path : str
-            this is the path of parent folder of where citations files exists.
-
         Returns
         -------
-        list
+        List[Dict[str, ...]]
             list with additional columns needed for next steps of systematic review and duplicates are removed
 
         """

@@ -2,11 +2,13 @@
 This module contain code for generating info, diagrams and tables. It can be used to generate systematic review flow
 and citations information.
 """
+from typing import List, Union
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from systematic_review import os_utils, converter, citation, string_manipulation, validation, search_count
+from systematic_review import os_utils, converter, citation, string_manipulation, validation
 
 
 def creating_sample_review_file(selected_citation_df):
@@ -52,7 +54,7 @@ def analysis_of_multiple_ris_citations_files(citations_files_parent_folder_path:
     details = {"total": 0}
     for path in citations_path_lists:
         if path.endswith(".ris"):
-            length = len(converter.ris_to_dict_list(path))
+            length = len(converter.ris_file_to_records_list(path))
             details[os_utils.get_filename_from_path(path)] = length
             details["total"] += length
     return details
@@ -229,12 +231,12 @@ class TextInBox:
         self.bottom = (
             self.x_coordinate, self.y_coordinate - ((text_padding_for_visualise(text)[1] / 2) * self.width_of_one_line))
 
-    def add_box(self, **kwargs):
+    def add_box(self, **kwargs: Union[dict, str, ...]):
         """It put the box on the matplotlib.pyplot.axes figure
 
         Parameters
         ----------
-        kwargs : dict
+        kwargs : Dict[...]
             This taken any custom_text_manipulation_function options to be set into box.
 
         Returns
@@ -295,8 +297,10 @@ class SystematicReviewInfo:
 
     """
 
+    download_flag_column_name = 'downloaded'
+
     def __init__(self, citations_files_parent_folder_path: str = None, filter_sorted_citations_df: pd.DataFrame = None,
-                 sorted_final_df: pd.DataFrame = None, downloaded_articles_path: str = None):
+                 sorted_final_df: pd.DataFrame = None):
         """This class contains all necessary information for systematic review flow.
 
         Parameters
@@ -307,8 +311,7 @@ class SystematicReviewInfo:
             This is screened dataframe containing records for downloading full text.
         sorted_final_df : pd.DataFrame
             This dataframe contains records for manual literature review.
-        downloaded_articles_path : str
-            This is the location of all articles full text folder.
+
         """
         self.citations_files_parent_folder_path = citations_files_parent_folder_path if \
             citations_files_parent_folder_path is not None else ""
@@ -325,8 +328,9 @@ class SystematicReviewInfo:
         self.screened_out = self.screened - self.for_retrieval if (self.screened is not None) and (
                 self.for_retrieval is not None) else ""
 
-        self.not_retrieved = missed_article_count(filter_sorted_citations_df, downloaded_articles_path) if \
-            (filter_sorted_citations_df is not None) and (downloaded_articles_path is not None) else ""
+        self.not_retrieved = filter_sorted_citations_df[self.download_flag_column_name].value_counts() if \
+            (filter_sorted_citations_df is not None) and \
+            (self.download_flag_column_name in filter_sorted_citations_df.columns) else ""
 
         self.eligible = len(sorted_final_df) if sorted_final_df is not None else ""
         self.manually_excluded = ""
@@ -334,24 +338,24 @@ class SystematicReviewInfo:
 
         self.included = ""
 
-    def get_text_list(self):
+    def get_text_list(self) -> List[str]:
         """This produces the list of all analysis done in this class.
 
         Returns
         -------
-        list
+        List[str]
             This contains systematic review information in sentences.
 
         """
-        text_list = [f"Records identified from:\n{vertical_dict_view(self.sources)}",
+        text_list = [f"Records identified from -\n{vertical_dict_view(self.sources)}",
                      f"Records screened\n(n = {self.screened})",
                      f"Reports sought for retrieval\n(n = {self.for_retrieval})",
                      f"Reports assessed for eligibility\n(n = {self.eligible})",
                      f"Total studies included in review\n(n = {self.included})",
-                     f"Records removed before screening:\nDuplicate records removed\n (n = {self.duplicates})",
+                     f"Records removed before screening -\nDuplicate records removed\n (n = {self.duplicates})",
                      f"Records screened out\n(n = {self.screened_out})",
-                     f"Reports not retrieved\n(n = {self.not_retrieved})",
-                     f"Reports excluded:\n{self.manually_excluded}\n{self.manually_excluded_reasons}"]
+                     f"Reports not retrieved -\n{self.download_flag_column_name}\n(n = {self.not_retrieved})",
+                     f"Reports excluded\n{self.manually_excluded}\n{self.manually_excluded_reasons}"]
 
         return text_list
 
@@ -502,7 +506,7 @@ class SystematicReviewInfo:
         all_boxes.append(TextInBox(ax,
                                    x_position_left,
                                    (all_boxes[3].bottom[1] - top_spaces - (
-                                               width_of_one_line * text_padding_for_visualise(text_list[4])[1] / 2)),
+                                           width_of_one_line * text_padding_for_visualise(text_list[4])[1] / 2)),
                                    text_list[4]
                                    )
                          )
@@ -593,7 +597,8 @@ class SystematicReviewInfo:
             green_rect = patches.Rectangle((x_position_right - (width_of_one_char * 3),
                                             (all_boxes[8].bottom[1] + width_of_one_line
                                              - top_spaces
-                                             - (width_of_one_line * (text_padding_for_visualise(text_list[4])[1] / 2)))),
+                                             - (width_of_one_line * (
+                                                                text_padding_for_visualise(text_list[4])[1] / 2)))),
                                            .1, .1, linewidth=1, facecolor='green', alpha=0.6)
             red_rect = patches.Rectangle((x_position_right - (width_of_one_char * 3),
                                           (all_boxes[8].bottom[1] - width_of_one_line - top_spaces
@@ -808,7 +813,8 @@ class CitationAnalysis:
         -------
 
         """
-        number_of_authors, articles_with_single_authors, articles_per_authors, authors_per_articles = self.authors_analysis()
+        number_of_authors, articles_with_single_authors, articles_per_authors, authors_per_articles = \
+            self.authors_analysis()
         print(f"Number of authors = {number_of_authors}")
         print(f"Articles with single authors = {articles_with_single_authors}")
         print(f"Articles per authors = {articles_per_authors}")
@@ -874,12 +880,12 @@ class CitationAnalysis:
         Parameters
         ----------
         column_name : str
-            column name of publisher detail in citation dataframe
+            column name of publisher detail in citation dataframe.
 
         Returns
         -------
         object
-            contains publisher name and count of publications
+            contains publisher name and count of publications.
 
         """
         return dataframe_column_counts(self.dataframe, column_name)
@@ -922,7 +928,8 @@ class CitationAnalysis:
             print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")
 
     def extract_keywords(self, column_name: str = "search_words_object"):
-        """return dataframe with search_words_object column containing single keyword in row that are used in the articles.
+        """return dataframe with search_words_object column containing single keyword in row that are used in the
+        articles.
 
         Parameters
         ----------
@@ -935,8 +942,8 @@ class CitationAnalysis:
         """
         keywords_list_of_lists = converter.try_convert_dataframe_column_elements_to_list(
             self.dataframe, column_name)
-        keywords_list = converter.unpack_list_of_lists_with_optional_apply_custom_function(keywords_list_of_lists,
-                                                                                           string_manipulation.string_to_space_separated_words)
+        keywords_list = converter.unpack_list_of_lists_with_optional_apply_custom_function(
+            keywords_list_of_lists, string_manipulation.string_to_space_separated_words)
 
         keywords_pandas_df = pd.DataFrame(data={column_name: keywords_list})
 

@@ -255,12 +255,17 @@ def strip_string_from_right_side(string: str, value_to_be_stripped: str = ".pdf"
 
 
 def text_manipulation_methods(text: str, text_manipulation_method_name: str = "preprocess_string",
-                              custom_text_manipulation_function: Callable[[str, ..., ...], ...] = None, *args, **kwargs):
+                              custom_text_manipulation_function: Callable[[str, ..., ...], ...] = None,
+                              *args, **kwargs):
     """This convert text or string using options like preprocess, nlp module function, for more info each respective
     methods methods implemented. args and kwargs will go into custom_text_manipulation_function
 
     Parameters
     ----------
+    kwargs : Dict[str, Any]
+        These key = word or {key: word} arguments are for custom_text_manipulation_function
+    args : Tuple[Any, ...]
+        These arguments are for custom_text_manipulation_function
     custom_text_manipulation_function : function
         This is optional custom_text_manipulation_function function if you want to implement this yourself. pass as
         custom_text_manipulation_function = function_name. it will take text as parameter with no default
@@ -305,4 +310,4 @@ def text_manipulation_methods(text: str, text_manipulation_method_name: str = "p
     elif text_manipulation_method_name == "nltk_remove_stopwords_spacy_lemma".lower():
         return nlp.nltk_remove_stopwords_spacy_lemma(preprocessed_text)
     else:
-        print("Not implemented yet.")
+        raise NotImplementedError("Not implemented yet.")

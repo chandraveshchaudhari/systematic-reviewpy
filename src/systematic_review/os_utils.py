@@ -4,6 +4,8 @@ This module contains functions related to getting directories, files, and filena
 
 import ntpath
 import os
+from typing import List
+
 from systematic_review import converter
 
 
@@ -50,8 +52,8 @@ def extract_subdirectories_path_from_directory(directory_path: str) -> list:
 
 
 def get_path_leaf(file_path: str) -> str:
-    """Extract file name from path.
-    for more details visit: https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
+    """Extract file name from path. for more details visit:
+     https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
 
     Parameters
     ----------
@@ -80,8 +82,8 @@ def get_filename_from_path(file_path: str) -> str:
     Returns
     -------
     str
-        A filename or file name is a name used to uniquely identify a computer file in a directory structure. for more info
-        visit- https://en.wikipedia.org/wiki/Filename
+        A filename or file name is a name used to uniquely identify a computer file in a directory structure. for more
+        info visit- https://en.wikipedia.org/wiki/Filename
 
     """
     file_name = get_path_leaf(file_path)
@@ -110,7 +112,7 @@ def get_file_extension_from_path(file_path: str) -> str:
     return file_name
 
 
-def get_all_filenames_in_dir(dir_path: str) -> list:
+def get_all_filenames_in_dir(dir_path: str) -> List[str]:
     """This provides all the names of files at dir_path.
 
     Parameters
@@ -120,7 +122,7 @@ def get_all_filenames_in_dir(dir_path: str) -> list:
 
     Returns
     -------
-    list
+    List[str]
         This is the list of all the names of files at dir_path.
 
     """
@@ -156,7 +158,7 @@ def get_sources_name_citations_mapping(dir_path: str) -> list:
     for file in sources_name:
         file_path = os.path.join(dir_path, file)
         print(file_path)
-        source_citations = converter.ris_to_dict_list(file_path)
+        source_citations = converter.ris_file_to_records_list(file_path)
         print(file)
         sources_name_citations_path_list_of_dict.append([sources_name[index], source_citations])
         index += 1

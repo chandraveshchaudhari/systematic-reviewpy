@@ -202,4 +202,3 @@ def nltk_remove_stopwords_spacy_lemma(string_list_lower: str) -> List[str]:
         string_lower_filter_lemma = spacy_lemma(string_lower_filter)
         string_list_lower_filter_lemma.append(str(string_lower_filter_lemma))
     return string_list_lower_filter_lemma
-
