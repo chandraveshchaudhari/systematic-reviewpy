@@ -89,7 +89,7 @@ def filter_dataframe_on_keywords_group_name_count(citations_grouped_keywords_cou
     filtered_list_of_dict = []
     keyword_group_name_list = get_pd_df_columns_names_with_prefix_suffix(citations_grouped_keywords_counts_df,
                                                                          common_word, method)
-    citations_grouped_keywords_count_list = converter.dataframe_to_list_of_dicts(citations_grouped_keywords_counts_df)
+    citations_grouped_keywords_count_list = converter.dataframe_to_records_list(citations_grouped_keywords_counts_df)
 
     for citation_dict in citations_grouped_keywords_count_list:
         more = True

@@ -336,7 +336,7 @@ class Citations:
         self.title_column_name = title_column_name
         self.citations_files_parent_folder_path = citations_files_parent_folder_path
 
-    def complete_citations_dataframe(self):
+    def create_citations_dataframe(self):
         """Executes citation step.
         This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
@@ -364,7 +364,7 @@ class Citations:
         complete_citations_df = drop_duplicates_citations(complete_df)
         return complete_citations_df
 
-    def complete_citations_list(self):
+    def get_records_list(self):
         """Executes citation step.
         This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
@@ -380,4 +380,7 @@ class Citations:
 
         """
 
-        return converter.dataframe_to_list_of_dicts(self.complete_citations_dataframe())
+        return converter.dataframe_to_records_list(self.create_citations_dataframe())
+
+    def get_dataframe(self):
+        return self.create_citations_dataframe()

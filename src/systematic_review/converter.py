@@ -32,8 +32,8 @@ def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: str =
     dataframe_object.to_csv(output_filename, index)
 
 
-def dataframe_to_list_of_dicts(dataframe: pd.DataFrame) -> list:
-    """converts pandas dataframe to the list of dictionaries.
+def dataframe_to_records_list(dataframe: pd.DataFrame) -> list:
+    """converts pandas dataframe to the list of dictionaries (records).
 
     Parameters
     ----------
@@ -43,7 +43,8 @@ def dataframe_to_list_of_dicts(dataframe: pd.DataFrame) -> list:
     Returns
     -------
     list
-        This list contains the dictionaries inside as elements. Example - [{'primary_title' : "this is the title"}]
+        This list contains the dictionaries inside as elements. Example - [{'primary_title' : "this is first title"},
+        {'primary_title' : "this is second title"}, {'primary_title' : "this is third title"}]
 
     """
     list_of_dicts = dataframe.to_dict('records')

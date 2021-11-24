@@ -3,6 +3,7 @@ This module contains functions related to string case change, preprocess, and re
 """
 
 import unicodedata
+from typing import Callable
 from systematic_review import os_utils, nlp
 
 
@@ -253,15 +254,17 @@ def strip_string_from_right_side(string: str, value_to_be_stripped: str = ".pdf"
     return stripped_string
 
 
-def text_manipulation_methods(text: str, text_manipulation_method_name: str = "preprocess_string", custom=None):
+def text_manipulation_methods(text: str, text_manipulation_method_name: str = "preprocess_string",
+                              custom_text_manipulation_function: Callable[[str, ..., ...], ...] = None, *args, **kwargs):
     """This convert text or string using options like preprocess, nlp module function, for more info each respective
-    methods methods implemented.
+    methods methods implemented. args and kwargs will go into custom_text_manipulation_function
 
     Parameters
     ----------
-    custom : function
+    custom_text_manipulation_function : function
         This is optional custom_text_manipulation_function function if you want to implement this yourself. pass as
-        custom_text_manipulation_function = function_name. it will take text as parameter with no default preprocess_string operation.
+        custom_text_manipulation_function = function_name. it will take text as parameter with no default
+        preprocess_string operation.
     text : str
         string type text which is needed to be converted.
     text_manipulation_method_name : str
@@ -284,7 +287,7 @@ def text_manipulation_methods(text: str, text_manipulation_method_name: str = "p
     elif text_manipulation_method_name == "convert_string_to_lowercase".lower():
         return convert_string_to_lowercase(text)
     elif text_manipulation_method_name == "custom_text_manipulation_function".lower():
-        return custom(text)
+        return custom_text_manipulation_function(text, args, kwargs)
     elif text_manipulation_method_name == "preprocess_string_to_space_separated_words".lower():
         return preprocess_string_to_space_separated_words(text)
     elif text_manipulation_method_name == "nltk_remove_stopwords".lower():

@@ -6,7 +6,7 @@ present.
 import pandas as pd
 import json
 
-from typing import List
+from typing import List, Union
 
 from systematic_review import string_manipulation, citation, filter_sort, validation, nlp
 from systematic_review import converter
@@ -818,7 +818,7 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
     criteria_list = filter_sort.get_sorting_keywords_criterion_list(unique_preprocessed_clean_grouped_keywords_dict)
     filter_sorted_citations_details = filter_sorted_citations_df.drop(columns=criteria_list)
 
-    citations_list = converter.dataframe_to_list_of_dicts(filter_sorted_citations_details)
+    citations_list = converter.dataframe_to_records_list(filter_sorted_citations_details)
     matched_list, unmatched_list = deep_validate_column_details_between_two_record_list(citations_list,
                                                                                         pdf_full_text_search_count,
                                                                                         first_column_name,
@@ -829,6 +829,131 @@ def adding_citation_details_with_keywords_count_in_pdf_full_text(filter_sorted_c
 
 
 class SearchCount:
-    def __init__(self):
+    def __init__(self, data: Union[List[dict], pd.DataFrame], search_words_object: SearchWords,
+                 text_manipulation_method_name: str = "preprocess_string"):
+
+        self.data = converter.dataframe_to_records_list(data) if type(data) == pd.DataFrame else data
+        self.text_manipulation_method_name = text_manipulation_method_name
+        self.search_words_object = search_words_object
+
+    def check_data(self):
+        if self.data:
+
+
+    def count_search_words_in_research_paper_text(self, list_of_downloaded_articles_path: list,
+                                                  unique_preprocessed_clean_grouped_keywords_dict: dict,
+                                                  title_column_name: str = "cleaned_title_pdf",
+                                                  method: str = "preprocess_string", custom=None) -> list:
+        """Loop over articles pdf files to calculate search_words_object counts.
+
+        Parameters
+        ----------
+        custom : function
+            This is optional custom_text_manipulation_function function if you want to implement this yourself. pass as custom_text_manipulation_function = function_name. it will
+            take text as parameter with no default preprocess_string operation.
+        method : str
+            provides the options to use any text manipulation function.
+            preprocess_string (default and applied before all other implemented functions)
+            custom_text_manipulation_function - for putting your custom_text_manipulation_function function to preprocess the text
+            nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+            nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma, convert_string_to_lowercase
+        title_column_name : str
+            This is the name of column which contain citation title
+        list_of_downloaded_articles_path : list
+            This list contains path of all the pdf files contained in directory_path.
+        unique_preprocessed_clean_grouped_keywords_dict : dict
+            looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
+                      'keyword_group_2': ["corporate", "pricing"],...}
+
+        Returns
+        -------
+        list
+            This is the list of all citations search result which contains our all search_words_object count.
+            Examples - [{'article': 'article_name', 'total_keywords': count, 'keyword_group_1_count': count,
+            "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
+            "pricing": count,...}]
+
+        """
+        final_list_of_full_keywords_counts_pdf_text_dict = []
+        keyword_count_dict = creating_default_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
+
+        # iterating through each research paper file path one by one.
+        for pdf_path in list_of_downloaded_articles_path:
+            article_name = string_manipulation.preprocess_string_to_space_separated_words(
+                string_manipulation.pdf_filename_from_filepath(pdf_path))
+
+            try:
+                text = converter.get_text_from_multiple_pdf_reader(pdf_path)
+            except FileNotFoundError:
+                final_list_of_full_keywords_counts_pdf_text_dict.append(keyword_count_dict)
+                continue
+
+            text = string_manipulation.text_manipulation_methods(text, method, custom)
+            # taking words one by one from text of research paper file and building count dictionary.
+            full_keywords_counts_dict = generate_keywords_count_dictionary(
+                unique_preprocessed_clean_grouped_keywords_dict,
+                text)
+            final_list_of_full_keywords_counts_pdf_text_dict.append(full_keywords_counts_dict)
+
+        return final_list_of_full_keywords_counts_pdf_text_dict
+
+    def count_search_words_in_citations_text(self, citations_with_fulltext_list: list,
+                                             search_words_object: SearchWords,
+                                             text_column_name: str = "'citation_text'",
+                                             text_manipulation_method_name: str = "preprocess_string", custom=None,
+                                             custom_text_manipulation_function=None, *args, **kwargs) -> list:
+        """Loop over articles to calculate search_words_object counts
+
+        Parameters
+        ----------
+        custom : function
+            This is optional custom_text_manipulation_function function if you want to implement this yourself. pass as custom_text_manipulation_function = function_name. it will
+            take text as parameter with no default preprocess_string operation.
+        text_manipulation_method_name : str
+            provides the options to use any text manipulation function.
+            preprocess_string (default and applied before all other implemented functions)
+            custom_text_manipulation_function - for putting your custom_text_manipulation_function function to preprocess the text
+            nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,
+            nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma, convert_string_to_lowercase
+        citations_with_fulltext_list : list
+            This list contains all the citations details with column named 'full_text' containing full text like
+            article name, abstract and keyword.
+        search_words_object : object
+            looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
+                      'keyword_group_2': ["corporate", "pricing"],...}
+        text_column_name : str
+            This is the name of column which contain citation text
+
+        Returns
+        -------
+        list
+            This is the list of all citations search result which contains our all search_words_object count.
+            Examples - [{'primary_title': 'name', 'total_keywords': count, 'keyword_group_1_count': count,
+            "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
+            "pricing": count,...}]
+
+        """
+        final_list_of_full_search_words_counts_citations_dict = []
+
+        # iterating through each citation details one by one.
+        for citation_dict in citations_with_fulltext_list:
+            # changing the text string based on text manipulation text_manipulation_method_name name
+            text = string_manipulation.text_manipulation_methods(citation_dict[text_column_name],
+                                                                 text_manipulation_method_name,
+                                                                 custom_text_manipulation_function,
+                                                                 args, kwargs)
+
+            # taking words one by one from full_text of citation.
+            search_words_counts_dict = search_words_object.generate_keywords_count_dictionary(text)
+            # adding citations with search_words_counts
+            full_search_words_counts_dict = {**citation_dict, **search_words_counts_dict}
+            # putting citation record in final_list_of_full_search_words_counts_citations_dict
+            final_list_of_full_search_words_counts_citations_dict.append(full_search_words_counts_dict)
+
+        return final_list_of_full_search_words_counts_citations_dict
+
+    def get_records_list(self):
         pass
 
+    def get_dataframe(self):
+        pass
