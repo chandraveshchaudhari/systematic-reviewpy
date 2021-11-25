@@ -287,27 +287,27 @@ def text_manipulation_methods(text: str, text_manipulation_method_name: str = "p
 
     """
     preprocessed_text = preprocess_string(text)
-    if text_manipulation_method_name == "preprocess_string".lower():
+    if text_manipulation_method_name.lower() == "preprocess_string":
         return preprocessed_text
-    elif text_manipulation_method_name == "convert_string_to_lowercase".lower():
+    elif text_manipulation_method_name.lower() == "convert_string_to_lowercase":
         return convert_string_to_lowercase(text)
-    elif text_manipulation_method_name == "custom_text_manipulation_function".lower():
+    elif text_manipulation_method_name.lower() == "custom_text_manipulation_function":
         return custom_text_manipulation_function(text, args, kwargs)
-    elif text_manipulation_method_name == "preprocess_string_to_space_separated_words".lower():
+    elif text_manipulation_method_name.lower() == "preprocess_string_to_space_separated_words":
         return preprocess_string_to_space_separated_words(text)
-    elif text_manipulation_method_name == "nltk_remove_stopwords".lower():
+    elif text_manipulation_method_name.lower() == "nltk_remove_stopwords":
         return nlp.nltk_remove_stopwords(preprocessed_text)
-    elif text_manipulation_method_name == "pattern_lemma_or_lemmatize_text".lower():
+    elif text_manipulation_method_name.lower() == "pattern_lemma_or_lemmatize_text":
         return nlp.pattern_lemma_or_lemmatize_text(preprocessed_text)
-    elif text_manipulation_method_name == "nltk_word_net_lemmatizer".lower():
+    elif text_manipulation_method_name.lower() == "nltk_word_net_lemmatizer":
         return nlp.nltk_word_net_lemmatizer(preprocessed_text)
-    elif text_manipulation_method_name == "nltk_porter_stemmer".lower():
+    elif text_manipulation_method_name.lower() == "nltk_porter_stemmer":
         return nlp.nltk_porter_stemmer(preprocessed_text)
-    elif text_manipulation_method_name == "nltk_lancaster_stemmer".lower():
+    elif text_manipulation_method_name.lower() == "nltk_lancaster_stemmer":
         return nlp.nltk_lancaster_stemmer(preprocessed_text)
-    elif text_manipulation_method_name == "spacy_lemma".lower():
+    elif text_manipulation_method_name.lower() == "spacy_lemma":
         return nlp.spacy_lemma(preprocessed_text)
-    elif text_manipulation_method_name == "nltk_remove_stopwords_spacy_lemma".lower():
+    elif text_manipulation_method_name.lower() == "nltk_remove_stopwords_spacy_lemma":
         return nlp.nltk_remove_stopwords_spacy_lemma(preprocessed_text)
     else:
         raise NotImplementedError("Not implemented yet.")

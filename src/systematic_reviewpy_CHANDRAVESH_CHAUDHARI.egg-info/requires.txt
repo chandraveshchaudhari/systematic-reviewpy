@@ -1,2 +1,4 @@
 pandas
 rispy
+matplotlib
+seaborn

@@ -34,4 +34,5 @@ could be beneficial to other users as well.
 - [x] improving design
 - [ ] writing test cases
 - [ ] Exception handling
+- [ ] Logging
 - [ ] creating web interface.

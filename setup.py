@@ -41,7 +41,7 @@ setuptools.setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.67',  # Required
+    version='0.0.68',  # Required
 
     # version="0.0.14",
     # This is a one-line description or tagline of what your project does. This
@@ -144,7 +144,7 @@ setuptools.setup(
     # 'Programming Language' classifiers above, 'pip install' will check this
     # and refuse to install the project if the version does not match. See
     # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
-    python_requires='>=3.6',
+    python_requires='>=3.8',
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -154,6 +154,8 @@ setuptools.setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=['pandas',
                       'rispy',
+                      'matplotlib',
+                      'seaborn'
                       ],  # Optional
 
     # List additional groups of dependencies here (e.g. development

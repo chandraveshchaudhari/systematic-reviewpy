@@ -106,9 +106,9 @@ def apply_custom_function_on_dataframe_column(dataframe: pd.DataFrame, column_na
 
     """
     if new_column_name:
-        dataframe[new_column_name] = dataframe[column_name].apply(lambda x: custom_function(x, args, kwargs))
+        dataframe[new_column_name] = dataframe[column_name].apply(lambda x: custom_function(x, *args, **kwargs))
     else:
-        dataframe[column_name] = dataframe[column_name].apply(lambda x: custom_function(x, args, kwargs))
+        dataframe[column_name] = dataframe[column_name].apply(lambda x: custom_function(x, *args, **kwargs))
     return dataframe
 
 
@@ -618,11 +618,11 @@ def get_text_from_pdf_pymupdf(pdf_file_path: str, pages: str = 'all') -> str:
         text = ""
         if pages == "first":
             for page in doc:
-                text += page.getText()
+                text += page.get_text()
                 return text
         elif pages == "all":
             for page in doc:
-                text += page.getText()
+                text += page.get_text()
     return text
 
 

@@ -248,7 +248,7 @@ def drop_search_words_count_columns(dataframe, search_words_object: search_count
     return cleaned_dataframe
 
 
-def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list = ('title', 'year')) -> pd.DataFrame:
+def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list = ['title', 'year']) -> pd.DataFrame:
     """This function check if citations or article title is available at more than one sources and add column named
     'multiple_sources' to the dataframe with list of name of sources names.
 
@@ -274,7 +274,7 @@ def add_multiple_sources_column(citation_dataframe: pd.DataFrame, group_by: list
 
 def add_citation_text_column(dataframe_object: pd.DataFrame, title_column_name: str = "title",
                              abstract_column_name: str = "abstract",
-                             keyword_column_name: str = "search_words_object") -> pd.DataFrame:
+                             keyword_column_name: str = "keywords") -> pd.DataFrame:
     """This takes dataframe of citations and return the full text comprises of "title", "abstract",
     "search_words_object"
 
@@ -301,7 +301,7 @@ def add_citation_text_column(dataframe_object: pd.DataFrame, title_column_name: 
     return dataframe_object
 
 
-def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ('title', 'year'),
+def drop_duplicates_citations(citation_dataframe: pd.DataFrame, subset: list = ['title', 'year'],
                               keep: Literal["first", "last", False] = 'first',
                               index_reset: bool = True) -> pd.DataFrame:
     """Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time

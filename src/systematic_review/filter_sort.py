@@ -359,8 +359,8 @@ def get_dataframe_sorting_criterion_list(citations_grouped_keywords_counts_df,
 
 def dataframe_sorting_criterion_list(citations_grouped_keywords_counts_df: pd.DataFrame,
                                      sorting_keywords_criterion_list: list, reverse: bool = False):
-    """Provide a sorting criterion list for dataframe columns. put citations columns to the left and keyword counts on
-    the right. On making reverse equal to true it put search_words_object on the left.
+    """Provide a sorting criterion list for dataframe columns. put citations columns to the left and search_words counts
+     on the right. On making reverse equal to true it put search_words on the left.
 
     Parameters
     ----------

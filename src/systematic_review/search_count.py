@@ -60,10 +60,10 @@ class SearchWords:
                  text_manipulation_method_name: str = "preprocess_string", custom_text_manipulation_function=None,
                  default_search_words_group_name: str = "search_words_group_", all_unique_keywords: bool = False,
                  unique_keywords: bool = True, *args, **kwargs):
-        if args:
-            self.args = args
-        if kwargs:
-            self.kwargs = kwargs
+
+        self.args = args
+        self.kwargs = kwargs
+
         self.all_unique_keywords = all_unique_keywords
         self.default_search_words_group_name = default_search_words_group_name
         self.custom_text_manipulation_function = custom_text_manipulation_function

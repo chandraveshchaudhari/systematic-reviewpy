@@ -5,7 +5,7 @@ contains functions to get articles source name and create list of missed or dupl
 
 from difflib import SequenceMatcher
 import pandas as pd
-from typing import List
+from typing import List, Union, Dict, Any
 
 from systematic_review import string_manipulation
 from systematic_review import converter
@@ -813,24 +813,30 @@ class Validation:
     file_not_downloaded_flag_name = "no"
     file_not_accessible_flag_name = "no access"
 
-    def __init__(self, citations_records_list: List[dict], parents_directory_of_research_papers_files: str,
+    def __init__(self, citations_data: Union[List[dict], pd.DataFrame],
+                 parents_directory_of_research_papers_files: str,
                  text_file_path_of_inaccessible_research_papers: str = None,
                  text_manipulation_method_name: str = "preprocess_string_to_space_separated_words"):
 
         self.text_manipulation_method_name = text_manipulation_method_name
         self.text_file_path_of_inaccessible_research_papers = text_file_path_of_inaccessible_research_papers
         self.parents_directory_of_research_papers_files = parents_directory_of_research_papers_files
-        self.citations_records_list = citations_records_list
+        self.citations_records_list = converter.dataframe_to_records_list(citations_data)\
+            if type(citations_data) == pd.DataFrame else citations_data
         self.research_papers_list = self.add_downloaded_flag_column_and_file_location_column()
         self.file_name_and_path_mapping = self.file_name_and_path_dict()
 
     def add_downloaded_flag_column_and_file_location_column(self):
         import copy
         complete_citations_records_list = copy.deepcopy(self.citations_records_list)
-        inaccessible_research_papers_set = set(converter.text_file_to_list(self.text_file_path_of_inaccessible_research_papers))
+        inaccessible_research_papers_set = set([string_manipulation.text_manipulation_methods(
+                article_name, self.text_manipulation_method_name) for article_name in converter.text_file_to_list(
+            self.text_file_path_of_inaccessible_research_papers)]) if \
+            self.text_file_path_of_inaccessible_research_papers else self.text_file_path_of_inaccessible_research_papers
 
         for record in complete_citations_records_list:
-            if record[self.cleaned_article_column_name] in inaccessible_research_papers_set:
+            if inaccessible_research_papers_set and \
+                    (record[self.cleaned_article_column_name] in inaccessible_research_papers_set):
                 record[self.download_flag_column_name] = self.file_not_accessible_flag_name
                 record[self.research_paper_file_location_column_name] = ""
             else:
@@ -855,41 +861,43 @@ class Validation:
         return file_name_and_path
 
     def check(self):
+
         for citation in self.research_papers_list:
-            if (not citation[self.download_flag_column_name]) and (
+
+            if (citation[self.download_flag_column_name].lower() == "no") and (
                     citation[self.cleaned_article_column_name] in self.file_name_and_path_mapping):
 
                 research_paper = converter.Reader(
-                    self.file_name_and_path_mapping[self.cleaned_article_column_name])
+                    self.file_name_and_path_mapping[citation[self.cleaned_article_column_name]])
                 file_extension = research_paper.file_extension
 
                 if file_extension == 'pdf':
                     text = research_paper.pdf_pdftotext_reader()
+                    if text:
+                        validation_result = multiple_methods_validating_words_string_in_text(
+                            citation[self.cleaned_article_column_name], text)
+                        if validation_result[0]:
+                            citation[self.download_flag_column_name] = self.file_validated_flag_name
+                            citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
+                                citation[self.cleaned_article_column_name]]
+                            continue
+
+                    text = research_paper.pdf_pymupdf_reader()
+                    if not text:
+                        citation[self.download_flag_column_name] = self.file_manual_check_flag_name
+                        continue
 
                     validation_result = multiple_methods_validating_words_string_in_text(
                         citation[self.cleaned_article_column_name], text)
 
-                    if validation_result[0] == self.file_validated_flag_name:
+                    if validation_result[0]:
                         citation[self.download_flag_column_name] = self.file_validated_flag_name
                         citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
-                            self.cleaned_article_column_name]
+                            citation[self.cleaned_article_column_name]]
                     else:
-                        text = research_paper.pdf_pymupdf_reader()
-                        if not text:
-                            citation[self.download_flag_column_name] = self.file_manual_check_flag_name
-                            continue
-
-                        validation_result = multiple_methods_validating_words_string_in_text(
-                            citation[self.cleaned_article_column_name], text)
-
-                        if validation_result[0] == self.file_validated_flag_name:
-                            citation[self.download_flag_column_name] = self.file_validated_flag_name
-                            citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
-                                self.cleaned_article_column_name]
-                        else:
-                            citation[self.download_flag_column_name] = self.file_invalidated_flag_name
-                            citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
-                                self.cleaned_article_column_name]
+                        citation[self.download_flag_column_name] = self.file_invalidated_flag_name
+                        citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
+                            citation[self.cleaned_article_column_name]]
                 else:
                     text = research_paper.get_text()
                     if not text:
@@ -902,13 +910,37 @@ class Validation:
                     if validation_result[0] == self.file_validated_flag_name:
                         citation[self.download_flag_column_name] = self.file_validated_flag_name
                         citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
-                            self.cleaned_article_column_name]
+                            citation[self.cleaned_article_column_name]]
                     else:
                         citation[self.download_flag_column_name] = self.file_invalidated_flag_name
                         citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
-                            self.cleaned_article_column_name]
+                            citation[self.cleaned_article_column_name]]
 
         return self.research_papers_list
+
+    def get_records_list(self) -> List[Dict[str, Any]]:
+        """Outputs the records list containing validation results of input data.
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+            This is the list of records which contains validation Flags column downloaded with values-  "yes", "no",
+            "wrong", "no access", "unreadable" and file location column if downloaded column contains "yes".
+
+        """
+        return self.check()
+
+    def get_dataframe(self):
+        """Outputs the pandas.DataFrame containing validation results of input data.
+
+        Returns
+        -------
+        pandas.DataFrame
+            This is the dataframe which contains validation Flags column downloaded with values-  "yes", "no",
+            "wrong", "no access", "unreadable" and file location column if downloaded column contains "yes".
+
+        """
+        return converter.records_list_to_dataframe(self.check())
 
 
 
