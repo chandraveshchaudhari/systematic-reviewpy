@@ -3,7 +3,7 @@ This module contains functions related to string case change, preprocess, and re
 """
 
 import unicodedata
-from typing import Callable
+from typing import Callable, Any
 from systematic_review import os_utils, nlp
 
 
@@ -255,8 +255,8 @@ def strip_string_from_right_side(string: str, value_to_be_stripped: str = ".pdf"
 
 
 def text_manipulation_methods(text: str, text_manipulation_method_name: str = "preprocess_string",
-                              custom_text_manipulation_function: Callable[[str, ..., ...], ...] = None,
-                              *args, **kwargs):
+                              custom_text_manipulation_function: Callable[[str, Any, Any], str] = None,
+                              *args, **kwargs) -> str:
     """This convert text or string using options like preprocess, nlp module function, for more info each respective
     methods methods implemented. args and kwargs will go into custom_text_manipulation_function
 
@@ -264,9 +264,9 @@ def text_manipulation_methods(text: str, text_manipulation_method_name: str = "p
     ----------
     kwargs : Dict[str, Any]
         These key = word or {key: word} arguments are for custom_text_manipulation_function
-    args : Tuple[Any, ...]
+    args : Tuple
         These arguments are for custom_text_manipulation_function
-    custom_text_manipulation_function : function
+    custom_text_manipulation_function : Callable[[str, Any, Any], str]
         This is optional custom_text_manipulation_function function if you want to implement this yourself. pass as
         custom_text_manipulation_function = function_name. it will take text as parameter with no default
         preprocess_string operation.

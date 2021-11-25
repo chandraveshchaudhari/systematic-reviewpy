@@ -4,7 +4,7 @@ dicts and many more.
 """
 import json
 from collections import defaultdict
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Any
 
 import pandas as pd
 import rispy
@@ -33,7 +33,7 @@ def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: Union
     dataframe_object.to_csv(output_filename, index=index)
 
 
-def dataframe_to_records_list(dataframe: pd.DataFrame) -> List[Dict[str, ...]]:
+def dataframe_to_records_list(dataframe: pd.DataFrame) -> List[Dict[str, Any]]:
     """converts pandas dataframe to the list of dictionaries (records).
 
     Parameters
@@ -43,7 +43,7 @@ def dataframe_to_records_list(dataframe: pd.DataFrame) -> List[Dict[str, ...]]:
 
     Returns
     -------
-    List[Dict[str, ...]]
+    List[Dict[str, Any]]
         This list contains the dictionaries inside as elements. Example - [{'primary_title' : "this is first title"},
         {'primary_title' : "this is second title"}, {'primary_title' : "this is third title"}]
 
@@ -236,12 +236,12 @@ def unpack_list_of_lists(list_of_lists):
     return unpacked_list
 
 
-def records_list_to_dataframe(list_of_dicts: List[Dict[str, ...]]) -> pd.DataFrame:
+def records_list_to_dataframe(list_of_dicts: List[Dict[str, Any]]) -> pd.DataFrame:
     """converts the list of dictionaries to pandas dataframe.
 
     Parameters
     ----------
-    list_of_dicts : list
+    list_of_dicts : List[Dict[str, Any]]
         This list contains the dictionaries inside as elements. Example - [{'primary_title' : "this is the title"}]
 
     Returns
@@ -254,7 +254,7 @@ def records_list_to_dataframe(list_of_dicts: List[Dict[str, ...]]) -> pd.DataFra
     return dataframe
 
 
-def ris_file_to_records_list(ris_file_path: str) -> List[Dict[str, ...]]:
+def ris_file_to_records_list(ris_file_path: str) -> List[Dict[str, Any]]:
     """Converts .ris file to list of dictionaries of citations using rispy(https://pypi.org/project/rispy/).
     For more lemma_info on ris format, visit: https://en.wikipedia.org/wiki/RIS_(file_format)
 
@@ -265,7 +265,7 @@ def ris_file_to_records_list(ris_file_path: str) -> List[Dict[str, ...]]:
 
     Returns
     -------
-    List[Dict[str, ...]]
+    List[Dict[str, Any]]
         This list contains dictionaries of citations in records format, same as in pandas.
 
     """

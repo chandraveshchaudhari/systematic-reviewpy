@@ -5,7 +5,7 @@ present.
 
 import pandas as pd
 
-from typing import List, Union, Callable, Dict
+from typing import List, Union, Dict, Any
 
 from systematic_review import string_manipulation, validation
 from systematic_review import converter
@@ -277,7 +277,7 @@ class SearchCount:
 
     def __init__(self, data: Union[List[dict], pd.DataFrame], search_words_object: SearchWords,
                  text_manipulation_method_name: str = "preprocess_string",
-                 custom_text_manipulation_function: Callable[[str, ..., ...], ...] = None, *args, **kwargs):
+                 custom_text_manipulation_function=None, *args, **kwargs):
         """Set up all necessary data for start counting.
 
         Parameters
@@ -302,7 +302,7 @@ class SearchCount:
             preprocess_string operation.
         kwargs : Dict[str, Any]
             These key = word or {key: word} arguments are for custom_text_manipulation_function
-        args : Tuple[Any, ...]
+        args : Tuple[Any, Any]
             These arguments are for custom_text_manipulation_function
 
         """
@@ -314,12 +314,12 @@ class SearchCount:
         self.text_manipulation_method_name = text_manipulation_method_name
         self.search_words_object = search_words_object
 
-    def counts(self) -> List[Dict[str, ...]]:
+    def counts(self) -> List[Dict[str, Any]]:
         """This takes records list and return search counts based on type of citation data or research papers data.
 
         Returns
         -------
-        List[Dict[str, ...]]
+        List[Dict[str, Any]]
             records list containing the citation data or research papers data.
 
         """
@@ -329,19 +329,19 @@ class SearchCount:
         else:
             return self.count_search_words_in_citations_text(self.data)
 
-    def count_search_words_in_citations_text(self, citations_records_list: List[Dict[str, ...]]
-                                             ) -> List[Dict[str, ...]]:
+    def count_search_words_in_citations_text(self, citations_records_list: List[Dict[str, Any]]
+                                             ) -> List[Dict[str, Any]]:
         """Loop over each citations to count search words (SearchWords instance) in citation data.
 
         Parameters
         ----------
-        citations_records_list : List[Dict[str, ...]]
+        citations_records_list : List[Dict[str, Any]]
             This list contains all the citations details with column named 'full_text' containing full text like
             article name, abstract and keyword.
 
         Returns
         -------
-        List[Dict[str, ...]]
+        List[Dict[str, Any]]
             This is the list of all citations search result which contains our all search_words_object count.
             Examples - [{'title': 'name', 'total_keywords': count, 'keyword_group_1_count': count,
             "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
@@ -367,18 +367,18 @@ class SearchCount:
 
         return final_list_of_full_search_words_counts_citations_dict
 
-    def count_search_words_in_research_paper_text(self, research_papers_records_list: List[Dict[str, ...]]
-                                                  ) -> List[Dict[str, ...]]:
+    def count_search_words_in_research_paper_text(self, research_papers_records_list: List[Dict[str, Any]]
+                                                  ) -> List[Dict[str, Any]]:
         """Loop over validated research paper to count search words (SearchWords instance) in research papers data.
 
         Parameters
         ----------
-        research_papers_records_list : List[Dict[str, ...]]
+        research_papers_records_list : List[Dict[str, Any]]
             This list contains data of all the research papers files contained in directory_path.
 
         Returns
         -------
-        List[Dict[str, ...]]
+        List[Dict[str, Any]]
             This is the list of all citations search result which contains our all search_words_object count.
             Examples - [{'article': 'article_name', 'total_keywords': count, 'keyword_group_1_count': count,
             "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
@@ -411,12 +411,12 @@ class SearchCount:
 
         return final_list_of_full_search_words_counts_citations_dict
 
-    def get_records_list(self) -> List[Dict[str, ...]]:
+    def get_records_list(self) -> List[Dict[str, Any]]:
         """Outputs the records list containing counts results of input data.
 
         Returns
         -------
-        List[Dict[str, ...]]
+        List[Dict[str, Any]]
             This is the list of records which contains all search_words_object count from input data.
             Examples - [{'article': 'article_name', 'total_keywords': count, 'keyword_group_1_count': count,
             "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,

@@ -2,7 +2,7 @@
 This module contain code for generating info, diagrams and tables. It can be used to generate systematic review flow
 and citations information.
 """
-from typing import List, Union
+from typing import List, Union, Any
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -231,12 +231,12 @@ class TextInBox:
         self.bottom = (
             self.x_coordinate, self.y_coordinate - ((text_padding_for_visualise(text)[1] / 2) * self.width_of_one_line))
 
-    def add_box(self, **kwargs: Union[dict, str, ...]):
+    def add_box(self, **kwargs: Union[dict, str, Any]):
         """It put the box on the matplotlib.pyplot.axes figure
 
         Parameters
         ----------
-        kwargs : Dict[...]
+        kwargs : Union[dict, str, Any]
             This taken any custom_text_manipulation_function options to be set into box.
 
         Returns

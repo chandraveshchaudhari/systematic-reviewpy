@@ -4,7 +4,7 @@ typos.
 """
 
 import re
-from typing import Literal, List, Dict
+from typing import Literal, List, Dict, Any
 
 import pandas as pd
 from systematic_review import string_manipulation, search_count
@@ -372,13 +372,13 @@ class Citations:
         complete_citations_df = drop_duplicates_citations(complete_df)
         return complete_citations_df
 
-    def get_records_list(self) -> List[Dict[str, ...]]:
+    def get_records_list(self) -> List[Dict[str, Any]]:
         """Executes citation step.
         This function load all the citations from path, add required columns for next steps, and remove duplicates.
 
         Returns
         -------
-        List[Dict[str, ...]]
+        List[Dict[str, Any]]
             list with additional columns needed for next steps of systematic review and duplicates are removed
 
         """
