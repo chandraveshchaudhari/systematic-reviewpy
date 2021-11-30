@@ -135,6 +135,25 @@ def add_preprocess_column(dataframe_object: pd.DataFrame, column_name: str = "ti
     return dataframe_object
 
 
+def dataframe_column_counts(dataframe, column_name):
+    """Equivalent to pandas.DataFrame.value_counts(), It return list with count of unique element in column
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        dataframe which contains column that is to be counted
+    column_name : str
+        Name of pandas column elements are supposed to be counted.
+
+    Returns
+    -------
+    object
+        unique column elements with counts
+
+    """
+    return dataframe[column_name].value_counts()
+
+
 def try_convert_dataframe_column_elements_to_list(dataframe: pd.DataFrame, column_name: str) -> List[list]:
     """try statement for converting each element of dataframe column to list object.
 

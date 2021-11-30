@@ -590,12 +590,220 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: 
     return validated_pdf_list, invalidated_pdf_list, manual_pdf_list
 
 
-def multiple_methods_validating_words_string_in_text(article_name: str, text: str) -> tuple:
+class ValidateWordsInText:
+    def __init__(self, words_string: str, text_string: str,
+                 words_percentage_checker_in_text_validation_limit: float = 70,
+                 jumbled_words_percentage_checker_in_text_validation_limit: float = 70,
+                 jumbled_words_percentage_checker_in_text_wrong_word_limit: int = 2):
+        """
+
+        Parameters
+        ----------
+        words_string : str
+            This is the word we are searching for.
+        text_string : str
+            This is query string or lengthy text.
+        jumbled_words_percentage_checker_in_text_wrong_word_limit : float
+            This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found
+            same.
+        jumbled_words_percentage_checker_in_text_validation_limit : int
+            This is the limit unto which algorithm ignore the wrong word in sequence.
+        words_percentage_checker_in_text_validation_limit : float
+            This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found
+            same.
+
+        """
+
+        self.words_percentage_checker_in_text_validation_limit = words_percentage_checker_in_text_validation_limit
+        self.jumbled_words_percentage_checker_in_text_validation_limit = \
+            jumbled_words_percentage_checker_in_text_validation_limit
+        self.jumbled_words_percentage_checker_in_text_wrong_word_limit = \
+            jumbled_words_percentage_checker_in_text_wrong_word_limit
+        self.text_string = text_string
+        self.words_string = words_string
+
+    def exact_words_checker_in_text(self) -> bool:
+        """This checks for exact match of substring in string and return True or False based on success.
+
+        Returns
+        -------
+        bool
+            This returns True if exact words_string found in text_string else False.
+
+        """
+        if (type(self.words_string) != str) or (type(self.text_string) != str):
+            raise TypeError
+        words_list = string_manipulation.split_preprocess_string(self.words_string)
+        words_list_length = len(words_list)
+        words_list_end_element_index = words_list_length - 1
+
+        words_set = set(words_list)
+        # words_dict_membership = dict_from_list_with_element_count(words_list)
+
+        text_list = string_manipulation.split_preprocess_string(self.text_string)
+
+        validation_bool = False
+        searching_flag = False
+
+        for word_of_text in text_list:
+            if searching_flag:
+                if word_of_text == words_list[searching_index]:
+                    if searching_index == words_list_end_element_index:
+                        validation_bool = True
+                        return validation_bool
+                    searching_index += 1
+                else:
+                    searching_flag = False
+
+            if word_of_text in words_set:
+                if word_of_text == words_list[0]:
+                    # starting_index = words_list.index(word_of_text)
+                    searching_flag = True
+                    searching_index = 1
+
+        return validation_bool
+
+    def words_percentage_checker_in_text(self) -> tuple:
+        """This  checks for exact match of substring in string and return True or False based on success. It also returns
+        matched word percentage.
+        words_percentage_checker_in_text_validation_limit: this doesn't work properly if words_string have duplicate words.
+
+        Returns
+        -------
+        tuple
+            This returns True if exact words_string found in text_string else False.
+            This also returns matched substring percentage.
+
+        """
+
+        words_list = string_manipulation.split_preprocess_string(self.words_string)
+        words_list_length = len(words_list)
+        # words_list_end_element_index = words_list_length - 1
+
+        words_set = set(words_list)
+        # words_dict_membership = dict_from_list_with_element_count(words_list)
+
+        text_list = string_manipulation.split_preprocess_string(self.text_string)
+
+        temp_list = [False] * words_list_length
+        validation_bool = False
+        # searching_flag = False
+        word_list_element_index = -1
+        percentage_matched = 0
+
+        for word_of_text in text_list:
+            if word_of_text in words_set:
+                word_of_text_index_in_words_list = words_list.index(word_of_text)
+
+                if word_of_text_index_in_words_list > word_list_element_index:
+                    word_list_element_index = word_of_text_index_in_words_list
+                    temp_list[word_of_text_index_in_words_list] = True
+
+                    percentage_matched = compare_two_list_members_via_percent_similarity(words_list, temp_list)
+                    validation_bool = True if \
+                        percentage_matched > self.words_percentage_checker_in_text_validation_limit else False
+                    if validation_bool:
+                        return validation_bool, percentage_matched
+
+                else:
+                    temp_list = [False] * words_list_length
+                    temp_list[word_of_text_index_in_words_list] = True
+            else:
+                temp_list = [False] * words_list_length
+                word_list_element_index = -1
+
+        return validation_bool, percentage_matched
+
+    def jumbled_words_percentage_checker_in_text(self) -> tuple:
+        """start calculating percentage if half of words are found in sequence. This also takes in consideration of words
+        which got jumbled up due to pdf reading operation.
+
+        Returns
+        -------
+        tuple
+            This returns True if exact words_string found in text_string else False.
+            This also returns matched substring percentage.
+
+        """
+
+        words_list = string_manipulation.split_preprocess_string(self.words_string)
+        # words_list_length = len(words_list)
+        # words_list_end_element_index = words_list_length - 1
+
+        words_set = set(words_list)
+        words_dict_membership = dict_from_list_with_element_count(words_list)
+
+        text_list = string_manipulation.split_preprocess_string(self.text_string)
+
+        validation_bool = False
+        percentage_matched = 0
+        skipped_words = 0
+
+        temp_dict = dict()
+        for word_of_text in text_list:
+            if word_of_text in words_set:
+                skipped_words = 0
+                add_dict_element_with_count(temp_dict, word_of_text)
+            else:
+                skipped_words += 1
+                if skipped_words >= self.jumbled_words_percentage_checker_in_text_wrong_word_limit:
+                    temp_dict = dict()
+                    continue
+                percentage_matched = compare_two_dict_members_via_percent_similarity(words_dict_membership, temp_dict)
+                validation_bool = True if\
+                    percentage_matched > self.jumbled_words_percentage_checker_in_text_validation_limit else False
+                if validation_bool:
+                    return validation_bool, percentage_matched
+                temp_dict = dict()
+
+        return validation_bool, percentage_matched
+
+    def multiple_methods(self) -> tuple:
+        """This text_manipulation_method_name uses different methods to validate the article_name(substring) in text.
+        Example - exact_words, words_percentage, jumbled_words_percentage.
+
+        Returns
+        -------
+        tuple
+            True and False value depicting validated article with True value.
+            This also shows percentage matched
+            Last it shows the text_manipulation_method_name used. like exact_words, words_percentage, jumbled_words_percentage, all if every text_manipulation_method_name
+            is executed to validate.
+
+        """
+        # percentage_matched = 0
+        validation_bool = exact_words_checker_in_text(self.words_string, self.text_string)
+        if validation_bool:
+            return validation_bool, 1, "exact_words"
+        validation_bool, percentage_matched = words_percentage_checker_in_text(
+            self.words_string, self.text_string, self.words_percentage_checker_in_text_validation_limit)
+        if validation_bool:
+            return validation_bool, percentage_matched, "words_percentage"
+        validation_bool, percentage_matched = jumbled_words_percentage_checker_in_text(
+            self.words_string, self.text_string, self.jumbled_words_percentage_checker_in_text_validation_limit,
+            self.jumbled_words_percentage_checker_in_text_wrong_word_limit)
+        if validation_bool:
+            return validation_bool, percentage_matched, "jumbled_words_percentage"
+
+        return validation_bool, percentage_matched, "all"
+
+
+def multiple_methods_validating_words_string_in_text(
+        article_name: str, text: str,
+        words_percentage_checker_in_text_validation_limit: float = 70,
+        jumbled_words_percentage_checker_in_text_validation_limit: float = 70,
+        jumbled_words_percentage_checker_in_text_wrong_word_limit: int = 2) -> tuple:
     """This text_manipulation_method_name uses different methods to validate the article_name(substring) in text. Example - exact_words,
     words_percentage, jumbled_words_percentage.
 
     Parameters
     ----------
+    jumbled_words_percentage_checker_in_text_wrong_word_limit : float
+        This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found same.
+    jumbled_words_percentage_checker_in_text_validation_limit : int
+        This is the limit unto which algorithm ignore the wrong word in sequence.
+    words_percentage_checker_in_text_validation_limit : float
+        This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found same.
     article_name : str
         This is input string which we want to validate in text.
     text : str
@@ -614,10 +822,13 @@ def multiple_methods_validating_words_string_in_text(article_name: str, text: st
     validation_bool = exact_words_checker_in_text(article_name, text)
     if validation_bool:
         return validation_bool, 1, "exact_words"
-    validation_bool, percentage_matched = words_percentage_checker_in_text(article_name, text)
+    validation_bool, percentage_matched = words_percentage_checker_in_text(
+        article_name, text, words_percentage_checker_in_text_validation_limit)
     if validation_bool:
         return validation_bool, percentage_matched, "words_percentage"
-    validation_bool, percentage_matched = jumbled_words_percentage_checker_in_text(article_name, text)
+    validation_bool, percentage_matched = jumbled_words_percentage_checker_in_text(
+        article_name, text, jumbled_words_percentage_checker_in_text_validation_limit,
+        jumbled_words_percentage_checker_in_text_wrong_word_limit)
     if validation_bool:
         return validation_bool, percentage_matched, "jumbled_words_percentage"
 
@@ -806,6 +1017,8 @@ def manual_validating_of_pdf(articles_path_list: list, manual_index: int) -> tup
 class Validation:
     download_flag_column_name = 'downloaded'
     research_paper_file_location_column_name = 'file location'
+    validation_method_column_name = "validation method"
+    validation_manual_method_name = "manual"
     cleaned_article_column_name = 'cleaned_title'
     file_manual_check_flag_name = "unreadable"
     file_validated_flag_name = "yes"
@@ -816,12 +1029,21 @@ class Validation:
     def __init__(self, citations_data: Union[List[dict], pd.DataFrame],
                  parents_directory_of_research_papers_files: str,
                  text_file_path_of_inaccessible_research_papers: str = None,
-                 text_manipulation_method_name: str = "preprocess_string_to_space_separated_words"):
+                 text_manipulation_method_name: str = "preprocess_string_to_space_separated_words",
+                 words_percentage_checker_in_text_validation_limit: float = 70,
+                 jumbled_words_percentage_checker_in_text_validation_limit: float = 70,
+                 jumbled_words_percentage_checker_in_text_wrong_word_limit: int = 2
+                 ):
 
+        self.jumbled_words_percentage_checker_in_text_wrong_word_limit = \
+            jumbled_words_percentage_checker_in_text_wrong_word_limit
+        self.jumbled_words_percentage_checker_in_text_validation_limit = \
+            jumbled_words_percentage_checker_in_text_validation_limit
+        self.words_percentage_checker_in_text_validation_limit = words_percentage_checker_in_text_validation_limit
         self.text_manipulation_method_name = text_manipulation_method_name
         self.text_file_path_of_inaccessible_research_papers = text_file_path_of_inaccessible_research_papers
         self.parents_directory_of_research_papers_files = parents_directory_of_research_papers_files
-        self.citations_records_list = converter.dataframe_to_records_list(citations_data)\
+        self.citations_records_list = converter.dataframe_to_records_list(citations_data) \
             if type(citations_data) == pd.DataFrame else citations_data
         self.research_papers_list = self.add_downloaded_flag_column_and_file_location_column()
         self.file_name_and_path_mapping = self.file_name_and_path_dict()
@@ -830,7 +1052,7 @@ class Validation:
         import copy
         complete_citations_records_list = copy.deepcopy(self.citations_records_list)
         inaccessible_research_papers_set = set([string_manipulation.text_manipulation_methods(
-                article_name, self.text_manipulation_method_name) for article_name in converter.text_file_to_list(
+            article_name, self.text_manipulation_method_name) for article_name in converter.text_file_to_list(
             self.text_file_path_of_inaccessible_research_papers)]) if \
             self.text_file_path_of_inaccessible_research_papers else self.text_file_path_of_inaccessible_research_papers
 
@@ -838,10 +1060,10 @@ class Validation:
             if inaccessible_research_papers_set and \
                     (record[self.cleaned_article_column_name] in inaccessible_research_papers_set):
                 record[self.download_flag_column_name] = self.file_not_accessible_flag_name
-                record[self.research_paper_file_location_column_name] = ""
             else:
                 record[self.download_flag_column_name] = self.file_not_downloaded_flag_name
-                record[self.research_paper_file_location_column_name] = ""
+            record[self.research_paper_file_location_column_name] = ""
+            record[self.validation_method_column_name] = ""
 
         return complete_citations_records_list
 
@@ -874,12 +1096,16 @@ class Validation:
                 if file_extension == 'pdf':
                     text = research_paper.pdf_pdftotext_reader()
                     if text:
-                        validation_result = multiple_methods_validating_words_string_in_text(
-                            citation[self.cleaned_article_column_name], text)
+                        validation_result = ValidateWordsInText(
+                            citation[self.cleaned_article_column_name], text,
+                            self.words_percentage_checker_in_text_validation_limit,
+                            self.jumbled_words_percentage_checker_in_text_validation_limit,
+                            self.jumbled_words_percentage_checker_in_text_wrong_word_limit).multiple_methods()
                         if validation_result[0]:
                             citation[self.download_flag_column_name] = self.file_validated_flag_name
                             citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
                                 citation[self.cleaned_article_column_name]]
+                            citation[self.validation_method_column_name] = validation_result[2]
                             continue
 
                     text = research_paper.pdf_pymupdf_reader()
@@ -887,34 +1113,44 @@ class Validation:
                         citation[self.download_flag_column_name] = self.file_manual_check_flag_name
                         continue
 
-                    validation_result = multiple_methods_validating_words_string_in_text(
-                        citation[self.cleaned_article_column_name], text)
+                    validation_result = ValidateWordsInText(
+                        citation[self.cleaned_article_column_name], text,
+                        self.words_percentage_checker_in_text_validation_limit,
+                        self.jumbled_words_percentage_checker_in_text_validation_limit,
+                        self.jumbled_words_percentage_checker_in_text_wrong_word_limit).multiple_methods()
 
                     if validation_result[0]:
                         citation[self.download_flag_column_name] = self.file_validated_flag_name
                         citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
                             citation[self.cleaned_article_column_name]]
+                        citation[self.validation_method_column_name] = validation_result[2]
                     else:
                         citation[self.download_flag_column_name] = self.file_invalidated_flag_name
                         citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
                             citation[self.cleaned_article_column_name]]
+                        citation[self.validation_method_column_name] = validation_result[2]
                 else:
                     text = research_paper.get_text()
                     if not text:
                         citation[self.download_flag_column_name] = self.file_manual_check_flag_name
                         continue
 
-                    validation_result = multiple_methods_validating_words_string_in_text(
-                        citation[self.cleaned_article_column_name], text)
+                    validation_result = ValidateWordsInText(
+                        citation[self.cleaned_article_column_name], text,
+                        self.words_percentage_checker_in_text_validation_limit,
+                        self.jumbled_words_percentage_checker_in_text_validation_limit,
+                        self.jumbled_words_percentage_checker_in_text_wrong_word_limit).multiple_methods()
 
-                    if validation_result[0] == self.file_validated_flag_name:
+                    if validation_result[0]:
                         citation[self.download_flag_column_name] = self.file_validated_flag_name
                         citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
                             citation[self.cleaned_article_column_name]]
+                        citation[self.validation_method_column_name] = validation_result[2]
                     else:
                         citation[self.download_flag_column_name] = self.file_invalidated_flag_name
                         citation[self.research_paper_file_location_column_name] = self.file_name_and_path_mapping[
                             citation[self.cleaned_article_column_name]]
+                        citation[self.validation_method_column_name] = validation_result[2]
 
         return self.research_papers_list
 
@@ -942,6 +1178,13 @@ class Validation:
         """
         return converter.records_list_to_dataframe(self.check())
 
+    def info(self):
+        """Equivalent to pandas.DataFrame.value_counts(), It return list with count of unique element in column
 
+        Returns
+        -------
+        object
+            unique download_flag_column_name elements with counts
 
-
+        """
+        return converter.dataframe_column_counts(self.get_dataframe(), self.download_flag_column_name)

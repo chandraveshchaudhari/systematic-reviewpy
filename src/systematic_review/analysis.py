@@ -298,9 +298,10 @@ class SystematicReviewInfo:
     """
 
     download_flag_column_name = 'downloaded'
+    file_validated_flag_name = "yes"
 
     def __init__(self, citations_files_parent_folder_path: str = None, filter_sorted_citations_df: pd.DataFrame = None,
-                 sorted_final_df: pd.DataFrame = None):
+                 validated_research_papers_df: pd.DataFrame = None, selected_research_papers_df: pd.DataFrame = None):
         """This class contains all necessary information for systematic review flow.
 
         Parameters
@@ -309,8 +310,10 @@ class SystematicReviewInfo:
             this is the path of parent folder of where citations files exists.
         filter_sorted_citations_df : pd.DataFrame
             This is screened dataframe containing records for downloading full text.
-        sorted_final_df : pd.DataFrame
+        selected_research_papers_df : pd.DataFrame
             This dataframe contains records for manual literature review.
+        validated_research_papers_df : pd.DataFrame
+            This contains validation of downloaded research articles.
 
         """
         self.citations_files_parent_folder_path = citations_files_parent_folder_path if \
@@ -328,11 +331,13 @@ class SystematicReviewInfo:
         self.screened_out = self.screened - self.for_retrieval if (self.screened is not None) and (
                 self.for_retrieval is not None) else ""
 
-        self.not_retrieved = filter_sorted_citations_df[self.download_flag_column_name].value_counts() if \
-            (filter_sorted_citations_df is not None) and \
-            (self.download_flag_column_name in filter_sorted_citations_df.columns) else ""
+        self.not_retrieved = len(validated_research_papers_df) - len(
+            validated_research_papers_df.loc[validated_research_papers_df[
+                                                 self.download_flag_column_name] == self.file_validated_flag_name]) if \
+            (validated_research_papers_df is not None) and \
+            (self.download_flag_column_name in validated_research_papers_df.columns) else ""
 
-        self.eligible = len(sorted_final_df) if sorted_final_df is not None else ""
+        self.eligible = len(selected_research_papers_df) if selected_research_papers_df is not None else ""
         self.manually_excluded = ""
         self.manually_excluded_reasons = ""
 
@@ -598,7 +603,7 @@ class SystematicReviewInfo:
                                             (all_boxes[8].bottom[1] + width_of_one_line
                                              - top_spaces
                                              - (width_of_one_line * (
-                                                                text_padding_for_visualise(text_list[4])[1] / 2)))),
+                                                            text_padding_for_visualise(text_list[4])[1] / 2)))),
                                            .1, .1, linewidth=1, facecolor='green', alpha=0.6)
             red_rect = patches.Rectangle((x_position_right - (width_of_one_char * 3),
                                           (all_boxes[8].bottom[1] - width_of_one_line - top_spaces
@@ -617,25 +622,6 @@ class SystematicReviewInfo:
             plt.savefig(diagram_fname, kwargs)
 
         plt.show()
-
-
-def dataframe_column_counts(dataframe, column_name):
-    """Equivalent to pandas.DataFrame.value_counts(), It return list with count of unique element in column
-
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        dataframe which contains column that is to be counted
-    column_name : str
-        Name of pandas column elements are supposed to be counted.
-
-    Returns
-    -------
-    object
-        unique column elements with counts
-
-    """
-    return dataframe[column_name].value_counts()
 
 
 def pandas_countplot_with_pandas_dataframe_column(dataframe, column_name, top_result, plot_kind: str = "bar",
@@ -735,7 +721,7 @@ class CitationAnalysis:
             contains year and count of publications
 
         """
-        return dataframe_column_counts(self.dataframe, column_name)
+        return converter.dataframe_column_counts(self.dataframe, column_name)
 
     def publication_year_diagram(self, column_name: str = "year",
                                  top_result=None, method: str = "seaborn", theme_style="darkgrid",
@@ -834,7 +820,7 @@ class CitationAnalysis:
             contains publication place and count of publications
 
         """
-        return dataframe_column_counts(self.dataframe, column_name)
+        return converter.dataframe_column_counts(self.dataframe, column_name)
 
     def publication_place_diagram(self, column_name: str = "place_published",
                                   top_result=None, method: str = "seaborn", theme_style="darkgrid",
@@ -888,7 +874,7 @@ class CitationAnalysis:
             contains publisher name and count of publications.
 
         """
-        return dataframe_column_counts(self.dataframe, column_name)
+        return converter.dataframe_column_counts(self.dataframe, column_name)
 
     def publisher_diagram(self, column_name: str = "publisher",
                           top_result=None, method: str = "seaborn", theme_style="darkgrid",
@@ -927,7 +913,7 @@ class CitationAnalysis:
         else:
             print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")
 
-    def extract_keywords(self, column_name: str = "search_words_object"):
+    def extract_keywords(self, column_name: str = "keywords"):
         """return dataframe with search_words_object column containing single keyword in row that are used in the
         articles.
 
@@ -949,7 +935,7 @@ class CitationAnalysis:
 
         return keywords_pandas_df
 
-    def keywords_info(self, column_name: str = "search_words_object"):
+    def keywords_info(self, column_name: str = "keywords"):
         """return search_words_object and number of times they are used in the articles
 
         Parameters
@@ -961,9 +947,9 @@ class CitationAnalysis:
         -------
 
         """
-        return dataframe_column_counts(self.extract_keywords(), column_name)
+        return converter.dataframe_column_counts(self.extract_keywords(), column_name)
 
-    def keyword_diagram(self, column_name: str = "search_words_object",
+    def keyword_diagram(self, column_name: str = "keywords",
                         top_result=None, method: str = "seaborn", theme_style="darkgrid",
                         xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None, **kwargs):
         """generates chart showing how many articles are published by different publishers.
