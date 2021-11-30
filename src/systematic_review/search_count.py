@@ -556,15 +556,18 @@ def count_keywords_in_citations_full_text_list(citations_with_fulltext_list: lis
 
 def creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict: dict):
     """Initialise keyword count dict with value 0 for every keyword.
+
     Parameters
     ----------
     unique_preprocessed_clean_grouped_keywords_dict : dict
         looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
                   'keyword_group_2': ["corporate", "pricing"],...}
+
     Returns
     -------
     dict
         This contains key as keyword and value as 0.
+
     """
     keyword_count_dict = {}
     for group_name, keywords_list in unique_preprocessed_clean_grouped_keywords_dict.items():
@@ -676,6 +679,7 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
                                           title_column_name: str = "title",
                                           method: str = "preprocess_string", custom=None) -> list:
     """Loop over articles to calculate keywords counts
+
     Parameters
     ----------
     custom : function
@@ -695,6 +699,7 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
                   'keyword_group_2': ["corporate", "pricing"],...}
     title_column_name : str
         This is the name of column which contain citation title
+
     Returns
     -------
     list
@@ -702,6 +707,7 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
         Examples - [{'primary_title': 'name', 'total_keywords': count, 'keyword_group_1_count': count,
         "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
         "pricing": count,...}]
+
     """
     final_list_of_full_keywords_counts_citations_dict = []
     keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
@@ -734,6 +740,7 @@ def count_keywords_in_citations_full_text(dataframe_citations_with_fulltext: pd.
 def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict, title_column_name: str = "title",
                                     method: str = "preprocess_string", custom=None) -> pd.DataFrame:
     """Loop over articles to calculate keywords counts and return dataframe.
+
     Parameters
     ----------
     title_column_name : str
@@ -753,6 +760,7 @@ def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict, 
         This is output dictionary which contains processed non-duplicate keywords dict.
         Example - {'keyword_group_name': ["management", "investing", "corporate", "pricing", "risk", "pre",
         "process"],...}
+
     Returns
     -------
     pandas.DataFrame object
@@ -760,6 +768,7 @@ def citation_search_count_dataframe(citations_df: pd.DataFrame, keywords: dict, 
         Examples - [{'primary_title': 'name', 'total_keywords': count, 'keyword_group_1_count': count,
         "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
         "pricing": count,...}]
+
     """
     citations_keywords_count_list = count_keywords_in_citations_full_text(citations_df, keywords, title_column_name,
                                                                           method, custom)
@@ -772,6 +781,7 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
                                     title_column_name: str = "cleaned_title_pdf",
                                     method: str = "preprocess_string", custom=None) -> list:
     """Loop over articles pdf files to calculate keywords counts.
+
     Parameters
     ----------
     custom : function
@@ -790,6 +800,7 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
     unique_preprocessed_clean_grouped_keywords_dict : dict
         looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
                   'keyword_group_2': ["corporate", "pricing"],...}
+
     Returns
     -------
     list
@@ -797,6 +808,7 @@ def count_keywords_in_pdf_full_text(list_of_downloaded_articles_path: list,
         Examples - [{'article': 'article_name', 'total_keywords': count, 'keyword_group_1_count': count,
         "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
         "pricing": count,...}]
+
     """
     final_list_of_full_keywords_counts_pdf_text_dict = []
     keyword_count_dict = creating_keyword_count_dict(unique_preprocessed_clean_grouped_keywords_dict)
@@ -839,6 +851,7 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
                                          method: str = "preprocess_string", custom=None
                                          ) -> pd.DataFrame:
     """Loop over articles pdf files to calculate keywords counts.
+
     Parameters
     ----------
     custom : function
@@ -857,6 +870,7 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
     unique_preprocessed_clean_grouped_keywords_dict : dict
         looks like this {'keyword_group_1': ["management", "investing", "risk", "pre", "process"],
                   'keyword_group_2': ["corporate", "pricing"],...}
+
     Returns
     -------
     pandas.DataFrame object
@@ -864,6 +878,7 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
         Examples - [{'article': 'article_name', 'total_keywords': count, 'keyword_group_1_count': count,
         "management": count, "investing: count", "risk: count", 'keyword_group_2_count': count, "corporate": count,
         "pricing": count,...}]
+
     """
     pdf_full_text_keywords_count_list = count_keywords_in_pdf_full_text(list_of_downloaded_articles_path,
                                                                         unique_preprocessed_clean_grouped_keywords_dict,
@@ -875,6 +890,7 @@ def pdf_full_text_search_count_dataframe(list_of_downloaded_articles_path: list,
 def get_sorting_keywords_criterion_list(unique_preprocessed_clean_grouped_keywords_dict: dict) -> list:
     """This sorting criteria list is based on the keywords got from the main input keywords. It contains total_keywords,
     group_keywords_counts, keywords_counts.
+
     Parameters
     ----------
     unique_preprocessed_clean_grouped_keywords_dict : dict
@@ -883,11 +899,13 @@ def get_sorting_keywords_criterion_list(unique_preprocessed_clean_grouped_keywor
         Example - {'keyword_group_1': ["management", "investing", "risk", "pre", "process"], 'keyword_group_2':
         ["corporate", "pricing"],...}.
         'risk' is removed from keyword_group_2.
+
     Returns
     -------
     list
         This is the sorting criterion list which contains column in logical manner we desire. It contains
         total_keywords, group_keywords_counts, and keywords in the last.
+
     """
     sorting_keywords_criterion_list = ["total_keywords"]
     for keyword_group_name in unique_preprocessed_clean_grouped_keywords_dict.keys():

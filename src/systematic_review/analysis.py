@@ -385,7 +385,7 @@ class SystematicReviewInfo:
         Parameters
         ----------
         kwargs : dict
-            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
         hide_border : bool
             border is line outside of diagram
         auto_fig_size : bool
@@ -641,7 +641,7 @@ def pandas_countplot_with_pandas_dataframe_column(dataframe, column_name, top_re
     diagram_fname : str
             filename or path of diagram image to be saved.
     kwargs : dict
-        kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+        kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
 
     Returns
     -------
@@ -673,7 +673,7 @@ def seaborn_countplot_with_pandas_dataframe_column(dataframe, column_name, theme
     top_result : int
         This limits the number of column unique elements to be shown
     kwargs : dict
-        kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+        kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
 
     Returns
     -------
@@ -746,7 +746,7 @@ class CitationAnalysis:
         diagram_fname : str
             filename or path of diagram image to be saved.
         kwargs : dict
-            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
 
         Returns
         -------
@@ -845,7 +845,7 @@ class CitationAnalysis:
         diagram_fname : str
             filename or path of diagram image to be saved.
         kwargs : dict
-            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
 
         Returns
         -------
@@ -898,7 +898,7 @@ class CitationAnalysis:
         diagram_fname : str
             filename or path of diagram image to be saved.
         kwargs : dict
-            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
 
         Returns
         -------
@@ -971,7 +971,7 @@ class CitationAnalysis:
         diagram_fname : str
             filename or path of diagram image to be saved.
         kwargs : dict
-            kwargs are also given to matplotlib.pyplot.savefig(**kwargs)
+            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
 
         Returns
         -------

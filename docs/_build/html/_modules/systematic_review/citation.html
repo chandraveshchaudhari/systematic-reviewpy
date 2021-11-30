@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>systematic_review.citation &mdash; systematic-reviewpy  documentation</title>
+  <title>systematic_review.citation &mdash; systematic-reviewpy 0.0.69 documentation</title>
   
 
   
@@ -159,15 +159,17 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">string_manipulation</span><span class="p">,</span> <span class="n">filter_sort</span>
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">string_manipulation</span><span class="p">,</span> <span class="n">search_count</span>
 <span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">converter</span>
 
 
-<div class="viewcode-block" id="csv_citations_to_ris_converter"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.csv_citations_to_ris_converter">[docs]</a><span class="k">def</span> <span class="nf">csv_citations_to_ris_converter</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;output_ris_file.ris&quot;</span><span class="p">,</span>
-                                   <span class="n">input_file_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="citations_to_ris_converter"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.citations_to_ris_converter">[docs]</a><span class="k">def</span> <span class="nf">citations_to_ris_converter</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;output_ris_file.ris&quot;</span><span class="p">,</span>
+                               <span class="n">input_file_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;read_csv&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This asks for columns name from csv and then convert the csv to ris format.</span>
+<span class="sd">    This asks for citations columns name from tabular data and then convert the data to ris format.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -176,22 +178,21 @@
 <span class="sd">    output_filename : str</span>
 <span class="sd">        this is the name of the output ris file with extension. output file path is also valid choice.</span>
 <span class="sd">    input_file_type : str</span>
-<span class="sd">        this function default is csv but excel is also supported by putting &#39;excel&#39;</span>
+<span class="sd">        this function default is csv but other formats are also supported by putting &#39;read_{file_type}&#39;. such as</span>
+<span class="sd">        input_file_type = &#39;read_excel&#39; all file type supported by pandas can be used by putting pandas IO tools methods.</span>
+<span class="sd">        for more info visit- https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">input_file_type</span> <span class="o">==</span> <span class="s1">&#39;excel&#39;</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">pd</span><span class="p">,</span> <span class="n">input_file_type</span><span class="p">)(</span><span class="n">input_file_path</span><span class="p">)</span>
 
     <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;please specify columns of following in input file:&quot;</span><span class="p">)</span>
-    <span class="n">article_type</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;specify the type of given citations. if it&#39;s journal article, input :JOUR&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;please specify column names for following data in input file:&quot;</span><span class="p">)</span>
+    <span class="n">article_type</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;specify column for type of given citations. if it&#39;s journal article, input :JOUR&quot;</span><span class="p">)</span>
     <span class="n">authors</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;provide name of authors column&quot;</span><span class="p">)</span>
     <span class="n">publication_year</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;provide name of Publication Year column&quot;</span><span class="p">)</span>
     <span class="n">item_title</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;provide name of Item Title column&quot;</span><span class="p">)</span>
@@ -217,31 +218,6 @@
         <span class="c1"># \n is placed to indicate EOL (End of Line)</span>
     <span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ris file has been generated&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="remove_empty_lines"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.remove_empty_lines">[docs]</a><span class="k">def</span> <span class="nf">remove_empty_lines</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;output_file.ris&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function removes the blank lines from the input file and output new file.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    input_file_path : str</span>
-<span class="sd">        this is the path of input file</span>
-<span class="sd">    output_filename : str</span>
-<span class="sd">        this is the name of the output ris file with extension.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">input_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_file</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
-            <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-    <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="edit_ris_citation_paste_values_after_regex_pattern"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.edit_ris_citation_paste_values_after_regex_pattern">[docs]</a><span class="k">def</span> <span class="nf">edit_ris_citation_paste_values_after_regex_pattern</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;output_file.ris&quot;</span><span class="p">,</span>
@@ -276,34 +252,6 @@
 
     <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="add_citation_text_column"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.add_citation_text_column">[docs]</a><span class="k">def</span> <span class="nf">add_citation_text_column</span><span class="p">(</span><span class="n">dataframe_object</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
-                             <span class="n">abstract_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;abstract&quot;</span><span class="p">,</span>
-                             <span class="n">keyword_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;keywords&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This takes dataframe of citations and return the full text comprises of &quot;title&quot;, &quot;abstract&quot;, &quot;keywords&quot;</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    dataframe_object : pandas.DataFrame object</span>
-<span class="sd">        this is the object of famous python library pandas. for more lemma_info: https://pandas.pydata.org/docs/</span>
-<span class="sd">    title_column_name : str</span>
-<span class="sd">        This is the name of column which contain citation title</span>
-<span class="sd">    abstract_column_name : str</span>
-<span class="sd">        This is the name of column which contain citation abstract</span>
-<span class="sd">    keyword_column_name : str</span>
-<span class="sd">        This is the name of column which contain citation keywords</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    pd.DataFrame</span>
-<span class="sd">        this is dataframe_object comprises of full text column.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dataframe_object</span><span class="p">[</span><span class="s2">&quot;full_text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataframe_object</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">dataframe_object</span><span class="p">[</span>
-        <span class="n">abstract_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">dataframe_object</span><span class="p">[</span><span class="n">keyword_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">dataframe_object</span></div>
 
 
 <div class="viewcode-block" id="get_details_via_article_name_from_citations"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.get_details_via_article_name_from_citations">[docs]</a><span class="k">def</span> <span class="nf">get_details_via_article_name_from_citations</span><span class="p">(</span><span class="n">article_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sources_name_citations_path_list_of_dict</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
@@ -411,7 +359,105 @@
     <span class="k">return</span> <span class="n">missed_article_name_and_source_name_list</span></div>
 
 
-<div class="viewcode-block" id="drop_duplicates_citations"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.drop_duplicates_citations">[docs]</a><span class="k">def</span> <span class="nf">drop_duplicates_citations</span><span class="p">(</span><span class="n">citation_dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">keep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;last&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="drop_columns_based_on_column_name_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.drop_columns_based_on_column_name_list">[docs]</a><span class="k">def</span> <span class="nf">drop_columns_based_on_column_name_list</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function drop columns based on the column name in the list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe : pandas.DataFrame object</span>
+<span class="sd">        This dataframe contains columns which we want to drop or remove.</span>
+<span class="sd">    column_name_list : list</span>
+<span class="sd">        This is the name of dataframe columns to be removed</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        DataFrame with columns mentioned in column_name_list removed.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_df</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">column_name_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_df</span></div>
+
+
+<div class="viewcode-block" id="drop_search_words_count_columns"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.drop_search_words_count_columns">[docs]</a><span class="k">def</span> <span class="nf">drop_search_words_count_columns</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">search_words_object</span><span class="p">:</span> <span class="n">search_count</span><span class="o">.</span><span class="n">SearchWords</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;removes columns created based on the keywords.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe : pandas.DataFrame object</span>
+<span class="sd">        This dataframe contains keywords columns which we want to drop or remove.</span>
+<span class="sd">    search_words_object : dict</span>
+<span class="sd">        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword</span>
+<span class="sd">        group can not be found in any other keyword group.</span>
+<span class="sd">        Example - {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;], &#39;keyword_group_2&#39;:</span>
+<span class="sd">        [&quot;corporate&quot;, &quot;pricing&quot;],...}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        DataFrame with keywords columns removed.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keywords_count_cols</span> <span class="o">=</span> <span class="n">search_words_object</span><span class="o">.</span><span class="n">get_sorting_keywords_criterion_list</span><span class="p">()</span>
+    <span class="n">cleaned_dataframe</span> <span class="o">=</span> <span class="n">drop_columns_based_on_column_name_list</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">keywords_count_cols</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cleaned_dataframe</span></div>
+
+
+<div class="viewcode-block" id="add_multiple_sources_column"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.add_multiple_sources_column">[docs]</a><span class="k">def</span> <span class="nf">add_multiple_sources_column</span><span class="p">(</span><span class="n">citation_dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">group_by</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function check if citations or article title is available at more than one sources and add column named</span>
+<span class="sd">    &#39;multiple_sources&#39; to the dataframe with list of name of sources names.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citation_dataframe : pandas.DataFrame object</span>
+<span class="sd">        Input dataset which contains citations or article title with sources more than one.</span>
+<span class="sd">    group_by : list</span>
+<span class="sd">        column label or sequence of labels, optional Only consider certain columns for citations or article title with</span>
+<span class="sd">        sources more than one, by default use all of the columns.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        DataFrame with additional column with list of sources names</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">citation_dataframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_by</span><span class="p">)[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;multiple_sources&quot;</span><span class="p">})</span>
+    <span class="n">citation_dataframe_with_multiple_sources_column</span> <span class="o">=</span> <span class="n">citation_dataframe</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">group_by</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">citation_dataframe_with_multiple_sources_column</span></div>
+
+
+<div class="viewcode-block" id="add_citation_text_column"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.add_citation_text_column">[docs]</a><span class="k">def</span> <span class="nf">add_citation_text_column</span><span class="p">(</span><span class="n">dataframe_object</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+                             <span class="n">abstract_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;abstract&quot;</span><span class="p">,</span>
+                             <span class="n">keyword_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;keywords&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This takes dataframe of citations and return the full text comprises of &quot;title&quot;, &quot;abstract&quot;,</span>
+<span class="sd">    &quot;search_words_object&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe_object : pandas.DataFrame object</span>
+<span class="sd">        this is the object of famous python library pandas. for more lemma_info: https://pandas.pydata.org/docs/</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation title</span>
+<span class="sd">    abstract_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation abstract</span>
+<span class="sd">    keyword_column_name : str</span>
+<span class="sd">        This is the name of column which contain citation search_words_object</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        this is dataframe_object comprises of full text column.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataframe_object</span><span class="p">[</span><span class="s2">&quot;citation_text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataframe_object</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">dataframe_object</span><span class="p">[</span>
+        <span class="n">abstract_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">dataframe_object</span><span class="p">[</span><span class="n">keyword_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dataframe_object</span></div>
+
+
+<div class="viewcode-block" id="drop_duplicates_citations"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.drop_duplicates_citations">[docs]</a><span class="k">def</span> <span class="nf">drop_duplicates_citations</span><span class="p">(</span><span class="n">citation_dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">],</span>
+                              <span class="n">keep</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;last&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;first&#39;</span><span class="p">,</span>
                               <span class="n">index_reset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return DataFrame with duplicate rows removed. Considering certain columns is optional. Indexes, including time</span>
 <span class="sd">    indexes are ignored.</span>
@@ -442,142 +488,60 @@
     <span class="k">return</span> <span class="n">clean_df</span></div>
 
 
-<div class="viewcode-block" id="drop_columns_based_on_column_name_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.drop_columns_based_on_column_name_list">[docs]</a><span class="k">def</span> <span class="nf">drop_columns_based_on_column_name_list</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This function drop columns based on the column name in the list.</span>
+<div class="viewcode-block" id="Citations"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.Citations">[docs]</a><span class="k">class</span> <span class="nc">Citations</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citations_files_parent_folder_path</span><span class="p">,</span> <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+                 <span class="n">text_manipulation_method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;preprocess_string_to_space_separated_words&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    dataframe : pandas.DataFrame object</span>
-<span class="sd">        This dataframe contains columns which we want to drop or remove.</span>
-<span class="sd">    column_name_list : list</span>
-<span class="sd">        This is the name of dataframe columns to be removed</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        citations_files_parent_folder_path : str</span>
+<span class="sd">            this is the path of parent folder of where citations files exists.</span>
+<span class="sd">        title_column_name</span>
+<span class="sd">        text_manipulation_method_name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_manipulation_method_name</span> <span class="o">=</span> <span class="n">text_manipulation_method_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title_column_name</span> <span class="o">=</span> <span class="n">title_column_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">citations_files_parent_folder_path</span> <span class="o">=</span> <span class="n">citations_files_parent_folder_path</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    pandas.DataFrame object</span>
-<span class="sd">        DataFrame with columns mentioned in column_name_list removed.</span>
+<div class="viewcode-block" id="Citations.create_citations_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.Citations.create_citations_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">create_citations_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Executes citation step.</span>
+<span class="sd">        This function load all the citations from path, add required columns for next steps, and remove duplicates.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">output_df</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">column_name_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">output_df</span></div>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame object</span>
+<span class="sd">            DataFrame with additional columns needed for next steps of systematic review and duplicates are removed</span>
 
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">full_list</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">load_multiple_ris_citations_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">citations_files_parent_folder_path</span><span class="p">)</span>
+        <span class="n">full_list_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">records_list_to_dataframe</span><span class="p">(</span><span class="n">full_list</span><span class="p">)</span>
+        <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_multiple_sources_column</span><span class="p">(</span><span class="n">full_list_df</span><span class="p">)</span>
+        <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_citation_text_column</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
+        <span class="n">new_column_name</span> <span class="o">=</span> <span class="s2">&quot;cleaned_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">title_column_name</span>
+        <span class="n">complete_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">apply_custom_function_on_dataframe_column</span><span class="p">(</span><span class="n">complete_df</span><span class="p">,</span>
+                                                                          <span class="bp">self</span><span class="o">.</span><span class="n">title_column_name</span><span class="p">,</span>
+                                                                          <span class="n">string_manipulation</span><span class="o">.</span><span class="n">text_manipulation_methods</span><span class="p">,</span>
+                                                                          <span class="n">new_column_name</span><span class="p">,</span>
+                                                                          <span class="bp">self</span><span class="o">.</span><span class="n">text_manipulation_method_name</span><span class="p">)</span>
+        <span class="n">complete_citations_df</span> <span class="o">=</span> <span class="n">drop_duplicates_citations</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">complete_citations_df</span></div>
 
-<div class="viewcode-block" id="drop_keywords_count_columns"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.drop_keywords_count_columns">[docs]</a><span class="k">def</span> <span class="nf">drop_keywords_count_columns</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;removes columns created based on the keywords.</span>
+<div class="viewcode-block" id="Citations.get_records_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.Citations.get_records_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_records_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Executes citation step.</span>
+<span class="sd">        This function load all the citations from path, add required columns for next steps, and remove duplicates.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    dataframe : pandas.DataFrame object</span>
-<span class="sd">        This dataframe contains keywords columns which we want to drop or remove.</span>
-<span class="sd">    keywords : dict</span>
-<span class="sd">        This is the dictionary comprised of unique keywords in each keyword groups. It means keyword from first keyword</span>
-<span class="sd">        group can not be found in any other keyword group.</span>
-<span class="sd">        Example - {&#39;keyword_group_1&#39;: [&quot;management&quot;, &quot;investing&quot;, &quot;risk&quot;, &quot;pre&quot;, &quot;process&quot;], &#39;keyword_group_2&#39;:</span>
-<span class="sd">        [&quot;corporate&quot;, &quot;pricing&quot;],...}</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List[Dict[str, Any]]</span>
+<span class="sd">            list with additional columns needed for next steps of systematic review and duplicates are removed</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    pandas.DataFrame object</span>
-<span class="sd">        DataFrame with keywords columns removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">keywords_count_cols</span> <span class="o">=</span> <span class="n">filter_sort</span><span class="o">.</span><span class="n">get_sorting_keywords_criterion_list</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
-    <span class="n">cleaned_dataframe</span> <span class="o">=</span> <span class="n">drop_columns_based_on_column_name_list</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">keywords_count_cols</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cleaned_dataframe</span></div>
+        <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_to_records_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_citations_dataframe</span><span class="p">())</span></div>
 
-
-<div class="viewcode-block" id="add_multiple_sources_column"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.add_multiple_sources_column">[docs]</a><span class="k">def</span> <span class="nf">add_multiple_sources_column</span><span class="p">(</span><span class="n">citation_dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">group_by</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This function check if citations or article title is available at more than one sources and add column named</span>
-<span class="sd">    &#39;multiple_sources&#39; to the dataframe with list of name of sources names.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    citation_dataframe : pandas.DataFrame object</span>
-<span class="sd">        Input dataset which contains citations or article title with sources more than one.</span>
-<span class="sd">    group_by : list</span>
-<span class="sd">        column label or sequence of labels, optional Only consider certain columns for citations or article title with</span>
-<span class="sd">        sources more than one, by default use all of the columns.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    pandas.DataFrame object</span>
-<span class="sd">        DataFrame with additional column with list of sources names</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">citation_dataframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_by</span><span class="p">)[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;multiple_sources&quot;</span><span class="p">})</span>
-    <span class="n">citation_dataframe_with_multiple_sources_column</span> <span class="o">=</span> <span class="n">citation_dataframe</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">group_by</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">citation_dataframe_with_multiple_sources_column</span></div>
-
-
-<div class="viewcode-block" id="add_preprocess_column"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.add_preprocess_column">[docs]</a><span class="k">def</span> <span class="nf">add_preprocess_column</span><span class="p">(</span><span class="n">dataframe_object</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Takes dataframe and column name to apply preprocess function from string_manipulation module.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    dataframe_object : pandas.DataFrame object</span>
-<span class="sd">        This is object with column containing column which needs to be preprocessed.</span>
-<span class="sd">    column_name : str</span>
-<span class="sd">        This is the name of the column of dataframe.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    pandas.DataFrame object</span>
-<span class="sd">        DataFrame with additional column with preprocessed column.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">new_column_name</span> <span class="o">=</span> <span class="s2">&quot;cleaned_&quot;</span> <span class="o">+</span> <span class="n">column_name</span>
-    <span class="n">dataframe_object</span><span class="p">[</span><span class="n">new_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataframe_object</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">preprocess_string</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">dataframe_object</span></div>
-
-
-<div class="viewcode-block" id="complete_citations_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.complete_citations_dataframe">[docs]</a><span class="k">def</span> <span class="nf">complete_citations_dataframe</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Executes citation step.</span>
-<span class="sd">    This function load all the citations from path, add required columns for next steps, and remove duplicates.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    citations_files_parent_folder_path : str</span>
-<span class="sd">        this is the path of parent folder of where citations files exists.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    pandas.DataFrame object</span>
-<span class="sd">        DataFrame with additional columns needed for next steps of systematic review and duplicates are removed</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">full_list</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">load_multiple_ris_citations_files</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">)</span>
-    <span class="n">full_list_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">full_list</span><span class="p">)</span>
-    <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_multiple_sources_column</span><span class="p">(</span><span class="n">full_list_df</span><span class="p">)</span>
-    <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_citation_text_column</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
-    <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_preprocess_column</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
-    <span class="n">complete_citations_df</span> <span class="o">=</span> <span class="n">drop_duplicates_citations</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">complete_citations_df</span></div>
-
-
-<div class="viewcode-block" id="complete_citations_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.complete_citations_list">[docs]</a><span class="k">def</span> <span class="nf">complete_citations_list</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Executes citation step.</span>
-<span class="sd">    This function load all the citations from path, add required columns for next steps, and remove duplicates.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    citations_files_parent_folder_path : str</span>
-<span class="sd">        this is the path of parent folder of where citations files exists.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    list</span>
-<span class="sd">        list with additional columns needed for next steps of systematic review and duplicates are removed</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">full_list</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">load_multiple_ris_citations_files</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">)</span>
-    <span class="n">full_list_df</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">list_of_dicts_to_dataframe</span><span class="p">(</span><span class="n">full_list</span><span class="p">)</span>
-    <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_multiple_sources_column</span><span class="p">(</span><span class="n">full_list_df</span><span class="p">)</span>
-    <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_citation_text_column</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
-    <span class="n">complete_df</span> <span class="o">=</span> <span class="n">add_preprocess_column</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
-    <span class="n">complete_citations_df</span> <span class="o">=</span> <span class="n">drop_duplicates_citations</span><span class="p">(</span><span class="n">complete_df</span><span class="p">)</span>
-    <span class="n">citations_list</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_to_list_of_dicts</span><span class="p">(</span><span class="n">complete_citations_df</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">citations_list</span></div>
+<div class="viewcode-block" id="Citations.get_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.citation.Citations.get_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_citations_dataframe</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>

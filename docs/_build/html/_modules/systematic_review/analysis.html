@@ -1,0 +1,1188 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>systematic_review.analysis &mdash; systematic-reviewpy 0.0.69 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> systematic-reviewpy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../systematic_review.html">systematic_review package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">systematic-reviewpy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>systematic_review.analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for systematic_review.analysis</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module: analysis</span>
+<span class="sd">This module contain code for generating info, diagrams and tables. It can be used to generate systematic review flow</span>
+<span class="sd">and citations information.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">os_utils</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">citation</span><span class="p">,</span> <span class="n">string_manipulation</span><span class="p">,</span> <span class="n">validation</span>
+
+
+<div class="viewcode-block" id="creating_sample_review_file"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.creating_sample_review_file">[docs]</a><span class="k">def</span> <span class="nf">creating_sample_review_file</span><span class="p">(</span><span class="n">selected_citation_df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function outputs dataframe with including columns to make literature review easier.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    selected_citation_df : pandas.DataFrame object</span>
+<span class="sd">        This dataframe is the result of last step of systematic-reviewpy. This contains records for manual literature</span>
+<span class="sd">        review.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame object</span>
+<span class="sd">        This is dataframe with additional columns for helping in adding details of literature review.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># add additional columns</span>
+    <span class="n">literature_review_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Main Topic&#39;</span><span class="p">,</span> <span class="s1">&#39;Sub Topic&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;Aim of the Study(objectives)&#39;</span><span class="p">,</span> <span class="s1">&#39;data sources&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;Data period&#39;</span><span class="p">,</span> <span class="s1">&#39;Input Variables&#39;</span><span class="p">,</span> <span class="s1">&#39;methodology&#39;</span><span class="p">,</span> <span class="s1">&#39;Findings&#39;</span><span class="p">,</span> <span class="s1">&#39;Research Gap/ Limitations&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;Results / Conclusions&#39;</span><span class="p">,</span> <span class="s1">&#39;place_published&#39;</span><span class="p">,</span> <span class="s1">&#39;Notes, Special Considerations&#39;</span><span class="p">,</span> <span class="s1">&#39;Email ID&#39;</span><span class="p">]</span>
+    <span class="n">selected_citation_review</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">selected_citation_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">literature_review_cols</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">selected_citation_review</span></div>
+
+
+<div class="viewcode-block" id="analysis_of_multiple_ris_citations_files"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.analysis_of_multiple_ris_citations_files">[docs]</a><span class="k">def</span> <span class="nf">analysis_of_multiple_ris_citations_files</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function loads all ris citations files from folder and return the databases names and collected number of</span>
+<span class="sd">    citations from the databases to dict.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    citations_files_parent_folder_path : str</span>
+<span class="sd">        this is the path of parent folder of where citations files exists.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        this is dict of databases name and number of records in ris files.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">citations_path_lists</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">extract_files_path_from_directories_or_subdirectories</span><span class="p">(</span>
+        <span class="n">citations_files_parent_folder_path</span><span class="p">)</span>
+    <span class="n">details</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">citations_path_lists</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.ris&quot;</span><span class="p">):</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">ris_file_to_records_list</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            <span class="n">details</span><span class="p">[</span><span class="n">os_utils</span><span class="o">.</span><span class="n">get_filename_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">length</span>
+            <span class="n">details</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">length</span>
+    <span class="k">return</span> <span class="n">details</span></div>
+
+
+<div class="viewcode-block" id="vertical_dict_view"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.vertical_dict_view">[docs]</a><span class="k">def</span> <span class="nf">vertical_dict_view</span><span class="p">(</span><span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;convert dict to string with each element in new line.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dictionary : dict</span>
+<span class="sd">        Contains key and value which we want to print vertically.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This prints key1 : value1</span>
+<span class="sd">        and         key2 : value2 ... in vertical format</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="n">output_string</span></div>
+
+
+<div class="viewcode-block" id="duplicate_count"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.duplicate_count">[docs]</a><span class="k">def</span> <span class="nf">duplicate_count</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;return count of the duplicate articles.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe : pd.DataFrame</span>
+<span class="sd">        Input pandas dataframe where we want to check numbers of duplicates.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        number of duplicates records.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">complete_citations_df</span> <span class="o">=</span> <span class="n">citation</span><span class="o">.</span><span class="n">drop_duplicates_citations</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
+    <span class="n">count_of_duplicates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">complete_citations_df</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">count_of_duplicates</span></div>
+
+
+<div class="viewcode-block" id="missed_article_count"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.missed_article_count">[docs]</a><span class="k">def</span> <span class="nf">missed_article_count</span><span class="p">(</span><span class="n">filter_sorted_citations_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">downloaded_articles_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">title_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cleaned_title&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;return count of missed articles from downloading by checking original list of articles from</span>
+<span class="sd">    filter_sorted_citations_df using downloaded articles path.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    title_column_name : str</span>
+<span class="sd">        contains name of column which contain the name of article.</span>
+<span class="sd">    filter_sorted_citations_df : pd.DataFrame</span>
+<span class="sd">        This dataframe contains records of selected articles including name of articles.</span>
+<span class="sd">    downloaded_articles_path : str</span>
+<span class="sd">        contains parent folder of all the downloaded articles files.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        count of the missed articles from downloading.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">filter_sorted_citations_df</span><span class="p">[</span><span class="n">title_column_name</span><span class="p">]]</span>
+    <span class="n">validated_articles_list</span><span class="p">,</span> <span class="n">invalidated_list</span><span class="p">,</span> <span class="n">manual_list</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">validating_pdfs_using_multiple_pdf_reader</span><span class="p">(</span>
+        <span class="n">downloaded_articles_path</span><span class="p">)</span>
+    <span class="n">articles_list</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">getting_article_paths_from_validation_detail</span><span class="p">(</span><span class="n">validated_articles_list</span><span class="p">)</span>
+    <span class="n">downloaded_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">string_manipulation</span><span class="o">.</span><span class="n">preprocess_string</span><span class="p">(</span><span class="n">os_utils</span><span class="o">.</span><span class="n">get_filename_from_path</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">articles_list</span><span class="p">]</span>
+    <span class="n">missed_articles</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">finding_missed_articles_from_downloading</span><span class="p">(</span><span class="n">downloaded_list</span><span class="p">,</span> <span class="n">original_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">missed_articles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="text_padding_for_visualise"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.text_padding_for_visualise">[docs]</a><span class="k">def</span> <span class="nf">text_padding_for_visualise</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">front_padding_space_multiple</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+                               <span class="n">top_bottom_line_padding_multiple</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This add required space on all four side of text for better look.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        This is the input word.</span>
+<span class="sd">    front_padding_space_multiple : int</span>
+<span class="sd">        This multiply the left and right side of spaces for increased padding.</span>
+<span class="sd">    top_bottom_line_padding_multiple : int</span>
+<span class="sd">        This multiply the top and down side of spaces for increased padding.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        str - text with spaces on all four sides.</span>
+<span class="sd">        int - height that is number of lines.</span>
+<span class="sd">        int - width that is number of char in longest line.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">top_bottom_line_padding</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="n">top_bottom_line_padding_multiple</span>
+    <span class="n">output_text</span> <span class="o">=</span> <span class="n">top_bottom_line_padding</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">top_bottom_line_padding_multiple</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">front_padding_space_multiple</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">max_width</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">front_padding_space_multiple</span> <span class="o">+</span> <span class="n">t</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">front_padding_space_multiple</span>
+        <span class="n">output_text</span> <span class="o">+=</span> <span class="n">padding</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">max_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">max_width</span><span class="p">)</span>
+
+    <span class="n">width</span> <span class="o">+=</span> <span class="n">max_width</span>
+    <span class="n">height</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">output_text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">top_bottom_line_padding_multiple</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_text</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span></div>
+
+
+<div class="viewcode-block" id="custom_box"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.custom_box">[docs]</a><span class="k">def</span> <span class="nf">custom_box</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This is the option for matplotlib text in box.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        Contains key word arguments</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        contains options</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># &quot;boxstyle&quot;: &quot;square,pad=10&quot; for extra padding use pad=amount.</span>
+    <span class="n">custom_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;boxstyle&quot;</span><span class="p">:</span> <span class="s2">&quot;square&quot;</span><span class="p">,</span> <span class="s2">&quot;facecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">},</span> <span class="s2">&quot;horizontalalignment&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;verticalalignment&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;midnightblue&quot;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">custom_options</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">custom_options</span></div>
+
+
+<div class="viewcode-block" id="TextInBox"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.TextInBox">[docs]</a><span class="k">class</span> <span class="nc">TextInBox</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This is matplotlib text in box class to make it easier to use text boxes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure_axes</span><span class="p">,</span> <span class="n">x_coordinate</span><span class="p">,</span> <span class="n">y_coordinate</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;It needs pyplot figure axes to add boxes, and x and y coordinate with any text to put into box.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        figure_axes : matplotlib.pyplot.axes</span>
+<span class="sd">            This is the axes of the figure where we want to add text box.</span>
+<span class="sd">        x_coordinate : float</span>
+<span class="sd">            This is the x coordinate usually 0 at left bottom side of figure in this module.</span>
+<span class="sd">        y_coordinate : float</span>
+<span class="sd">            This is the y coordinate usually 0 at left bottom side of figure in this module.</span>
+<span class="sd">        text : str</span>
+<span class="sd">            This is text to be written inside of box.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure_axes</span> <span class="o">=</span> <span class="n">figure_axes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_coordinate</span> <span class="o">=</span> <span class="n">x_coordinate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_coordinate</span> <span class="o">=</span> <span class="n">y_coordinate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width_of_one_char</span> <span class="o">=</span> <span class="mf">0.067</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width_of_one_line</span> <span class="o">=</span> <span class="mf">0.165</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_coordinate</span> <span class="o">-</span> <span class="p">((</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_of_one_char</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_coordinate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_coordinate</span> <span class="o">+</span> <span class="p">((</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_of_one_char</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_coordinate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_coordinate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_coordinate</span> <span class="o">+</span> <span class="p">((</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_of_one_line</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_coordinate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_coordinate</span> <span class="o">-</span> <span class="p">((</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_of_one_line</span><span class="p">))</span>
+
+<div class="viewcode-block" id="TextInBox.add_box"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.TextInBox.add_box">[docs]</a>    <span class="k">def</span> <span class="nf">add_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;It put the box on the matplotlib.pyplot.axes figure</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kwargs : Union[dict, str, Any]</span>
+<span class="sd">            This taken any custom_text_manipulation_function options to be set into box.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure_axes</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_coordinate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_coordinate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">custom_box</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="Annotate"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.Annotate">[docs]</a><span class="k">class</span> <span class="nc">Annotate</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This class makes it easier to draw arrows into matplotlib.pyplot.axes figure</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure_axes</span><span class="p">,</span> <span class="n">start_coordinate</span><span class="p">,</span> <span class="n">end_coordinate</span><span class="p">,</span> <span class="n">arrow_style</span><span class="o">=</span><span class="s2">&quot;&lt;|-&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This takes matplotlib.pyplot.axes and location of x and y coordinate for both start and end point. end point</span>
+<span class="sd">        is the arrow head target.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        figure_axes : matplotlib.pyplot.axes</span>
+<span class="sd">            This is the axes of the figure where we want to add text box.</span>
+<span class="sd">        start_coordinate : tuple</span>
+<span class="sd">            this is tuple containing x and y coordinates of the point, 0, 0 is left bottom in this module figure. start</span>
+<span class="sd">             point is the arrow handle.</span>
+<span class="sd">        end_coordinate : tuple</span>
+<span class="sd">            this is tuple containing x and y coordinates of the point, 0, 0 is left bottom in this module figure. end</span>
+<span class="sd">            point is the arrow head target.</span>
+<span class="sd">        arrow_style : str</span>
+<span class="sd">            This contains symbol for different type of arrows in matplotlib.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure_axes</span> <span class="o">=</span> <span class="n">figure_axes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_coordinate</span> <span class="o">=</span> <span class="n">start_coordinate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_coordinate</span> <span class="o">=</span> <span class="n">end_coordinate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arrowstyle</span> <span class="o">=</span> <span class="n">arrow_style</span>
+
+<div class="viewcode-block" id="Annotate.add_arrow"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.Annotate.add_arrow">[docs]</a>    <span class="k">def</span> <span class="nf">add_arrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This draw the arrow on matplotlib.pyplot.axes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        text : str</span>
+<span class="sd">            This takes test to put on the arrow.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure_axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_coordinate</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end_coordinate</span><span class="p">,</span>
+            <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">arrowstyle</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="SystematicReviewInfo"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.SystematicReviewInfo">[docs]</a><span class="k">class</span> <span class="nc">SystematicReviewInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This analyse whole systematic review process and takes all produced file to generate tables, figure.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">download_flag_column_name</span> <span class="o">=</span> <span class="s1">&#39;downloaded&#39;</span>
+    <span class="n">file_validated_flag_name</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">citations_files_parent_folder_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_sorted_citations_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">validated_research_papers_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">selected_research_papers_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This class contains all necessary information for systematic review flow.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        citations_files_parent_folder_path : str</span>
+<span class="sd">            this is the path of parent folder of where citations files exists.</span>
+<span class="sd">        filter_sorted_citations_df : pd.DataFrame</span>
+<span class="sd">            This is screened dataframe containing records for downloading full text.</span>
+<span class="sd">        selected_research_papers_df : pd.DataFrame</span>
+<span class="sd">            This dataframe contains records for manual literature review.</span>
+<span class="sd">        validated_research_papers_df : pd.DataFrame</span>
+<span class="sd">            This contains validation of downloaded research articles.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">citations_files_parent_folder_path</span> <span class="o">=</span> <span class="n">citations_files_parent_folder_path</span> <span class="k">if</span> \
+            <span class="n">citations_files_parent_folder_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sources</span> <span class="o">=</span> <span class="n">analysis_of_multiple_ris_citations_files</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">)</span> <span class="k">if</span> \
+            <span class="n">citations_files_parent_folder_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duplicates</span> <span class="o">=</span> <span class="n">duplicate_count</span><span class="p">(</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">load_multiple_ris_citations_files_to_dataframe</span><span class="p">(</span><span class="n">citations_files_parent_folder_path</span><span class="p">))</span> <span class="k">if</span> \
+            <span class="n">citations_files_parent_folder_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">screened</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duplicates</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">duplicates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">for_retrieval</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filter_sorted_citations_df</span><span class="p">)</span> <span class="k">if</span> <span class="n">filter_sorted_citations_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screened_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screened</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">for_retrieval</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screened</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">for_retrieval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">not_retrieved</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">validated_research_papers_df</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">validated_research_papers_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">validated_research_papers_df</span><span class="p">[</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">download_flag_column_name</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_validated_flag_name</span><span class="p">])</span> <span class="k">if</span> \
+            <span class="p">(</span><span class="n">validated_research_papers_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">download_flag_column_name</span> <span class="ow">in</span> <span class="n">validated_research_papers_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">eligible</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_research_papers_df</span><span class="p">)</span> <span class="k">if</span> <span class="n">selected_research_papers_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manually_excluded</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manually_excluded_reasons</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">included</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<div class="viewcode-block" id="SystematicReviewInfo.get_text_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.SystematicReviewInfo.get_text_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_text_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;This produces the list of all analysis done in this class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List[str]</span>
+<span class="sd">            This contains systematic review information in sentences.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">text_list</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Records identified from -</span><span class="se">\n</span><span class="si">{</span><span class="n">vertical_dict_view</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Records screened</span><span class="se">\n</span><span class="s2">(n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">screened</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Reports sought for retrieval</span><span class="se">\n</span><span class="s2">(n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">for_retrieval</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Reports assessed for eligibility</span><span class="se">\n</span><span class="s2">(n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">eligible</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Total studies included in review</span><span class="se">\n</span><span class="s2">(n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">included</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Records removed before screening -</span><span class="se">\n</span><span class="s2">Duplicate records removed</span><span class="se">\n</span><span class="s2"> (n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">duplicates</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Records screened out</span><span class="se">\n</span><span class="s2">(n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">screened_out</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Reports not retrieved -</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">download_flag_column_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">(n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">not_retrieved</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;Reports excluded</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manually_excluded</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manually_excluded_reasons</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">text_list</span></div>
+
+<div class="viewcode-block" id="SystematicReviewInfo.info"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.SystematicReviewInfo.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This takes systematic review text list and create proper order to print.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">temp_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_text_list</span><span class="p">()</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">temp_text</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SystematicReviewInfo.systematic_review_diagram"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.SystematicReviewInfo.systematic_review_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">systematic_review_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig_width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fig_height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">color_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">auto_fig_size</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">hide_border</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This outputs the systematic review diagram resembling PRISMA guidelines.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``</span>
+<span class="sd">        hide_border : bool</span>
+<span class="sd">            border is line outside of diagram</span>
+<span class="sd">        auto_fig_size : bool</span>
+<span class="sd">            this sets the figure size automatically based on given data.</span>
+<span class="sd">        color : bool</span>
+<span class="sd">            This is color inside of diagram boxes. turn this off by putting False.</span>
+<span class="sd">        color_info : bool</span>
+<span class="sd">            This show meaning of color in diagram.</span>
+<span class="sd">        diagram_fname : str</span>
+<span class="sd">            filename or path of diagram image to be saved.</span>
+<span class="sd">        fig_width : float</span>
+<span class="sd">            This is width of figure in inches.</span>
+<span class="sd">        fig_height : float</span>
+<span class="sd">            This is height of figure in inches.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">text_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_text_list</span><span class="p">()</span>
+        <span class="n">width_of_one_char</span> <span class="o">=</span> <span class="mf">0.067</span>
+        <span class="n">width_of_one_line</span> <span class="o">=</span> <span class="mf">0.165</span>
+
+        <span class="n">top_spaces</span> <span class="o">=</span> <span class="n">width_of_one_line</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">top_outer_spaces</span> <span class="o">=</span> <span class="n">width_of_one_line</span> <span class="o">*</span> <span class="mi">4</span>
+
+        <span class="n">left_spaces</span> <span class="o">=</span> <span class="n">width_of_one_char</span> <span class="o">*</span> <span class="mi">10</span>
+        <span class="n">left_outer_spaces</span> <span class="o">=</span> <span class="n">width_of_one_char</span> <span class="o">*</span> <span class="mi">15</span>
+
+        <span class="n">height</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">top_outer_spaces</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">top_spaces</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span>
+                                           <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">5</span><span class="p">])[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span>
+                                           <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">6</span><span class="p">])[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">2</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span>
+                                           <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">7</span><span class="p">])[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">3</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span>
+                                           <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">8</span><span class="p">])[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">4</span><span class="p">])[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">width</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">left_outer_spaces</span>
+        <span class="n">width</span> <span class="o">+=</span> <span class="n">left_spaces</span>
+
+        <span class="n">max_left_width</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">width_of_one_char</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">2</span><span class="p">],</span>
+                                        <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">2</span><span class="p">],</span>
+                                        <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">2</span><span class="p">])[</span><span class="mi">2</span><span class="p">],</span>
+                                        <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">3</span><span class="p">])[</span><span class="mi">2</span><span class="p">],</span>
+                                        <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">3</span><span class="p">])[</span><span class="mi">2</span><span class="p">]))</span>
+
+        <span class="n">max_right_width</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">width_of_one_char</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">5</span><span class="p">])[</span><span class="mi">2</span><span class="p">],</span>
+                                        <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">6</span><span class="p">])[</span><span class="mi">2</span><span class="p">],</span>
+                                        <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">7</span><span class="p">])[</span><span class="mi">2</span><span class="p">],</span>
+                                        <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">8</span><span class="p">])[</span><span class="mi">2</span><span class="p">]))</span>
+
+        <span class="n">width</span> <span class="o">+=</span> <span class="p">(</span><span class="n">max_left_width</span> <span class="o">+</span> <span class="n">max_right_width</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">auto_fig_size</span><span class="p">:</span>
+            <span class="n">fig_width</span> <span class="o">=</span> <span class="n">width</span>
+            <span class="n">fig_height</span> <span class="o">=</span> <span class="n">height</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fig_width</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fig_height</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labeltop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelright</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">x_position_left</span> <span class="o">=</span> <span class="n">left_outer_spaces</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_left_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">x_position_right</span> <span class="o">=</span> <span class="n">left_outer_spaces</span> <span class="o">+</span> <span class="n">max_left_width</span> <span class="o">+</span> <span class="n">left_spaces</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_right_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># draw rectangles with text in the center</span>
+        <span class="n">all_boxes</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># box 0 to 4</span>
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_left</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">fig_height</span> <span class="o">-</span> <span class="n">top_outer_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">5</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_left</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">6</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_left</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">2</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">7</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_left</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">3</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">8</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_left</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span>
+                                           <span class="n">width_of_one_line</span> <span class="o">*</span> <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">4</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="c1"># box 5 to 8</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_right</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">fig_height</span> <span class="o">-</span> <span class="n">top_outer_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">5</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_right</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">6</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_right</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">2</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">7</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="n">all_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TextInBox</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                                   <span class="n">x_position_right</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">3</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                       <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">8</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+                                    <span class="p">),</span>
+                                   <span class="n">text_list</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+                                   <span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">color</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">all_boxes_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_boxes</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">all_boxes_index</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">all_boxes</span><span class="p">[</span><span class="n">all_boxes_index</span><span class="p">]</span><span class="o">.</span><span class="n">add_box</span><span class="p">(</span>
+                        <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;boxstyle&quot;</span><span class="p">:</span> <span class="s2">&quot;square&quot;</span><span class="p">,</span> <span class="s2">&quot;facecolor&quot;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;edgecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">},</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">all_boxes</span><span class="p">[</span><span class="n">all_boxes_index</span><span class="p">]</span><span class="o">.</span><span class="n">add_box</span><span class="p">(</span>
+                        <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;boxstyle&quot;</span><span class="p">:</span> <span class="s2">&quot;square&quot;</span><span class="p">,</span> <span class="s2">&quot;facecolor&quot;</span><span class="p">:</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;edgecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">},</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">all_boxes</span><span class="p">:</span>
+                <span class="n">box</span><span class="o">.</span><span class="n">add_box</span><span class="p">()</span>
+
+        <span class="c1"># Draw arrows</span>
+        <span class="n">all_arrows</span> <span class="o">=</span> <span class="p">[</span><span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">top</span><span class="p">),</span>
+                      <span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">top</span><span class="p">),</span>
+                      <span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">top</span><span class="p">),</span>
+                      <span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">top</span><span class="p">),</span>
+                      <span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">left</span><span class="p">),</span>
+                      <span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">left</span><span class="p">),</span>
+                      <span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">left</span><span class="p">),</span>
+                      <span class="n">Annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">all_boxes</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">left</span><span class="p">)]</span>
+
+        <span class="c1"># vertical arrows 0-1 to 3-4</span>
+        <span class="c1"># Horizontal arrows 0-5 to 3-8</span>
+        <span class="k">for</span> <span class="n">arrow</span> <span class="ow">in</span> <span class="n">all_arrows</span><span class="p">:</span>
+            <span class="n">arrow</span><span class="o">.</span><span class="n">add_arrow</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">color_info</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x_position_right</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">width_of_one_line</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="p">(</span>
+                            <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">4</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+                     <span class="p">),</span> <span class="s2">&quot;Automated step&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x_position_right</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">width_of_one_line</span> <span class="o">-</span> <span class="n">top_spaces</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="p">(</span>
+                            <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">4</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+                     <span class="p">),</span> <span class="s2">&quot;Manual step&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Create a Rectangle box</span>
+            <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
+            <span class="n">green_rect</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">x_position_right</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_char</span> <span class="o">*</span> <span class="mi">3</span><span class="p">),</span>
+                                            <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">width_of_one_line</span>
+                                             <span class="o">-</span> <span class="n">top_spaces</span>
+                                             <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="p">(</span>
+                                                            <span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">4</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))),</span>
+                                           <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+            <span class="n">red_rect</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">x_position_right</span> <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_char</span> <span class="o">*</span> <span class="mi">3</span><span class="p">),</span>
+                                          <span class="p">(</span><span class="n">all_boxes</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">width_of_one_line</span> <span class="o">-</span> <span class="n">top_spaces</span>
+                                           <span class="o">-</span> <span class="p">(</span><span class="n">width_of_one_line</span> <span class="o">*</span> <span class="p">(</span><span class="n">text_padding_for_visualise</span><span class="p">(</span><span class="n">text_list</span><span class="p">[</span><span class="mi">4</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))),</span>
+                                         <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+            <span class="c1"># Add the rectangular box patch to the Axes</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">green_rect</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">red_rect</span><span class="p">)</span>
+
+        <span class="c1"># makes border invisible</span>
+        <span class="k">if</span> <span class="n">hide_border</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">diagram_fname</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">diagram_fname</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="pandas_countplot_with_pandas_dataframe_column"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.pandas_countplot_with_pandas_dataframe_column">[docs]</a><span class="k">def</span> <span class="nf">pandas_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">plot_kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span>
+                                                  <span class="n">diagram_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;generate pandas count chart using dataframe column.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe : pd.DataFrame</span>
+<span class="sd">        dataframe which contains column whose value counts to be shown.</span>
+<span class="sd">    column_name : str</span>
+<span class="sd">        Name of pandas column elements are supposed to be counted.</span>
+<span class="sd">    top_result : int</span>
+<span class="sd">            This limits the number of column unique elements to be shown</span>
+<span class="sd">    plot_kind : str</span>
+<span class="sd">        pandas plot option of kind of chart needed. defaults to &#39;bar&#39; in this implementation</span>
+<span class="sd">    diagram_fname : str</span>
+<span class="sd">            filename or path of diagram image to be saved.</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataframe</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()[:</span><span class="n">top_result</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">plot_kind</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">diagram_fname</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">diagram_fname</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="seaborn_countplot_with_pandas_dataframe_column"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.seaborn_countplot_with_pandas_dataframe_column">[docs]</a><span class="k">def</span> <span class="nf">seaborn_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">theme_style</span><span class="o">=</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">,</span>
+                                                   <span class="n">xaxis_label_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">top_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                   <span class="n">diagram_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;generate seaborn count bar chart using dataframe column.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram_fname : str</span>
+<span class="sd">            filename or path of diagram image to be saved.</span>
+<span class="sd">    dataframe : pd.DataFrame</span>
+<span class="sd">        dataframe which contains column whose value counts to be shown.</span>
+<span class="sd">    column_name : str</span>
+<span class="sd">        Name of pandas column elements are supposed to be counted.</span>
+<span class="sd">    theme_style : str</span>
+<span class="sd">        name of the bar chart theme</span>
+<span class="sd">    xaxis_label_rotation : float</span>
+<span class="sd">        rotate the column elements shown on x axis or horizontally.</span>
+<span class="sd">    top_result : int</span>
+<span class="sd">        This limits the number of column unique elements to be shown</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    object</span>
+<span class="sd">            show the bar chart</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">column_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">dataframe</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">column_name</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">top_result</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">theme_style</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="n">xaxis_label_rotation</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar_label</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">containers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">diagram_fname</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">diagram_fname</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="CitationAnalysis"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis">[docs]</a><span class="k">class</span> <span class="nc">CitationAnalysis</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This takes any pandas dataframe containing citation details and produces analyses on various columns.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This requires citation dataframe.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dataframe : pd.DataFrame</span>
+<span class="sd">            This dataframe is checked for columns for analyses, please change column name for analyses if not same as</span>
+<span class="sd">            implemented.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">dataframe</span>
+
+<div class="viewcode-block" id="CitationAnalysis.publication_year_info"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.publication_year_info">[docs]</a>    <span class="k">def</span> <span class="nf">publication_year_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;year&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;shows how many articles are published each year.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of publication year detail in citation dataframe</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            contains year and count of publications</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_column_counts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.publication_year_diagram"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.publication_year_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">publication_year_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span>
+                                 <span class="n">top_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">,</span> <span class="n">theme_style</span><span class="o">=</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">,</span>
+                                 <span class="n">xaxis_label_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">pandas_bar_kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;generates chart showing how many articles are published each year.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pandas_bar_kind : str</span>
+<span class="sd">            pandas plot option of kind of chart needed. defaults to &#39;bar&#39; in this implementation</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of publication year detail in citation dataframe</span>
+<span class="sd">        theme_style : str</span>
+<span class="sd">            name of the bar chart theme</span>
+<span class="sd">        xaxis_label_rotation : float</span>
+<span class="sd">            rotate the column elements shown on x axis or horizontally.</span>
+<span class="sd">        top_result : int</span>
+<span class="sd">            This limits the number of column unique elements to be shown</span>
+<span class="sd">        method : str</span>
+<span class="sd">            provide option to plot chart using either &#39;seaborn&#39; or &#39;pandas&#39;</span>
+<span class="sd">        diagram_fname : str</span>
+<span class="sd">            filename or path of diagram image to be saved.</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">:</span>
+            <span class="n">seaborn_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">theme_style</span><span class="p">,</span>
+                                                           <span class="n">xaxis_label_rotation</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pandas&quot;</span><span class="p">:</span>
+            <span class="n">pandas_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">pandas_bar_kind</span><span class="p">,</span>
+                                                          <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please provide text_manipulation_method_name value as &#39;seaborn&#39; or &#39;pandas&#39;.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.authors_analysis"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.authors_analysis">[docs]</a>    <span class="k">def</span> <span class="nf">authors_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authors_column_name</span><span class="o">=</span><span class="s2">&quot;authors&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;generates the details based on pandas dataframe column of article authors. example- Number of authors,</span>
+<span class="sd">        Articles with single authors, Articles per authors, Authors per articles</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        authors_column_name : str</span>
+<span class="sd">            Name of column containing authors details.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            contains Number of authors, Articles with single authors, Articles per authors, Authors per articles</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">number_of_articles</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">)</span>
+        <span class="n">unique_author_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">articles_with_single_authors</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">authors_list</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">authors_column_name</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">authors_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">articles_with_single_authors</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">authors</span> <span class="ow">in</span> <span class="n">authors_list</span><span class="p">:</span>
+                <span class="n">unique_author_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">authors</span><span class="p">)</span>
+
+        <span class="n">number_of_authors</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_author_names</span><span class="p">)</span>
+        <span class="n">articles_per_authors</span> <span class="o">=</span> <span class="n">number_of_articles</span> <span class="o">/</span> <span class="n">number_of_authors</span>
+        <span class="n">authors_per_articles</span> <span class="o">=</span> <span class="n">number_of_authors</span> <span class="o">/</span> <span class="n">number_of_articles</span>
+
+        <span class="k">return</span> <span class="n">number_of_authors</span><span class="p">,</span> <span class="n">articles_with_single_authors</span><span class="p">,</span> <span class="n">articles_per_authors</span><span class="p">,</span> <span class="n">authors_per_articles</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.authors_info"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.authors_info">[docs]</a>    <span class="k">def</span> <span class="nf">authors_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;prints the authors analysis details in nice format</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">number_of_authors</span><span class="p">,</span> <span class="n">articles_with_single_authors</span><span class="p">,</span> <span class="n">articles_per_authors</span><span class="p">,</span> <span class="n">authors_per_articles</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">authors_analysis</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of authors = </span><span class="si">{</span><span class="n">number_of_authors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Articles with single authors = </span><span class="si">{</span><span class="n">articles_with_single_authors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Articles per authors = </span><span class="si">{</span><span class="n">articles_per_authors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Authors per articles = </span><span class="si">{</span><span class="n">authors_per_articles</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.publication_place_info"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.publication_place_info">[docs]</a>    <span class="k">def</span> <span class="nf">publication_place_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;place_published&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;shows how many articles are published from different places or countries.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of publication place detail in citation dataframe</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            contains publication place and count of publications</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_column_counts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.publication_place_diagram"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.publication_place_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">publication_place_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;place_published&quot;</span><span class="p">,</span>
+                                  <span class="n">top_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">,</span> <span class="n">theme_style</span><span class="o">=</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">,</span>
+                                  <span class="n">xaxis_label_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">pandas_bar_kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;generates chart showing how many articles are published from different places or countries.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pandas_bar_kind : str</span>
+<span class="sd">            pandas plot option of kind of chart needed. defaults to &#39;bar&#39; in this implementation</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of publication place detail in citation dataframe</span>
+<span class="sd">        theme_style : str</span>
+<span class="sd">            name of the bar chart theme</span>
+<span class="sd">        xaxis_label_rotation : float</span>
+<span class="sd">            rotate the column elements shown on x axis or horizontally.</span>
+<span class="sd">        top_result : int</span>
+<span class="sd">            This limits the number of column unique elements to be shown</span>
+<span class="sd">        method : str</span>
+<span class="sd">            provide option to plot chart using either &#39;seaborn&#39; or &#39;pandas&#39;</span>
+<span class="sd">        diagram_fname : str</span>
+<span class="sd">            filename or path of diagram image to be saved.</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">:</span>
+            <span class="n">seaborn_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">theme_style</span><span class="p">,</span>
+                                                           <span class="n">xaxis_label_rotation</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pandas&quot;</span><span class="p">:</span>
+            <span class="n">pandas_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">pandas_bar_kind</span><span class="p">,</span>
+                                                          <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please provide text_manipulation_method_name value as &#39;seaborn&#39; or &#39;pandas&#39;.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.publisher_info"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.publisher_info">[docs]</a>    <span class="k">def</span> <span class="nf">publisher_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;publisher&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;shows how many articles are published by different publishers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of publisher detail in citation dataframe.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            contains publisher name and count of publications.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_column_counts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.publisher_diagram"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.publisher_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">publisher_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;publisher&quot;</span><span class="p">,</span>
+                          <span class="n">top_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">,</span> <span class="n">theme_style</span><span class="o">=</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">,</span>
+                          <span class="n">xaxis_label_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">pandas_bar_kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;generates chart showing how many articles are published by different publishers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pandas_bar_kind : str</span>
+<span class="sd">            pandas plot option of kind of chart needed. defaults to &#39;bar&#39; in this implementation</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of publisher detail in citation dataframe</span>
+<span class="sd">        theme_style : str</span>
+<span class="sd">            name of the bar chart theme</span>
+<span class="sd">        xaxis_label_rotation : float</span>
+<span class="sd">            rotate the column elements shown on x axis or horizontally.</span>
+<span class="sd">        top_result : int</span>
+<span class="sd">            This limits the number of column unique elements to be shown</span>
+<span class="sd">        method : str</span>
+<span class="sd">            provide option to plot chart using either &#39;seaborn&#39; or &#39;pandas&#39;</span>
+<span class="sd">        diagram_fname : str</span>
+<span class="sd">            filename or path of diagram image to be saved.</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">:</span>
+            <span class="n">seaborn_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">theme_style</span><span class="p">,</span>
+                                                           <span class="n">xaxis_label_rotation</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pandas&quot;</span><span class="p">:</span>
+            <span class="n">pandas_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">pandas_bar_kind</span><span class="p">,</span>
+                                                          <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please provide text_manipulation_method_name value as &#39;seaborn&#39; or &#39;pandas&#39;.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.extract_keywords"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.extract_keywords">[docs]</a>    <span class="k">def</span> <span class="nf">extract_keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;keywords&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return dataframe with search_words_object column containing single keyword in row that are used in the</span>
+<span class="sd">        articles.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of search_words_object detail in citation dataframe</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keywords_list_of_lists</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">try_convert_dataframe_column_elements_to_list</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span>
+        <span class="n">keywords_list</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">unpack_list_of_lists_with_optional_apply_custom_function</span><span class="p">(</span>
+            <span class="n">keywords_list_of_lists</span><span class="p">,</span> <span class="n">string_manipulation</span><span class="o">.</span><span class="n">string_to_space_separated_words</span><span class="p">)</span>
+
+        <span class="n">keywords_pandas_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">column_name</span><span class="p">:</span> <span class="n">keywords_list</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">keywords_pandas_df</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.keywords_info"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.keywords_info">[docs]</a>    <span class="k">def</span> <span class="nf">keywords_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;keywords&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return search_words_object and number of times they are used in the articles</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of search_words_object detail in citation dataframe</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_column_counts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_keywords</span><span class="p">(),</span> <span class="n">column_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CitationAnalysis.keyword_diagram"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.analysis.CitationAnalysis.keyword_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">keyword_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;keywords&quot;</span><span class="p">,</span>
+                        <span class="n">top_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">,</span> <span class="n">theme_style</span><span class="o">=</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">,</span>
+                        <span class="n">xaxis_label_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">pandas_bar_kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;generates chart showing how many articles are published by different publishers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pandas_bar_kind : str</span>
+<span class="sd">            pandas plot option of kind of chart needed. defaults to &#39;bar&#39; in this implementation</span>
+<span class="sd">        column_name : str</span>
+<span class="sd">            column name of search_words_object detail in citation dataframe</span>
+<span class="sd">        theme_style : str</span>
+<span class="sd">            name of the bar chart theme</span>
+<span class="sd">        xaxis_label_rotation : float</span>
+<span class="sd">            rotate the column elements shown on x axis or horizontally.</span>
+<span class="sd">        top_result : int</span>
+<span class="sd">            This limits the number of column unique elements to be shown</span>
+<span class="sd">        method : str</span>
+<span class="sd">            provide option to plot chart using either &#39;seaborn&#39; or &#39;pandas&#39;</span>
+<span class="sd">        diagram_fname : str</span>
+<span class="sd">            filename or path of diagram image to be saved.</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;seaborn&quot;</span><span class="p">:</span>
+            <span class="n">seaborn_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_keywords</span><span class="p">(),</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">theme_style</span><span class="p">,</span>
+                                                           <span class="n">xaxis_label_rotation</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pandas&quot;</span><span class="p">:</span>
+            <span class="n">pandas_countplot_with_pandas_dataframe_column</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_keywords</span><span class="p">(),</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">top_result</span><span class="p">,</span>
+                                                          <span class="n">pandas_bar_kind</span><span class="p">,</span> <span class="n">diagram_fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please provide text_manipulation_method_name value as &#39;seaborn&#39; or &#39;pandas&#39;.&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chandravesh chaudhari.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

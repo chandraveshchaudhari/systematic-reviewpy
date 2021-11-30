@@ -4,6 +4,14 @@ systematic\_review package
 Submodules
 ----------
 
+systematic\_review.analysis module
+----------------------------------
+
+.. automodule:: systematic_review.analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 systematic\_review.citation module
 ----------------------------------
 

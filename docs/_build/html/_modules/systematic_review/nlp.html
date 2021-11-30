@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>systematic_review.nlp &mdash; systematic-reviewpy  documentation</title>
+  <title>systematic_review.nlp &mdash; systematic-reviewpy 0.0.69 documentation</title>
   
 
   
@@ -159,9 +159,10 @@
 <span class="sd">For more Examples and info visit: https://www.machinelearningplus.com/nlp/lemmatization-examples-python/ and</span>
 <span class="sd">https://www.machinelearningplus.com/nlp/lemmatization-examples-python/</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 
-<div class="viewcode-block" id="remove_stopwords"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.remove_stopwords">[docs]</a><span class="k">def</span> <span class="nf">remove_stopwords</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="nltk_remove_stopwords"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_remove_stopwords">[docs]</a><span class="k">def</span> <span class="nf">nltk_remove_stopwords</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Remove unnecessary words such as she, are, of, which, and in.</span>
 
 <span class="sd">    Parameters</span>
@@ -195,7 +196,7 @@
     <span class="k">return</span> <span class="n">filtered_text</span></div>
 
 
-<div class="viewcode-block" id="get_lemma_or_lemmatize_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.get_lemma_or_lemmatize_text">[docs]</a><span class="k">def</span> <span class="nf">get_lemma_or_lemmatize_text</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lemma_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="pattern_lemma_or_lemmatize_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.pattern_lemma_or_lemmatize_text">[docs]</a><span class="k">def</span> <span class="nf">pattern_lemma_or_lemmatize_text</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lemma_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This return lemma if lemma_info is True else it returns lemmatize text. Uses pattern.en lemma</span>
 
 <span class="sd">    Parameters</span>
@@ -223,7 +224,11 @@
         <span class="kn">from</span> <span class="nn">pattern.en</span> <span class="kn">import</span> <span class="n">parse</span>
         <span class="k">return</span> <span class="n">parse</span><span class="p">(</span><span class="n">input_text</span><span class="p">,</span> <span class="n">lemmata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">lemma</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span> <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="n">input_text</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">lemma</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span> <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="n">input_text</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">lemma</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span> <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="n">input_text</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
+    <span class="k">return</span> <span class="n">output</span></div>
 
 
 <div class="viewcode-block" id="nltk_word_net_lemmatizer"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_word_net_lemmatizer">[docs]</a><span class="k">def</span> <span class="nf">nltk_word_net_lemmatizer</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -332,7 +337,7 @@
     <span class="k">return</span> <span class="n">filtered_text</span></div>
 
 
-<div class="viewcode-block" id="string_list_filter_lemma"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.string_list_filter_lemma">[docs]</a><span class="k">def</span> <span class="nf">string_list_filter_lemma</span><span class="p">(</span><span class="n">string_list_lower</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="nltk_remove_stopwords_spacy_lemma"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_remove_stopwords_spacy_lemma">[docs]</a><span class="k">def</span> <span class="nf">nltk_remove_stopwords_spacy_lemma</span><span class="p">(</span><span class="n">string_list_lower</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;This function returns lemmatize text of lowercase input string. Uses spacy en_core_web_sm</span>
 
 <span class="sd">    Parameters</span>
@@ -342,37 +347,16 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    str</span>
+<span class="sd">    List[str]</span>
 <span class="sd">        This output text contains word-forms which are linguistically valid lemmas.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">string_list_lower_filter_lemma</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">string_list_lower</span><span class="p">:</span>
-        <span class="n">string_lower_filter</span> <span class="o">=</span> <span class="n">remove_stopwords</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">string_lower_filter</span> <span class="o">=</span> <span class="n">nltk_remove_stopwords</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
         <span class="n">string_lower_filter_lemma</span> <span class="o">=</span> <span class="n">spacy_lemma</span><span class="p">(</span><span class="n">string_lower_filter</span><span class="p">)</span>
         <span class="n">string_list_lower_filter_lemma</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">string_lower_filter_lemma</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">string_list_lower_filter_lemma</span></div>
-
-
-<div class="viewcode-block" id="string_lower_lemma"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.string_lower_lemma">[docs]</a><span class="k">def</span> <span class="nf">string_lower_lemma</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This function returns lemmatize text by first converting input string into lowercase. Uses spacy en_core_web_sm</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    string : str</span>
-<span class="sd">        This may contains all words in dictionary.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    str</span>
-<span class="sd">        This output text contains word-forms which are linguistically valid lemmas.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">string_lower</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">string_lower_filter_lemma</span> <span class="o">=</span> <span class="n">spacy_lemma</span><span class="p">(</span><span class="n">string_lower</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">string_lower_filter_lemma</span><span class="p">)</span></div>
-
-
 </pre></div>
 
            </div>
