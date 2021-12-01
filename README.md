@@ -21,9 +21,9 @@ and Meta-Analyses (PRISMA).
 
 ### Project Authors
 The packages [systematic-reviewpy](https://github.com/chandraveshchaudhari/systematic-reviewpy) and 
-[browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Research paper "a python framework for systematic 
-review using PRISMA guidelines" created by Chandravesh chaudhari, Doctoral candidate at christ university, Bangalore 
-under supervision of Dr. Geetanjali purswani. 
+[browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Research paper 
+"a python framework for systematic review using PRISMA guidelines" created by Chandravesh chaudhari, Doctoral candidate 
+at christ university, Bangalore under supervision of Dr. Geetanjali purswani. 
 
 > Citation
 
@@ -47,7 +47,8 @@ under supervision of Dr. Geetanjali purswani.
 - Provides replicable results
 
 ## Installation 
-This project is available at [PyPI](https://pypi.org/project/systematic-reviewpy/). For help in installation check [instructions](https://packaging.python.org/tutorials/installing-packages/#installing-from-pypi)
+This project is available at [PyPI](https://pypi.org/project/systematic-reviewpy/). For help in installation check 
+[instructions](https://packaging.python.org/tutorials/installing-packages/#installing-from-pypi)
 ```bash
 python3 -m pip install systematic-reviewpy  
 ```
@@ -55,16 +56,18 @@ python3 -m pip install systematic-reviewpy
 ### Dependencies
 ##### Required
 - [rispy](https://pypi.org/project/rispy/) - A Python 3.6+ reader/writer of RIS reference files.
-- [pandas](https://pypi.org/project/pandas/) - A Python package that provides fast, flexible, and expressive data structures designed to make working with "relational" or "labeled" data both easy and intuitive.
+- [pandas](https://pypi.org/project/pandas/) - A Python package that provides fast, flexible, and expressive data 
+structures designed to make working with "relational" or "labeled" data both easy and intuitive.
 ##### Optional
 - [browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy/)
 - [pdftotext](https://pypi.org/project/pdftotext/) - Simple PDF text extraction
-- [PyMuPDF](https://pypi.org/project/PyMuPDF/) - PyMuPDF (current version 1.19.2) - A Python binding with support for MuPDF, a lightweight PDF, XPS, and E-book viewer, renderer, and toolkit.
+- [PyMuPDF](https://pypi.org/project/PyMuPDF/) - PyMuPDF (current version 1.19.2) - A Python binding with support for 
+MuPDF, a lightweight PDF, XPS, and E-book viewer, renderer, and toolkit.
 
 ## Important links
 - [Documentation](documentation link)
 - [Quick tour](tutorial file link)
-- [Project maintainer (feel free to contact)](mailto:chandraveshchaudhari@gmail.com?subject=[GitHub]%20Source%20sytematic-reviewpy) :mailbox_with_mail: 
+- [Project maintainer (feel free to contact)](mailto:chandraveshchaudhari@gmail.com?subject=[GitHub]%20Source%20sytematic-reviewpy) 
 - [Future Improvements](https://github.com/chandraveshchaudhari/systematic-reviewpy/projects)
 - [License](https://github.com/chandraveshchaudhari/systematic-reviewpy/blob/master/LICENSE.txt)
 
