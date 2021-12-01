@@ -1,7 +1,7 @@
 # An open-source Python framework for systematic review based on PRISMA : systematic-reviewpy
 <p align="center">
   <a href="https://github.com/chandraveshchaudhari/systematic-reviewpy">
-    <img width="60%" height="60%" src="https://raw.githubusercontent.com/asreview/asreview/master/images/RepoCardGithub-1280x640px.png">
+    <img width="60%" height="60%" src="https://github.com/chandraveshchaudhari/MachineLearningProjects/raw/master/ComputerVisionProjects/Object%20detection%20using%20ORB/images/photo.jpg">
   </a>
 </p>
 
@@ -32,6 +32,7 @@ under supervision of Dr. Geetanjali purswani.
 - supports the complete workflow for systematic reviews.
 - supports to combine multiple databases citations.
 - supports searching words with boolean conditions and filter based on counts.
+- browser automation using [browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy)
 - validation of downloaded articles.
 - contains natural language processing techniques such as stemming and lemmatisation for text mining. 
 - sorting selected research papers based on database.
