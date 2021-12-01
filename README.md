@@ -22,7 +22,7 @@ and Meta-Analyses (PRISMA).
 ### Project Authors
 The packages [systematic-reviewpy](https://github.com/chandraveshchaudhari/systematic-reviewpy) and 
 [browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Research paper 
-"a python framework for systematic review using PRISMA guidelines" created by Chandravesh chaudhari, Doctoral candidate 
+"An open-source Python framework for systematic review based on PRISMA" created by Chandravesh chaudhari, Doctoral candidate 
 at christ university, Bangalore under supervision of Dr. Geetanjali purswani. 
 
 > Citation
