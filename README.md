@@ -17,21 +17,33 @@ The main objective of the Python framework is to automate systematic reviews to 
 constraints that might affect the review quality. The other objective is to create an open-source and highly 
 customisable framework with options to use or improve any parts of the framework. python framework supports each step in
 the systematic review workflow and suggests using checklists provided by Preferred Reporting Items for Systematic Reviews
-and Meta-Analyses (PRISMA). Systematic-reviewpy supports the complete workflow for systematic reviews and contains 
-natural language processing techniques such as stemming and lemmatisation for text mining. Systematic-reviewpy also 
-automatically generates analysis tables and graphs based on the selected article list.
+and Meta-Analyses (PRISMA). 
 
 ### Project Authors
-The packages systematic-reviewpy and browser-automationpy are part of Research paper "a python framework for systematic 
+The packages [systematic-reviewpy](https://github.com/chandraveshchaudhari/systematic-reviewpy) and 
+[browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Research paper "a python framework for systematic 
 review using PRISMA guidelines" created by Chandravesh chaudhari, Doctoral candidate at christ university, Bangalore 
 under supervision of Dr. Geetanjali purswani. 
 
 > Citation
 
 ## Features
-- supported file types: https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html    
+- supported file types: ris, json, and [pandas IO](https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html)   
+- supports the complete workflow for systematic reviews.
+- supports to combine multiple databases citations.
+- supports searching words with boolean conditions and filter based on counts.
+- validation of downloaded articles.
+- contains natural language processing techniques such as stemming and lemmatisation for text mining. 
+- sorting selected research papers based on database.
+- generating literature review excel or csv file.
+- automatically generates analysis tables and graphs.
+- automatically generates workflow diagram.
+
 #### Advantages over manual methods
-- To do
+- Saves time
+- Automate monotonous tasks
+- Never makes mistakes
+- Provides replicable results
 
 ## Installation 
 This project is available at [PyPI](https://pypi.org/project/systematic-reviewpy/). For help in installation check [instructions](https://packaging.python.org/tutorials/installing-packages/#installing-from-pypi)
@@ -51,8 +63,9 @@ python3 -m pip install systematic-reviewpy
 ## Important links
 - [Documentation](documentation link)
 - [Quick tour](tutorial file link)
-- [Project maintainer contact](mailto:chandraveshchaudhari@gmail.com?subject=[GitHub]%20Source%20sytematic-reviewpy) 
+- [Project maintainer (feel free to contact)](mailto:chandraveshchaudhari@gmail.com?subject=[GitHub]%20Source%20sytematic-reviewpy) :mailbox_with_mail: 
 - [Future Improvements](https://github.com/chandraveshchaudhari/systematic-reviewpy/projects)
+- [License](https://github.com/chandraveshchaudhari/systematic-reviewpy/blob/master/LICENSE.txt)
 
 ## Contribution
 all kinds of contributions are appreciated.
