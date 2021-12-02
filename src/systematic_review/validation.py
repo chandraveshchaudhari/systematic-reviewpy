@@ -591,6 +591,10 @@ def validating_multiple_pdfs_via_filenames(list_of_pdf_files_path: list, pages: 
 
 
 class ValidateWordsInText:
+    """This checks words in given Text.
+
+    """
+
     def __init__(self, words_string: str, text_string: str,
                  words_percentage_checker_in_text_validation_limit: float = 70,
                  jumbled_words_percentage_checker_in_text_validation_limit: float = 70,
@@ -750,7 +754,7 @@ class ValidateWordsInText:
                     temp_dict = dict()
                     continue
                 percentage_matched = compare_two_dict_members_via_percent_similarity(words_dict_membership, temp_dict)
-                validation_bool = True if\
+                validation_bool = True if \
                     percentage_matched > self.jumbled_words_percentage_checker_in_text_validation_limit else False
                 if validation_bool:
                     return validation_bool, percentage_matched
@@ -868,6 +872,21 @@ def finding_missed_articles_from_downloading(validated_pdf_list: list, original_
 
 
 def get_missed_original_articles_list(original_article_list: list, downloaded_article_list: list) -> list:
+    """This check elemets of the original_article_list in downloaded_article_list and return missed articles list.
+
+    Parameters
+    ----------
+    original_article_list : list
+        This list elements are checked if they are present in other list.
+    downloaded_article_list : list
+        This list is checked if it consists elements of other list
+
+    Returns
+    -------
+    list
+        This contains missing elements of original_article_list in downloaded_article_list.
+
+    """
     missed_articles_list = []
     for article_name in original_article_list:
         if article_name in set(downloaded_article_list):
@@ -1015,6 +1034,9 @@ def manual_validating_of_pdf(articles_path_list: list, manual_index: int) -> tup
 
 
 class Validation:
+    """This is used to validate the downloaded files.
+
+    """
     download_flag_column_name = 'downloaded'
     research_paper_file_location_column_name = 'file location'
     validation_method_column_name = "validation method"
@@ -1034,6 +1056,31 @@ class Validation:
                  jumbled_words_percentage_checker_in_text_validation_limit: float = 70,
                  jumbled_words_percentage_checker_in_text_wrong_word_limit: int = 2
                  ):
+        """
+
+        Parameters
+        ----------
+        citations_data : Union[List[dict], pd.DataFrame]
+            This contains citation data which we are validating.
+        parents_directory_of_research_papers_files : str
+            This is parent directory of all the downloaded files for citation data.
+        text_file_path_of_inaccessible_research_papers : str
+            This is the path of text file containing non-accessible research papers separated by newline.
+        text_manipulation_method_name : str
+            provides the options to use any text manipulation function.
+            preprocess_string (default and applied before all other implemented functions)
+            custom_text_manipulation_function - for putting your custom_text_manipulation_function function to
+            preprocess the text nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer,
+            nltk_porter_stemmer, nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma,
+            convert_string_to_lowercase, preprocess_string_to_space_separated_words
+        jumbled_words_percentage_checker_in_text_wrong_word_limit : float
+            This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found same.
+        jumbled_words_percentage_checker_in_text_validation_limit : int
+            This is the limit unto which algorithm ignore the wrong word in sequence.
+        words_percentage_checker_in_text_validation_limit : float
+            This is the limit on similarity of checked substring. Example - 0.5 will return true if half of word found same.
+
+        """
 
         self.jumbled_words_percentage_checker_in_text_wrong_word_limit = \
             jumbled_words_percentage_checker_in_text_wrong_word_limit
@@ -1049,6 +1096,14 @@ class Validation:
         self.file_name_and_path_mapping = self.file_name_and_path_dict()
 
     def add_downloaded_flag_column_and_file_location_column(self):
+        """add empty columns based on research_paper_file_location_column_name and download_flag_column_name
+
+        Returns
+        -------
+        List[dict]
+            data contains new columns.
+
+        """
         import copy
         complete_citations_records_list = copy.deepcopy(self.citations_records_list)
         inaccessible_research_papers_set = set([string_manipulation.text_manipulation_methods(
@@ -1068,6 +1123,14 @@ class Validation:
         return complete_citations_records_list
 
     def file_name_and_path_dict(self):
+        """contains mapping of filename to file paths
+
+        Returns
+        -------
+        dict
+            key is filename and value is file paths.
+
+        """
         file_name_and_path = {}
         articles_paths = os_utils.extract_files_path_from_directories_or_subdirectories(
             self.parents_directory_of_research_papers_files)
@@ -1083,6 +1146,15 @@ class Validation:
         return file_name_and_path
 
     def check(self):
+        """Executes the validation of research articles in citation data by checking the research paper files and
+        validating if the research articles are correct.
+
+        Returns
+        -------
+        List[dict]
+            data contains columns with downloaded, validation method and file path columns
+
+        """
 
         for citation in self.research_papers_list:
 
@@ -1188,3 +1260,36 @@ class Validation:
 
         """
         return converter.dataframe_column_counts(self.get_dataframe(), self.download_flag_column_name)
+
+    def to_csv(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to csv file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .csv extension
+        index : bool
+            Define if index is needed in output csv file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_csv_file(self.get_dataframe(), output_filename, index)
+
+    def to_excel(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to excel file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .xlsx extension
+        index : bool
+            Define if index is needed in output excel file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_excel_file(self.get_dataframe(), output_filename, index)
+

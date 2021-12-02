@@ -458,6 +458,9 @@ def filter_and_sort(citations_grouped_keywords_counts_df: pd.DataFrame,
 
 
 class FilterSort:
+    """This contains functionality to filter and sort the data.
+
+    """
     def __init__(self, data: Union[List[dict], pd.DataFrame], search_words_object: search_count.SearchWords,
                  required_number: int):
         """
@@ -502,7 +505,55 @@ class FilterSort:
         return filtered_sorted_df
 
     def get_records_list(self):
+        """executes the filter and sort function and outputs the records list file
+
+        Returns
+        -------
+        List[dict]
+            outputs the filter and sorted data.
+
+        """
         return converter.dataframe_to_records_list(self.filter_and_sort())
 
     def get_dataframe(self):
+        """executes the filter and sort function and outputs the pd.DataFrame
+
+        Returns
+        -------
+        pd.DataFrame
+            outputs the filter and sorted data.
+
+        """
         return self.filter_and_sort()
+
+    def to_csv(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to csv file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .csv extension
+        index : bool
+            Define if index is needed in output csv file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_csv_file(self.get_dataframe(), output_filename, index)
+
+    def to_excel(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to excel file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .xlsx extension
+        index : bool
+            Define if index is needed in output excel file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_excel_file(self.get_dataframe(), output_filename, index)

@@ -4,7 +4,7 @@ typos.
 """
 
 import re
-from typing import Literal, List, Dict, Any
+from typing import Literal, List, Dict, Any, Union
 
 import pandas as pd
 from systematic_review import string_manipulation, search_count
@@ -386,4 +386,44 @@ class Citations:
         return converter.dataframe_to_records_list(self.create_citations_dataframe())
 
     def get_dataframe(self):
+        """executes the create citations dataframe function and outputs the pd.DataFrame
+
+        Returns
+        -------
+        pd.DataFrame
+            outputs the citations data.
+
+        """
         return self.create_citations_dataframe()
+
+    def to_csv(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to csv file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .csv extension
+        index : bool
+            Define if index is needed in output csv file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_csv_file(self.get_dataframe(), output_filename, index)
+
+    def to_excel(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to excel file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .xlsx extension
+        index : bool
+            Define if index is needed in output excel file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_excel_file(self.get_dataframe(), output_filename, index)

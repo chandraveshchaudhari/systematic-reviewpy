@@ -20,7 +20,7 @@ def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: Union
     Parameters
     ----------
     dataframe_object : pandas.DataFrame object
-        this is the object of famous python library pandas. for more lemma_info: https://pandas.pydata.org/docs/
+        this is the object of python library pandas. for more lemma_info: https://pandas.pydata.org/docs/
     output_filename : str
         This is the name of output file which should contains .csv extension
     index : bool
@@ -31,6 +31,27 @@ def dataframe_to_csv_file(dataframe_object: pd.DataFrame, output_filename: Union
 
     """
     dataframe_object.to_csv(output_filename, index=index)
+
+
+def dataframe_to_excel_file(dataframe_object: pd.DataFrame, output_filename: Union[str, None] = "output.csv",
+                            index: bool = True):
+    """
+    This function saves pandas.DataFrame to excel file.
+
+    Parameters
+    ----------
+    dataframe_object : pandas.DataFrame object
+        this is the object of python library pandas. for more lemma_info: https://pandas.pydata.org/docs/
+    output_filename : str
+        This is the name of output file which should contains .xlsx extension
+    index : bool
+        Define if index is needed in output excel file or not.
+
+    Returns
+    -------
+
+    """
+    dataframe_object.to_excel(output_filename, index=index)
 
 
 def dataframe_to_records_list(dataframe: pd.DataFrame) -> List[Dict[str, Any]]:
@@ -718,6 +739,19 @@ class ASReview:
         self.data = data
 
     def get_file(self, output_filename: str = "output.csv", index: bool = True):
+        """Outputs the file needed to start project in ASReview.
+
+        Parameters
+        ----------
+        output_filename : str
+            name or path of your needed file.
+        index : bool
+            asks if you need index column in output file.
+
+        Returns
+        -------
+
+        """
         if type(self.data) == pd.DataFrame:
             dataframe = self.data.copy()
             dataframe['label_included'] = ""
@@ -732,11 +766,35 @@ class ASReview:
 
 
 class Reader:
+    """Contains functionality to read files.
+
+    """
+
     def __init__(self, file_path: str):
+        """Needs file path to read a file.
+
+        Parameters
+        ----------
+        file_path : str
+            path of the file.
+        """
         self.file_path = file_path
         self.file_extension = os_utils.get_file_extension_from_path(self.file_path)
 
     def get_text(self, pages: str = 'all'):
+        """It understand the type of file and output the content of file.
+
+        Parameters
+        ----------
+        pages : str
+            contain option to read 'first' or 'all' pages.
+
+        Returns
+        -------
+        str
+            This is text in readable file.
+
+        """
         if self.file_extension == "pdf":
             return get_text_from_multiple_pdf_reader(self.file_path, pages)
         elif self.file_extension == "csv":
@@ -749,6 +807,19 @@ class Reader:
             return load_text_file(self.file_path)
 
     def pdf_pdftotext_reader(self, pages: str = 'all'):
+        """Extract the text from pdf file via pdftotext. for more lemma_info, visit: https://pypi.org/project/pdftotext/
+
+        Parameters
+        ----------
+        pages : str
+            This could be 'all' to get full text of pdf and 'first' for first page of pdf.
+
+        Returns
+        -------
+        str
+            This is the required text from pdf file.
+
+        """
         try:
             pdf_text = get_text_from_pdf_pdftotext(self.file_path, pages)
         except Exception:
@@ -757,6 +828,19 @@ class Reader:
         return pdf_text
 
     def pdf_pymupdf_reader(self, pages: str = 'all'):
+        """Extract the text from pdf file via fitz(PyMuPDF). for more lemma_info, visit: https://pypi.org/project/PyMuPDF/
+
+        Parameters
+        ----------
+        pages : str
+            This could be 'all' to get full text of pdf and 'first' for first page of pdf.
+
+        Returns
+        -------
+        str
+            This is the required text from pdf file.
+
+        """
         try:
             pdf_text = get_text_from_pdf_pymupdf(self.file_path, pages)
         except Exception:
@@ -765,5 +849,18 @@ class Reader:
         return pdf_text
 
     def pandas_reader(self, input_file_type):
+        """Read file using pandas IO https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html
+
+        Parameters
+        ----------
+        input_file_type : str
+            check pandas IO for examples like read_csv, read_excel etc.
+
+        Returns
+        -------
+        str
+            This is the required text from pandas IO.
+
+        """
         dataframe = getattr(pd, input_file_type)(self.file_path)
         return dataframe

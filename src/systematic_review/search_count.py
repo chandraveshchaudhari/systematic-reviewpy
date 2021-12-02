@@ -439,6 +439,38 @@ class SearchCount:
         """
         return converter.records_list_to_dataframe(self.counts())
 
+    def to_csv(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to csv file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .csv extension
+        index : bool
+            Define if index is needed in output csv file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_csv_file(self.get_dataframe(), output_filename, index)
+
+    def to_excel(self, output_filename: Union[str, None] = "output.csv", index: bool = True):
+        """This function saves pandas.DataFrame to excel file.
+
+        Parameters
+        ----------
+        output_filename : str
+            This is the name of output file which should contains .xlsx extension
+        index : bool
+            Define if index is needed in output excel file or not.
+
+        Returns
+        -------
+
+        """
+        converter.dataframe_to_excel_file(self.get_dataframe(), output_filename, index)
+
 
 def adding_dict_key_or_increasing_value(input_dict: dict, dict_key: str, step: int = 1, default_dict_value: int = 1):
     """Increase the value of dict(key:value) by step using key. If key not present then it get initialised with default
