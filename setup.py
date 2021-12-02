@@ -113,7 +113,6 @@ setuptools.setup(
         # that you indicate you support Python 3. These classifiers are *not*
         # checked by 'pip install'. See instead 'python_requires' below.
         'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
     ],
 
     # This field adds unique_preprocessed_clean_grouped_keywords_dict for your project which will appear on the

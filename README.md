@@ -1,7 +1,7 @@
 # An open-source Python framework for systematic review based on PRISMA : systematic-reviewpy
 <p align="center">
   <a href="https://github.com/chandraveshchaudhari/systematic-reviewpy">
-    <img width="60%" height="60%" src="https://github.com/chandraveshchaudhari/MachineLearningProjects/raw/master/ComputerVisionProjects/Object%20detection%20using%20ORB/images/photo.jpg">
+    <img width="60%" height="60%" src="https://raw.githubusercontent.com/systematic-reviewpy/data/systematic-reviewpy_logo.png">
   </a>
 </p>
 
@@ -39,6 +39,7 @@ at christ university, Bangalore under supervision of Dr. Geetanjali purswani.
 - generating literature review excel or csv file.
 - automatically generates analysis tables and graphs.
 - automatically generates workflow diagram.
+- generate the ASReview supported file for Active-learning Screening
 
 #### Advantages over manual methods
 - Saves time
