@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>systematic_review package &mdash; systematic-reviewpy 0.0.69 documentation</title>
+  <title>systematic_review package &mdash; systematic-reviewpy 70 documentation</title>
   
 
   
@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/mystnb.css" type="text/css" />
 
   
   
@@ -35,13 +37,15 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Welcome to systematic-reviewpy’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Documentation with code" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,19 +90,22 @@
               
             
             
-              <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">systematic_review package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.analysis">systematic_review.analysis module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.citation">systematic_review.citation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.converter">systematic_review.converter module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.filter_sort">systematic_review.filter_sort module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.nlp">systematic_review.nlp module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.os_utils">systematic_review.os_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.search_count">systematic_review.search_count module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.string_manipulation">systematic_review.string_manipulation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review.validation">systematic_review.validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-systematic_review">Module contents</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="systematic-reviewpy%20tutorial.html">Quick Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Documentation with code</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">systematic_review package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.analysis">systematic_review.analysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.citation">systematic_review.citation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.converter">systematic_review.converter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.filter_sort">systematic_review.filter_sort module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.nlp">systematic_review.nlp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.os_utils">systematic_review.os_utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.search_count">systematic_review.search_count module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.string_manipulation">systematic_review.string_manipulation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-systematic_review.validation">systematic_review.validation module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -149,6 +156,8 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
+          <li><a href="modules.html">Documentation with code</a> &raquo;</li>
+        
       <li>systematic_review package</li>
     
     
@@ -170,9 +179,6 @@
             
   <div class="section" id="systematic-review-package">
 <h1>systematic_review package<a class="headerlink" href="#systematic-review-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-systematic_review.analysis">
 <span id="systematic-review-analysis-module"></span><h2>systematic_review.analysis module<a class="headerlink" href="#module-systematic_review.analysis" title="Permalink to this headline">¶</a></h2>
 <p>Module: analysis
@@ -660,7 +666,16 @@ This function load all the citations from path, add required columns for next st
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.citation.Citations.get_dataframe">
 <span class="sig-name descname"><span class="pre">get_dataframe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#Citations.get_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.Citations.get_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>executes the create citations dataframe function and outputs the pd.DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>outputs the citations data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.citation.Citations.get_records_list">
@@ -673,6 +688,34 @@ This function load all the citations from path, add required columns for next st
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>List[Dict[str, Any]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.citation.Citations.to_csv">
+<span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#Citations.to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.Citations.to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .csv extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output csv file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.citation.Citations.to_excel">
+<span class="sig-name descname"><span class="pre">to_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/citation.html#Citations.to_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.citation.Citations.to_excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .xlsx extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output excel file or not.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -920,7 +963,16 @@ dicts and many more.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.converter.ASReview.get_file">
 <span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#ASReview.get_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.ASReview.get_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Outputs the file needed to start project in ASReview.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – name or path of your needed file.</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – asks if you need index column in output file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -928,25 +980,74 @@ dicts and many more.</p>
 <dt class="sig sig-object py" id="systematic_review.converter.Reader">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">Reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#Reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.Reader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Contains functionality to read files.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.converter.Reader.get_text">
 <span class="sig-name descname"><span class="pre">get_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#Reader.get_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.Reader.get_text" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>It understand the type of file and output the content of file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pages</strong> (<em>str</em>) – contain option to read ‘first’ or ‘all’ pages.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is text in readable file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.converter.Reader.pandas_reader">
 <span class="sig-name descname"><span class="pre">pandas_reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#Reader.pandas_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.Reader.pandas_reader" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read file using pandas IO <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_file_type</strong> (<em>str</em>) – check pandas IO for examples like read_csv, read_excel etc.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the required text from pandas IO.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.converter.Reader.pdf_pdftotext_reader">
 <span class="sig-name descname"><span class="pre">pdf_pdftotext_reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#Reader.pdf_pdftotext_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.Reader.pdf_pdftotext_reader" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extract the text from pdf file via pdftotext. for more lemma_info, visit: <a class="reference external" href="https://pypi.org/project/pdftotext/">https://pypi.org/project/pdftotext/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pages</strong> (<em>str</em>) – This could be ‘all’ to get full text of pdf and ‘first’ for first page of pdf.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the required text from pdf file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.converter.Reader.pdf_pymupdf_reader">
 <span class="sig-name descname"><span class="pre">pdf_pymupdf_reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#Reader.pdf_pymupdf_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.Reader.pdf_pymupdf_reader" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extract the text from pdf file via fitz(PyMuPDF). for more lemma_info, visit: <a class="reference external" href="https://pypi.org/project/PyMuPDF/">https://pypi.org/project/PyMuPDF/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pages</strong> (<em>str</em>) – This could be ‘all’ to get full text of pdf and ‘first’ for first page of pdf.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is the required text from pdf file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1021,9 +1122,24 @@ custom_text_manipulation_function function.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataframe_object</strong> (<em>pandas.DataFrame object</em>) – this is the object of famous python library pandas. for more lemma_info: <a class="reference external" href="https://pandas.pydata.org/docs/">https://pandas.pydata.org/docs/</a></p></li>
+<li><p><strong>dataframe_object</strong> (<em>pandas.DataFrame object</em>) – this is the object of python library pandas. for more lemma_info: <a class="reference external" href="https://pandas.pydata.org/docs/">https://pandas.pydata.org/docs/</a></p></li>
 <li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .csv extension</p></li>
 <li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output csv file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="systematic_review.converter.dataframe_to_excel_file">
+<span class="sig-prename descclassname"><span class="pre">systematic_review.converter.</span></span><span class="sig-name descname"><span class="pre">dataframe_to_excel_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe_object</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/converter.html#dataframe_to_excel_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.converter.dataframe_to_excel_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe_object</strong> (<em>pandas.DataFrame object</em>) – this is the object of python library pandas. for more lemma_info: <a class="reference external" href="https://pandas.pydata.org/docs/">https://pandas.pydata.org/docs/</a></p></li>
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .xlsx extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output excel file or not.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1499,6 +1615,7 @@ manually read and filter.</p>
 <dt class="sig sig-object py" id="systematic_review.filter_sort.FilterSort">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">systematic_review.filter_sort.</span></span><span class="sig-name descname"><span class="pre">FilterSort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_words_object</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#systematic_review.search_count.SearchWords" title="systematic_review.search_count.SearchWords"><span class="pre">systematic_review.search_count.SearchWords</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#FilterSort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.FilterSort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This contains functionality to filter and sort the data.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.filter_sort.FilterSort.filter_and_sort">
 <span class="sig-name descname"><span class="pre">filter_and_sort</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#FilterSort.filter_and_sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.FilterSort.filter_and_sort" title="Permalink to this definition">¶</a></dt>
@@ -1521,12 +1638,58 @@ creates sorting criterion list, sort the dataframe based on the sorting criterio
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.filter_sort.FilterSort.get_dataframe">
 <span class="sig-name descname"><span class="pre">get_dataframe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#FilterSort.get_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.FilterSort.get_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>executes the filter and sort function and outputs the pd.DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>outputs the filter and sorted data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.filter_sort.FilterSort.get_records_list">
 <span class="sig-name descname"><span class="pre">get_records_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#FilterSort.get_records_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.FilterSort.get_records_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>executes the filter and sort function and outputs the records list file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>outputs the filter and sorted data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.filter_sort.FilterSort.to_csv">
+<span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#FilterSort.to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.FilterSort.to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .csv extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output csv file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.filter_sort.FilterSort.to_excel">
+<span class="sig-name descname"><span class="pre">to_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/filter_sort.html#FilterSort.to_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.filter_sort.FilterSort.to_excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .xlsx extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output excel file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -2201,6 +2364,34 @@ Examples - [{‘article’: ‘article_name’, ‘total_keywords’: count, ‘
 <dt class="sig sig-object py" id="systematic_review.search_count.SearchCount.research_paper_file_location_column_name">
 <span class="sig-name descname"><span class="pre">research_paper_file_location_column_name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'file</span> <span class="pre">location'</span></em><a class="headerlink" href="#systematic_review.search_count.SearchCount.research_paper_file_location_column_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.search_count.SearchCount.to_csv">
+<span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/search_count.html#SearchCount.to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.SearchCount.to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .csv extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output csv file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.search_count.SearchCount.to_excel">
+<span class="sig-name descname"><span class="pre">to_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/search_count.html#SearchCount.to_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.search_count.SearchCount.to_excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .xlsx extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output excel file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -2997,6 +3188,7 @@ contains functions to get articles source name and create list of missed or dupl
 <dt class="sig sig-object py" id="systematic_review.validation.ValidateWordsInText">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">ValidateWordsInText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">words_percentage_checker_in_text_validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jumbled_words_percentage_checker_in_text_validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jumbled_words_percentage_checker_in_text_wrong_word_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/validation.html#ValidateWordsInText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.ValidateWordsInText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This checks words in given Text.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.validation.ValidateWordsInText.exact_words_checker_in_text">
 <span class="sig-name descname"><span class="pre">exact_words_checker_in_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#ValidateWordsInText.exact_words_checker_in_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.ValidateWordsInText.exact_words_checker_in_text" title="Permalink to this definition">¶</a></dt>
@@ -3068,15 +3260,35 @@ This also returns matched substring percentage.</p>
 <dt class="sig sig-object py" id="systematic_review.validation.Validation">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">Validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">citations_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents_directory_of_research_papers_files</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_file_path_of_inaccessible_research_papers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_manipulation_method_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'preprocess_string_to_space_separated_words'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">words_percentage_checker_in_text_validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jumbled_words_percentage_checker_in_text_validation_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jumbled_words_percentage_checker_in_text_wrong_word_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/validation.html#Validation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.Validation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is used to validate the downloaded files.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.validation.Validation.add_downloaded_flag_column_and_file_location_column">
 <span class="sig-name descname"><span class="pre">add_downloaded_flag_column_and_file_location_column</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/validation.html#Validation.add_downloaded_flag_column_and_file_location_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.Validation.add_downloaded_flag_column_and_file_location_column" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>add empty columns based on research_paper_file_location_column_name and download_flag_column_name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>data contains new columns.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[dict]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.validation.Validation.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/validation.html#Validation.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.Validation.check" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Executes the validation of research articles in citation data by checking the research paper files and
+validating if the research articles are correct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>data contains columns with downloaded, validation method and file path columns</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[dict]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="systematic_review.validation.Validation.cleaned_article_column_name">
@@ -3101,7 +3313,16 @@ This also returns matched substring percentage.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="systematic_review.validation.Validation.file_name_and_path_dict">
 <span class="sig-name descname"><span class="pre">file_name_and_path_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/validation.html#Validation.file_name_and_path_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.Validation.file_name_and_path_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>contains mapping of filename to file paths</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>key is filename and value is file paths.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="systematic_review.validation.Validation.file_not_accessible_flag_name">
@@ -3166,6 +3387,34 @@ This also returns matched substring percentage.</p>
 <dt class="sig sig-object py" id="systematic_review.validation.Validation.research_paper_file_location_column_name">
 <span class="sig-name descname"><span class="pre">research_paper_file_location_column_name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'file</span> <span class="pre">location'</span></em><a class="headerlink" href="#systematic_review.validation.Validation.research_paper_file_location_column_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.validation.Validation.to_csv">
+<span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/validation.html#Validation.to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.Validation.to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .csv extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output csv file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="systematic_review.validation.Validation.to_excel">
+<span class="sig-name descname"><span class="pre">to_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'output.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/systematic_review/validation.html#Validation.to_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.Validation.to_excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves pandas.DataFrame to excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – This is the name of output file which should contains .xlsx extension</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Define if index is needed in output excel file or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="systematic_review.validation.Validation.validation_manual_method_name">
@@ -3406,7 +3655,22 @@ filter_sorted_citations_df using downloaded articles path.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.validation.get_missed_original_articles_list">
 <span class="sig-prename descclassname"><span class="pre">systematic_review.validation.</span></span><span class="sig-name descname"><span class="pre">get_missed_original_articles_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_article_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downloaded_article_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/systematic_review/validation.html#get_missed_original_articles_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#systematic_review.validation.get_missed_original_articles_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This check elemets of the original_article_list in downloaded_article_list and return missed articles list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_article_list</strong> (<em>list</em>) – This list elements are checked if they are present in other list.</p></li>
+<li><p><strong>downloaded_article_list</strong> (<em>list</em>) – This list is checked if it consists elements of other list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This contains missing elements of original_article_list in downloaded_article_list.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="systematic_review.validation.getting_article_paths_from_validation_detail">
@@ -3664,9 +3928,6 @@ This also returns matched substring percentage.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-systematic_review">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-systematic_review" title="Permalink to this headline">¶</a></h2>
-</div>
 </div>
 
 
@@ -3675,7 +3936,7 @@ This also returns matched substring percentage.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to systematic-reviewpy’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="Documentation with code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

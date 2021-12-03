@@ -1,9 +1,6 @@
 systematic\_review package
 ==========================
 
-Submodules
-----------
-
 systematic\_review.analysis module
 ----------------------------------
 
@@ -72,14 +69,6 @@ systematic\_review.validation module
 ------------------------------------
 
 .. automodule:: systematic_review.validation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: systematic_review
    :members:
    :undoc-members:
    :show-inheritance:

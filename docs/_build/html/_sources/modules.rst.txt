@@ -1,7 +1,7 @@
-src
-===
+Documentation with code
+=======================
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 10
 
    systematic_review

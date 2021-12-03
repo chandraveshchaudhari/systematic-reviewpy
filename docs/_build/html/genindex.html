@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; systematic-reviewpy 0.0.69 documentation</title>
+  <title>Index &mdash; systematic-reviewpy 70 documentation</title>
   
 
   
@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/mystnb.css" type="text/css" />
 
   
   
@@ -35,6 +37,8 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -85,8 +89,10 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="systematic_review.html">systematic_review package</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="systematic-reviewpy%20tutorial.html">Quick Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Documentation with code</a></li>
 </ul>
 
             
@@ -287,6 +293,8 @@
       <li><a href="systematic_review.html#systematic_review.filter_sort.dataframe_sorting_criterion_list">dataframe_sorting_criterion_list() (in module systematic_review.filter_sort)</a>
 </li>
       <li><a href="systematic_review.html#systematic_review.converter.dataframe_to_csv_file">dataframe_to_csv_file() (in module systematic_review.converter)</a>
+</li>
+      <li><a href="systematic_review.html#systematic_review.converter.dataframe_to_excel_file">dataframe_to_excel_file() (in module systematic_review.converter)</a>
 </li>
       <li><a href="systematic_review.html#systematic_review.converter.dataframe_to_records_list">dataframe_to_records_list() (in module systematic_review.converter)</a>
 </li>
@@ -536,8 +544,6 @@
     module
 
       <ul>
-        <li><a href="systematic_review.html#module-systematic_review">systematic_review</a>
-</li>
         <li><a href="systematic_review.html#module-systematic_review.analysis">systematic_review.analysis</a>
 </li>
         <li><a href="systematic_review.html#module-systematic_review.citation">systematic_review.citation</a>
@@ -694,21 +700,12 @@
       <li><a href="systematic_review.html#systematic_review.string_manipulation.strip_string_from_right_side">strip_string_from_right_side() (in module systematic_review.string_manipulation)</a>
 </li>
       <li>
-    systematic_review
-
-      <ul>
-        <li><a href="systematic_review.html#module-systematic_review">module</a>
-</li>
-      </ul></li>
-      <li>
     systematic_review.analysis
 
       <ul>
         <li><a href="systematic_review.html#module-systematic_review.analysis">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     systematic_review.citation
 
@@ -716,6 +713,8 @@
         <li><a href="systematic_review.html#module-systematic_review.citation">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     systematic_review.converter
 
@@ -779,12 +778,32 @@
 </li>
       <li><a href="systematic_review.html#systematic_review.string_manipulation.text_manipulation_methods">text_manipulation_methods() (in module systematic_review.string_manipulation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="systematic_review.html#systematic_review.analysis.text_padding_for_visualise">text_padding_for_visualise() (in module systematic_review.analysis)</a>
 </li>
       <li><a href="systematic_review.html#systematic_review.analysis.TextInBox">TextInBox (class in systematic_review.analysis)</a>
 </li>
+      <li><a href="systematic_review.html#systematic_review.citation.Citations.to_csv">to_csv() (systematic_review.citation.Citations method)</a>
+
+      <ul>
+        <li><a href="systematic_review.html#systematic_review.filter_sort.FilterSort.to_csv">(systematic_review.filter_sort.FilterSort method)</a>
+</li>
+        <li><a href="systematic_review.html#systematic_review.search_count.SearchCount.to_csv">(systematic_review.search_count.SearchCount method)</a>
+</li>
+        <li><a href="systematic_review.html#systematic_review.validation.Validation.to_csv">(systematic_review.validation.Validation method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="systematic_review.html#systematic_review.citation.Citations.to_excel">to_excel() (systematic_review.citation.Citations method)</a>
+
+      <ul>
+        <li><a href="systematic_review.html#systematic_review.filter_sort.FilterSort.to_excel">(systematic_review.filter_sort.FilterSort method)</a>
+</li>
+        <li><a href="systematic_review.html#systematic_review.search_count.SearchCount.to_excel">(systematic_review.search_count.SearchCount method)</a>
+</li>
+        <li><a href="systematic_review.html#systematic_review.validation.Validation.to_excel">(systematic_review.validation.Validation method)</a>
+</li>
+      </ul></li>
       <li><a href="systematic_review.html#systematic_review.converter.try_convert_dataframe_column_elements_to_list">try_convert_dataframe_column_elements_to_list() (in module systematic_review.converter)</a>
 </li>
   </ul></td>

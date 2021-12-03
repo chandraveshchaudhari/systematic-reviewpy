@@ -1,0 +1,829 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Quick Tutorial &mdash; systematic-reviewpy 70 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/mystnb.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Documentation with code" href="modules.html" />
+    <link rel="prev" title="Welcome to systematic-reviewpy’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> systematic-reviewpy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#required-dependencies">Required Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-the-systematic-reviewpy">installing the systematic-reviewpy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#install-pdftotext-dependencies-installing-needed-python-pdf-readers-for-validation-and-search-count-of-pdf-text">install pdftotext dependencies: Installing needed python pdf readers for validation and search count of pdf text.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fedora-red-hat-and-friends">Fedora, Red Hat, and friends</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#macos">macOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#windows-using-conda">Windows using conda</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#install-python-pdf-readers">Install python pdf readers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#importing-the-systematic-reviewpy">importing the systematic-reviewpy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-converting-and-wrangling-citation-files">Optional Converting and wrangling citation files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citations">Citations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#all-files-are-uploaded-to-mendeley-reference-manager-updated-using-mendeley-database-and-downloaded-in-ris-format">All files are uploaded to mendeley reference manager, updated using mendeley database, and downloaded in ris format.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-words">Search Words</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-and-count-words-in-citations">Search and count words in citations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sort-and-filter-the-citations">Sort and Filter the citations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#research-paper-files">Research paper files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#downloading-above-selected-pdf-from-databases">Downloading above selected pdf from databases.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validating-the-downloaded-articles">Validating the downloaded articles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-and-count-the-research-papers-files">Search and count the research papers files.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-and-sort-pdf-counted-df">Filter and sort pdf counted df</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-research-papers-review-files">Generating research papers review files:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sytematic-review-workflow-diagram-and-info">Sytematic Review Workflow diagram and info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Documentation with code</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">systematic-reviewpy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Quick Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/systematic-reviewpy tutorial.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="tex2jax_ignore mathjax_ignore section" id="quick-tutorial">
+<h1>Quick Tutorial<a class="headerlink" href="#quick-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="required-dependencies">
+<h3>Required Dependencies<a class="headerlink" href="#required-dependencies" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install rispy
+<span class="o">!</span>pip install pandas
+<span class="o">!</span>pip install matplotlib
+<span class="o">!</span>pip install seaborn
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: rispy in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (0.7.1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pandas in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (1.3.2)
+Requirement already satisfied: numpy&gt;=1.17.3 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from pandas) (1.21.2)
+Requirement already satisfied: pytz&gt;=2017.3 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from pandas) (2021.1)
+Requirement already satisfied: python-dateutil&gt;=2.7.3 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from pandas) (2.8.2)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: six&gt;=1.5 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from python-dateutil&gt;=2.7.3-&gt;pandas) (1.16.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: matplotlib in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (3.4.3)
+Requirement already satisfied: numpy&gt;=1.16 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib) (1.21.2)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib) (1.3.2)
+Requirement already satisfied: pillow&gt;=6.2.0 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib) (8.4.0)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib) (2.8.2)
+Requirement already satisfied: cycler&gt;=0.10 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib) (0.11.0)
+Requirement already satisfied: pyparsing&gt;=2.2.1 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib) (2.4.7)
+Requirement already satisfied: six&gt;=1.5 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: seaborn in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (0.11.2)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: matplotlib&gt;=2.2 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from seaborn) (3.4.3)
+Requirement already satisfied: scipy&gt;=1.0 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from seaborn) (1.7.2)
+Requirement already satisfied: numpy&gt;=1.15 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from seaborn) (1.21.2)
+Requirement already satisfied: pandas&gt;=0.23 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from seaborn) (1.3.2)
+Requirement already satisfied: pillow&gt;=6.2.0 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib&gt;=2.2-&gt;seaborn) (8.4.0)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib&gt;=2.2-&gt;seaborn) (1.3.2)
+Requirement already satisfied: cycler&gt;=0.10 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib&gt;=2.2-&gt;seaborn) (0.11.0)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib&gt;=2.2-&gt;seaborn) (2.8.2)
+Requirement already satisfied: pyparsing&gt;=2.2.1 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from matplotlib&gt;=2.2-&gt;seaborn) (2.4.7)
+Requirement already satisfied: pytz&gt;=2017.3 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from pandas&gt;=0.23-&gt;seaborn) (2021.1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: six&gt;=1.5 in /home/chaudharyubuntu/PycharmProjects/systematic-reviewpy/venv/lib/python3.8/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib&gt;=2.2-&gt;seaborn) (1.16.0)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="installing-the-systematic-reviewpy">
+<h3>installing the systematic-reviewpy<a class="headerlink" href="#installing-the-systematic-reviewpy" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>python3 -m pip install systematic-reviewpy
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">ERROR: Could not find a version that satisfies the requirement systematic-reviewpy (from versions: none)</span>
+<span class=" -Color -Color-Red">ERROR: No matching distribution found for systematic-reviewpy</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>google colab Jupyter notebook Instruction :<br />
+<code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">m</span> <span class="pre">m</span></code> will convert a code cell to a text cell.<br />
+<code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">m</span> <span class="pre">y</span></code> will convert a text cell to a code cell.</p>
+<div class="section" id="install-pdftotext-dependencies-installing-needed-python-pdf-readers-for-validation-and-search-count-of-pdf-text">
+<h4>install pdftotext dependencies: Installing needed python pdf readers for validation and search count of pdf text.<a class="headerlink" href="#install-pdftotext-dependencies-installing-needed-python-pdf-readers-for-validation-and-search-count-of-pdf-text" title="Permalink to this headline">¶</a></h4>
+<p><font color="#F7B905" size="3">Please run cell based on your OS and keep other cells as markdown.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">##### Debian, Ubuntu, and friends</span>
+<span class="o">!</span>sudo apt install build-essential libpoppler-cpp-dev pkg-config python3-dev
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[sudo] password for chaudharyubuntu: 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="fedora-red-hat-and-friends">
+<h4>Fedora, Red Hat, and friends<a class="headerlink" href="#fedora-red-hat-and-friends" title="Permalink to this headline">¶</a></h4>
+<p>!sudo yum install gcc-c++ pkgconfig poppler-cpp-devel python3-devel</p>
+</div>
+<div class="section" id="macos">
+<h4>macOS<a class="headerlink" href="#macos" title="Permalink to this headline">¶</a></h4>
+<p>!brew install pkg-config poppler python</p>
+</div>
+<div class="section" id="windows-using-conda">
+<h4>Windows using conda<a class="headerlink" href="#windows-using-conda" title="Permalink to this headline">¶</a></h4>
+<p>!conda install -c conda-forge poppler</p>
+</div>
+</div>
+<div class="section" id="install-python-pdf-readers">
+<h3>Install python pdf readers<a class="headerlink" href="#install-python-pdf-readers" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## https://pypi.org/project/PyMuPDF/</span>
+<span class="o">!</span>python -m pip install --upgrade pip
+<span class="o">!</span>python -m pip install --upgrade pymupdf
+<span class="c1">## https://pypi.org/project/pdftotext/</span>
+<span class="o">!</span>pip install pdftotext
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="importing-the-systematic-reviewpy">
+<h3>importing the systematic-reviewpy<a class="headerlink" href="#importing-the-systematic-reviewpy" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">systematic_review</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Most of the object contains methods like to_csv and to_excel to output files</p>
+<p>Check documentation for more string manipulation methods :</p>
+<ul class="simple">
+<li><p>preprocess_string (default and applied before all other implemented functions)</p></li>
+<li><p>custom_text_manipulation_function : for putting your custom_text_manipulation_function function to preprocess the text</p></li>
+<li><p>nltk_remove_stopwords</p></li>
+<li><p>pattern_lemma_or_lemmatize_text</p></li>
+<li><p>nltk_word_net_lemmatizer</p></li>
+<li><p>nltk_porter_stemmer</p></li>
+<li><p>nltk_lancaster_stemmer</p></li>
+<li><p>spacy_lemma</p></li>
+<li><p>nltk_remove_stopwords_spacy_lemma</p></li>
+<li><p>convert_string_to_lowercase</p></li>
+<li><p>preprocess_string_to_space_separated_words</p></li>
+</ul>
+<p><font color="#F7B905" size="3">Please provide name of string manipulation method.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">string_manipulation_method</span> <span class="o">=</span> <span class="s1">&#39;convert_string_to_lowercase&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="optional-converting-and-wrangling-citation-files">
+<h2>Optional Converting and wrangling citation files<a class="headerlink" href="#optional-converting-and-wrangling-citation-files" title="Permalink to this headline">¶</a></h2>
+<p>wrangling or modification of the citation files is required if there is format error while uploading files into reference manager.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#citation.csv_citations_to_ris_converter(&quot;./Data files and Python Code/Downloaded files/springer.csv&quot;, &quot;./Data files and Python Code/Modified files/springer.ris&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#citation.remove_empty_lines(&quot;./Data files and Python Code/Downloaded files/entropy-v12-i12_20210610.ris&quot;, &quot;./Data files and Python Code/Modified files/MDPI.ris&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#citation.edit_ris_citation_paste_values_after_regex_pattern(&quot;./Data files and Python Code/Modified files/MDPI.ris&quot;, &quot;./Data files and Python Code/Modified files/mdpi.ris&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#import os</span>
+<span class="c1">#os.remove(&quot;./Data files and Python Code/Modified files/MDPI.ris&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="all-files-are-uploaded-to-mendeley-reference-manager-updated-using-mendeley-database-and-downloaded-in-ris-format">
+<h3>All files are uploaded to mendeley reference manager, updated using mendeley database, and downloaded in ris format.<a class="headerlink" href="#all-files-are-uploaded-to-mendeley-reference-manager-updated-using-mendeley-database-and-downloaded-in-ris-format" title="Permalink to this headline">¶</a></h3>
+<p><font color="#F7B905" size="3">Please provide the path of the folder that contains all citations ris files.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CITATIONS_FILES_PARENT_DIR_PATH</span> <span class="o">=</span> <span class="s2">&quot;./Data files and Python Code/Articles_by_sources&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">citations</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">citation</span><span class="o">.</span><span class="n">Citations</span><span class="p">(</span><span class="n">CITATIONS_FILES_PARENT_DIR_PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">citations_df</span> <span class="o">=</span> <span class="n">citations</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">()</span>
+<span class="n">citations_df</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="search-words">
+<h3>Search Words<a class="headerlink" href="#search-words" title="Permalink to this headline">¶</a></h3>
+<p><span style="color:green">Please provide the path of search_words.json or make keyword dictionary.</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">systematic_review</span><span class="o">.</span><span class="n">search_count</span><span class="o">.</span><span class="n">SearchWords</span><span class="p">()</span><span class="o">.</span><span class="n">get_sample_keywords_json</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><font color="#F7B905" size="3">Edit the template based on your need and provide the file path in cell below. if filename and location is not changed no need to change anything.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#KEYWORDS_JSON_FILE_PATH = &quot;./Data files and Python Code/keywords.json&quot;</span>
+<span class="n">SEARCH_WORDS_JSON_FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;./sample_search_words_template.json&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">search_words</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">search_count</span><span class="o">.</span><span class="n">SearchWords</span><span class="p">(</span><span class="n">SEARCH_WORDS_JSON_FILE_PATH</span><span class="p">,</span> <span class="n">string_manipulation_method</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">search_words</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="search-and-count-words-in-citations">
+<h3>Search and count words in citations<a class="headerlink" href="#search-and-count-words-in-citations" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">citations_search_words_count</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">search_count</span><span class="o">.</span><span class="n">SearchCount</span><span class="p">(</span><span class="n">citations_df</span><span class="p">,</span> <span class="n">search_words</span><span class="p">,</span> <span class="n">string_manipulation_method</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">citations_search_words_count_df</span> <span class="o">=</span> <span class="n">citations_search_words_count</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">()</span>
+<span class="n">citations_search_words_count_df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>citations_search_words_count.to_csv(“./Data files and Python Code/OutputFiles/citations_keywords_count_df.csv”)</p>
+</div>
+<div class="section" id="sort-and-filter-the-citations">
+<h3>Sort and Filter the citations<a class="headerlink" href="#sort-and-filter-the-citations" title="Permalink to this headline">¶</a></h3>
+<p><font color="#F7B905" size="3">Please provide how many research papers needed.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the citations to required number</span>
+<span class="n">required_citations_number</span> <span class="o">=</span> <span class="mi">500</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filter_sorted_citations</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">filter_sort</span><span class="o">.</span><span class="n">FilterSort</span><span class="p">(</span><span class="n">citations_search_words_count_df</span><span class="p">,</span> <span class="n">search_words</span><span class="p">,</span> <span class="n">required_citations_number</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filter_sorted_citations_df</span> <span class="o">=</span> <span class="n">filter_sorted_citations</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filter_sorted_citations_df</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>filter_sorted_citations.to_csv(“./Data files and Python Code/OutputFiles/filter_sorted_citations_df.csv”)</p>
+</div>
+</div>
+<div class="section" id="research-paper-files">
+<h2>Research paper files<a class="headerlink" href="#research-paper-files" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="downloading-above-selected-pdf-from-databases">
+<h3>Downloading above selected pdf from databases.<a class="headerlink" href="#downloading-above-selected-pdf-from-databases" title="Permalink to this headline">¶</a></h3>
+<p>This is completed with <a class="reference external" href="https://github.com/chandraveshchaudhari/browser-automationpy">browser-automationpy</a></p>
+</div>
+<div class="section" id="validating-the-downloaded-articles">
+<h3>Validating the downloaded articles<a class="headerlink" href="#validating-the-downloaded-articles" title="Permalink to this headline">¶</a></h3>
+<p><font color="#F7B905" size="3">Please provide parent directory path of all downloaded research papers.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DOWNLOADED_ARTICLES_PATH</span> <span class="o">=</span> <span class="s2">&quot;./Data files and Python Code/downloadedArticles&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><font color="#F7B905" size="3">Please provide path of text file containing names of research papers separated by new line OR write None.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IN_ACCESSIBLE_ARTICLES_TEXT_FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;./Data files and Python Code/not_accessible_articles.txt&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">validation</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">validation</span><span class="o">.</span><span class="n">Validation</span><span class="p">(</span><span class="n">filter_sorted_citations_df</span><span class="p">,</span> <span class="n">DOWNLOADED_ARTICLES_PATH</span><span class="p">,</span> <span class="n">IN_ACCESSIBLE_ARTICLES_TEXT_FILE_PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">validated_research_papers</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">validation</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>validation.to_csv(“validation.csv”)</p>
+</div>
+<div class="section" id="search-and-count-the-research-papers-files">
+<h3>Search and count the research papers files.<a class="headerlink" href="#search-and-count-the-research-papers-files" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">research_paper_search_words_count</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">search_count</span><span class="o">.</span><span class="n">SearchCount</span><span class="p">(</span><span class="n">validated_research_papers</span><span class="p">,</span> <span class="n">search_words</span><span class="p">,</span> <span class="n">string_manipulation_method</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">research_paper_search_words_count_df</span> <span class="o">=</span> <span class="n">research_paper_search_words_count</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>research_paper_search_words_count.to_csv(“./Data files and Python Code/OutputFiles/pdf_keywords_count_df.csv”)</p>
+</div>
+<div class="section" id="filter-and-sort-pdf-counted-df">
+<h3>Filter and sort pdf counted df<a class="headerlink" href="#filter-and-sort-pdf-counted-df" title="Permalink to this headline">¶</a></h3>
+<p><font color="#F7B905" size="3">Please provide how many research papers needed.</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">required_full_text_documents</span> <span class="o">=</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filter_sorted_research_papers</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">filter_sort</span><span class="o">.</span><span class="n">FilterSort</span><span class="p">(</span><span class="n">research_paper_search_words_count_df</span><span class="p">,</span> <span class="n">search_words</span><span class="p">,</span> <span class="n">required_full_text_documents</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_review_articles_df</span> <span class="o">=</span> <span class="n">filter_sorted_research_papers</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>filter_sorted_research_papers.to_csv(“./Data files and Python Code/OutputFiles/selected_review_articles_df.csv”)</p>
+</div>
+</div>
+<div class="section" id="generating-research-papers-review-files">
+<h2>Generating research papers review files:<a class="headerlink" href="#generating-research-papers-review-files" title="Permalink to this headline">¶</a></h2>
+<p>choose any of following</p>
+<ul class="simple">
+<li><p>sorted based on sources: to make it easier to find articles in folder.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sorted_Finaldf</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">filter_sort</span><span class="o">.</span><span class="n">sort_dataframe_based_on_column</span><span class="p">(</span><span class="n">selected_review_articles_df</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#sorted_Finaldf.to_csv(&quot;./Data files and Python Code/OutputFiles/sorted_Finaldf.csv&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Creating the sample literature review file:<br />
+by adding review columns to enter details manually. The keywords counts are not required at this point of the time, so they are dropped.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_citation</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">citation</span><span class="o">.</span><span class="n">drop_search_words_count_columns</span><span class="p">(</span><span class="n">sorted_Finaldf</span><span class="p">,</span> <span class="n">search_words</span><span class="p">)</span>
+<span class="n">selected_citation_review</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">creating_sample_review_file</span><span class="p">(</span><span class="n">selected_citation</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>selected_citation_review.to_csv(“./Data files and Python Code/OutputFiles/selected_citation_review.csv”)</p>
+</div>
+<div class="section" id="sytematic-review-workflow-diagram-and-info">
+<h2>Sytematic Review Workflow diagram and info<a class="headerlink" href="#sytematic-review-workflow-diagram-and-info" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_analysis</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">SystematicReviewInfo</span><span class="p">(</span><span class="n">CITATIONS_FILES_PARENT_DIR_PATH</span><span class="p">,</span> <span class="n">filter_sorted_citations_df</span><span class="p">,</span>
+                 <span class="n">validated_research_papers</span><span class="p">,</span> <span class="n">selected_review_articles_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_analysis</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_analysis</span><span class="o">.</span><span class="n">systematic_review_diagram</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="analysis">
+<h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Analysis needed</p></th>
+<th class="head"><p>Fact table</p></th>
+<th class="head"><p>Diagram</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>The number of articles</p></td>
+<td><p>yes</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-odd"><td><p>Period of the publications</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Number of authors</p></td>
+<td><p>yes</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-odd"><td><p>Articles with single authors</p></td>
+<td><p>yes</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-even"><td><p>Articles per authors</p></td>
+<td><p>yes</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-odd"><td><p>Authors per articles</p></td>
+<td><p>yes</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-even"><td><p>Top N countries with the highest number of articles</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Top N journals with the highest number of articles</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Top N keywords most used in the articles</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>The year with the highest number of articles</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span> <span class="o">=</span> <span class="n">systematic_review</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">CitationAnalysis</span><span class="p">(</span><span class="n">sorted_Finaldf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">publication_year_info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">publication_year_diagram</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">authors_info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">publication_place_info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">publication_place_diagram</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">keywords_info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">keyword_diagram</span><span class="p">(</span><span class="n">top_result</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">publisher_info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_cite_analysis</span><span class="o">.</span><span class="n">publisher_diagram</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="modules.html" class="btn btn-neutral float-right" title="Documentation with code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to systematic-reviewpy’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chandravesh chaudhari.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

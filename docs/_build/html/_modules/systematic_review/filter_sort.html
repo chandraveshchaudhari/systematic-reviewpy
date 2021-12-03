@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>systematic_review.filter_sort &mdash; systematic-reviewpy 0.0.69 documentation</title>
+  <title>systematic_review.filter_sort &mdash; systematic-reviewpy 70 documentation</title>
   
 
   
@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/mystnb.css" type="text/css" />
 
   
   
@@ -35,6 +37,8 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -85,8 +89,10 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../systematic_review.html">systematic_review package</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../systematic-reviewpy%20tutorial.html">Quick Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Documentation with code</a></li>
 </ul>
 
             
@@ -613,6 +619,9 @@
 
 
 <div class="viewcode-block" id="FilterSort"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.FilterSort">[docs]</a><span class="k">class</span> <span class="nc">FilterSort</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This contains functionality to filter and sort the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="n">search_words_object</span><span class="p">:</span> <span class="n">search_count</span><span class="o">.</span><span class="n">SearchWords</span><span class="p">,</span>
                  <span class="n">required_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -657,10 +666,58 @@
         <span class="k">return</span> <span class="n">filtered_sorted_df</span></div>
 
 <div class="viewcode-block" id="FilterSort.get_records_list"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.FilterSort.get_records_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_records_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;executes the filter and sort function and outputs the records list file</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List[dict]</span>
+<span class="sd">            outputs the filter and sorted data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_to_records_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_and_sort</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="FilterSort.get_dataframe"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.FilterSort.get_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_and_sort</span><span class="p">()</span></div></div>
+        <span class="sd">&quot;&quot;&quot;executes the filter and sort function and outputs the pd.DataFrame</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            outputs the filter and sorted data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_and_sort</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FilterSort.to_csv"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.FilterSort.to_csv">[docs]</a>    <span class="k">def</span> <span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;output.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function saves pandas.DataFrame to csv file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output_filename : str</span>
+<span class="sd">            This is the name of output file which should contains .csv extension</span>
+<span class="sd">        index : bool</span>
+<span class="sd">            Define if index is needed in output csv file or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_to_csv_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(),</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FilterSort.to_excel"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.filter_sort.FilterSort.to_excel">[docs]</a>    <span class="k">def</span> <span class="nf">to_excel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;output.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function saves pandas.DataFrame to excel file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output_filename : str</span>
+<span class="sd">            This is the name of output file which should contains .xlsx extension</span>
+<span class="sd">        index : bool</span>
+<span class="sd">            Define if index is needed in output excel file or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">converter</span><span class="o">.</span><span class="n">dataframe_to_excel_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(),</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

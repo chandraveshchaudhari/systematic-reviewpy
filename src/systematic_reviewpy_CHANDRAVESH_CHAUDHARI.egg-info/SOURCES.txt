@@ -2,6 +2,7 @@ LICENSE.txt
 MANIFEST.in
 README.md
 setup.py
+data/systematic-reviewpy_logo.png
 src/systematic_review/__init__.py
 src/systematic_review/analysis.py
 src/systematic_review/citation.py
