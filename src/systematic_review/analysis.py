@@ -3,7 +3,7 @@ This module contain code for generating info, diagrams and tables. It can be use
 and citations information.
 """
 from typing import List, Union, Any
-
+import re
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -781,6 +781,9 @@ class CitationAnalysis:
         articles_with_single_authors = 0
 
         for authors_list in self.dataframe[authors_column_name]:
+            if not isinstance(authors_list, list):
+                continue
+
             if len(authors_list) == 1:
                 articles_with_single_authors += 1
             for authors in authors_list:
@@ -913,6 +916,125 @@ class CitationAnalysis:
         else:
             print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")
 
+    def extract_pandas_column_words_into_list(self, column_name, separated_by=",", custom_function=None):
+        """This takes pandas column as input, use re split function on each element and save that all split words to
+        output list.
+
+        Parameters
+        ----------
+        column_name : str
+            This is the name of pandas column which contain require data words.
+        separated_by : str
+            This is re split function ragex to split the strings. example: "[,\n\t]"
+        custom_function
+            This is optional function to be applied on each element
+
+        Returns
+        -------
+        list
+            contains split words
+
+        """
+        words_list = []
+        for words in self.dataframe[column_name]:
+            if not isinstance(words, str):
+                continue
+            element_list = re.split(separated_by, words)
+            small_list = [custom_function(i) for i in element_list]
+            words_list += small_list
+
+        return words_list
+
+    def extract_pandas_column_words_into_df(self, column_name, separated_by=",", custom_function=None):
+        """This takes pandas column as input, use re split function on each element and save that all split words to
+        output pandas dataframe.
+
+        Parameters
+        ----------
+        column_name : str
+            This is the name of pandas column which contain require data words.
+        separated_by : str
+            This is re split function ragex to split the strings. example: "[,\n\t]"
+        custom_function
+            This is optional function to be applied on each element
+
+        Returns
+        -------
+        pd.DataFrame
+            Contains split words in column
+
+        """
+        data_list = self.extract_pandas_column_words_into_list(column_name, separated_by, custom_function)
+        words_pandas_df = pd.DataFrame(data={column_name: data_list})
+
+        return words_pandas_df
+
+    def column_analysis_info(self, column_name, separated_by, custom_function=None):
+        """
+
+        Parameters
+        ----------
+        column_name : str
+            This is the name of pandas column which contain require data words.
+        separated_by : str
+            This is re split function ragex to split the strings. example: "[,\n\t]"
+        custom_function
+            This is optional function to be applied on each element
+
+        Returns
+        -------
+
+        """
+        return converter.dataframe_column_counts(self.extract_pandas_column_words_into_df(column_name, separated_by,
+                                                                                          custom_function), column_name)
+
+    def column_analysis_diagram(self, column_name, separated_by, custom_function=None,
+                                top_result=None, method: str = "seaborn", theme_style="darkgrid",
+                                xaxis_label_rotation=90, pandas_bar_kind: str = "bar", diagram_fname: str = None,
+                                **kwargs):
+        """generates chart using column name of the dataframe and uses regex to split string with optional custom
+        function.
+
+        Parameters
+        ----------
+        separated_by : str
+            This is re split function ragex to split the strings. example: "[,\n\t]"
+        custom_function
+            This is optional function to be applied on each element
+        pandas_bar_kind : str
+            pandas plot option of kind of chart needed. defaults to 'bar' in this implementation
+        column_name : str
+            column name of search_words_object detail in citation dataframe
+        theme_style : str
+            name of the bar chart theme
+        xaxis_label_rotation : float
+            rotate the column elements shown on x axis or horizontally.
+        top_result : int
+            This limits the number of column unique elements to be shown
+        method : str
+            provide option to plot chart using either 'seaborn' or 'pandas'
+        diagram_fname : str
+            filename or path of diagram image to be saved.
+        kwargs : dict
+            kwargs are also given to ``matplotlib.pyplot.savefig(**kwargs)``
+
+        Returns
+        -------
+
+        """
+        if method.lower() == "seaborn":
+            seaborn_countplot_with_pandas_dataframe_column(
+                self.extract_pandas_column_words_into_df(column_name, separated_by, custom_function),
+                column_name, theme_style,
+                xaxis_label_rotation, top_result, diagram_fname, **kwargs)
+        elif method.lower() == "pandas":
+            pandas_countplot_with_pandas_dataframe_column(
+                self.extract_pandas_column_words_into_df(column_name, separated_by, custom_function),
+                column_name, top_result,
+                pandas_bar_kind, diagram_fname, **kwargs)
+        else:
+            print("Please provide text_manipulation_method_name value as 'seaborn' or 'pandas'.")
+
     def extract_keywords(self, column_name: str = "keywords"):
         """return dataframe with search_words_object column containing single keyword in row that are used in the
         articles.
@@ -947,7 +1069,7 @@ class CitationAnalysis:
         -------
 
         """
-        return converter.dataframe_column_counts(self.extract_keywords(), column_name)
+        return converter.dataframe_column_counts(self.extract_keywords(column_name), column_name)
 
     def keyword_diagram(self, column_name: str = "keywords",
                         top_result=None, method: str = "seaborn", theme_style="darkgrid",

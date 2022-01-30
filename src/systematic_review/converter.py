@@ -194,10 +194,11 @@ def try_convert_dataframe_column_elements_to_list(dataframe: pd.DataFrame, colum
     keyword_list_of_list = []
 
     for keyword_list in dataframe[column_name]:
-        try:
-            keyword_list_of_list.append(list(keyword_list))
-        except TypeError:
+        if not isinstance(keyword_list, list):
             print(f"'{keyword_list}' can not be converted to list")
+            continue
+        keyword_list_of_list.append(list(keyword_list))
+
     return keyword_list_of_list
 
 
