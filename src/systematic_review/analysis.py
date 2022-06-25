@@ -560,7 +560,7 @@ class SystematicReviewInfo:
 
         if color:
             for all_boxes_index in range(len(all_boxes)):
-                if all_boxes_index == 4:
+                if all_boxes_index in (4, 8):
                     all_boxes[all_boxes_index].add_box(
                         bbox={"boxstyle": "square", "facecolor": 'red', "alpha": 0.3, "edgecolor": "red"},
                         color="black")
