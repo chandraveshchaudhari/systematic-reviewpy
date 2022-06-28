@@ -619,7 +619,7 @@ class SystematicReviewInfo:
             ax.axis('off')
 
         if diagram_fname:
-            plt.savefig(diagram_fname, kwargs)
+            plt.savefig(diagram_fname, **kwargs)
 
         plt.show()
 
