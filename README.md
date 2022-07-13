@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="https://github.com/chandraveshchaudhari/personal-information/blob/bf3d602dbbf0b7d0bbe6461351c163144b617d24/logos/my%20github%20logo%20template-python%20project%20template%20small.png" width="640" height="320">
+  <img src="https://github.com/chandraveshchaudhari/personal-information/blob/06f7a94e5addaf5cf4a0fdb03d53236d5ea40f9f/logos/my%20github%20logo%20template-systematic-reviewpy%20small.png" width="640" height="320">
 </div>
 
 # An open-source Python framework for systematic review based on PRISMA : systematic-reviewpy
