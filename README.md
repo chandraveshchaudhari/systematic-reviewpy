@@ -1,14 +1,15 @@
+
+<div align="center">
+  <img src="https://github.com/chandraveshchaudhari/personal-information/blob/bf3d602dbbf0b7d0bbe6461351c163144b617d24/logos/my%20github%20logo%20template-python%20project%20template%20small.png" width="640" height="320">
+</div>
+
 # An open-source Python framework for systematic review based on PRISMA : systematic-reviewpy
-<p align="center">
-  <a href="https://github.com/chandraveshchaudhari/systematic-reviewpy">
-    <img width="60%" height="60%" src="https://raw.githubusercontent.com/systematic-reviewpy/data/systematic-reviewpy_logo.png">
-  </a>
-</p>
+
+> Citation
 
 - [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
-- [Contact](#contact)
 - [Contribution](#contribution)
 - [Future Improvements](#future-improvements)
 
@@ -19,13 +20,18 @@ customisable framework with options to use or improve any parts of the framework
 the systematic review workflow and suggests using checklists provided by Preferred Reporting Items for Systematic Reviews
 and Meta-Analyses (PRISMA). 
 
-### Project Authors
+### Authors
+<img align="left" width="231.95" height="75" src="https://github.com/chandraveshchaudhari/personal-information/blob/1afa9ad052ab9666e6a1a3854464a77ccab68438/images/christ.png">
+
 The packages [systematic-reviewpy](https://github.com/chandraveshchaudhari/systematic-reviewpy) and 
 [browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Research paper 
-`An open-source Python framework for systematic review based on PRISMA` created by Chandravesh chaudhari, Doctoral candidate 
-at christ university, Bangalore under supervision of Dr. Geetanjali purswani. 
+`An open-source Python framework for systematic review based on PRISMA` created by [Chandravesh chaudhari][chandravesh linkedin], Doctoral candidate at [CHRIST (Deemed to be University), Bangalore, India][christ university website] under supervision of [Dr. Geetanjali purswani][geetanjali linkedin].
 
-> Citation
+<br/>
+
+[chandravesh linkedin]: https://www.linkedin.com/in/chandravesh-chaudhari "chandravesh linkedin profile"
+[geetanjali linkedin]: https://www.linkedin.com/in/dr-geetanjali-purswani-546336b8 "geetanjali linkedin profile"
+[christ university website]: https://christuniversity.in/ "website"
 
 ## Features
 - supported file types: ris, json, and [pandas IO](https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html)   
@@ -41,7 +47,7 @@ at christ university, Bangalore under supervision of Dr. Geetanjali purswani.
 - automatically generates workflow diagram.
 - generate the ASReview supported file for Active-learning Screening
 
-#### Advantages over manual methods
+#### Significance
 - Saves time
 - Automate monotonous tasks
 - Never makes mistakes
