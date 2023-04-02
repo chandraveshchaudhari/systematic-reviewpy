@@ -1,0 +1,520 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>systematic_review.string_manipulation &mdash; systematic-reviewpy 70 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/mystnb.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> systematic-reviewpy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../systematic-reviewpy%20tutorial.html">Quick Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Documentation with code</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">systematic-reviewpy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>systematic_review.string_manipulation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for systematic_review.string_manipulation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module: string_manipulation</span>
+<span class="sd">This module contains functions related to string case change, preprocess, and removing some part of it.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">unicodedata</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">systematic_review</span> <span class="kn">import</span> <span class="n">os_utils</span><span class="p">,</span> <span class="n">nlp</span>
+
+
+<div class="viewcode-block" id="string_dict_to_lower"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.string_dict_to_lower">[docs]</a><span class="k">def</span> <span class="nf">string_dict_to_lower</span><span class="p">(</span><span class="n">string_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    this convert the values into lowercase. similar function for list is available as string_list_to_lower()</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string_map : dict</span>
+<span class="sd">        these are key:values pairs needed to be converted.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">         output by converting input to key: lowercase values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lower_string_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">string_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">lower_string_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lower_string_map</span></div>
+
+
+<div class="viewcode-block" id="string_list_to_lower"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.string_list_to_lower">[docs]</a><span class="k">def</span> <span class="nf">string_list_to_lower</span><span class="p">(</span><span class="n">string_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    this convert the values into lowercase. similar function for dict is available as string_dict_to_lower()</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string_list : list</span>
+<span class="sd">        this list contains input string need to be converted to lowercase.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        this is the output list which contains original input strings but in lowercase</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lower_string_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">string_list</span><span class="p">:</span>
+        <span class="n">lower_string_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">lower_string_list</span></div>
+
+
+<div class="viewcode-block" id="string_to_space_separated_words"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.string_to_space_separated_words">[docs]</a><span class="k">def</span> <span class="nf">string_to_space_separated_words</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;takes text string and outputs space separated words.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        This text contains multiple spaces or trailing whitespaces</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This is space separated word string with no trailing whitespaces.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">temp_text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_non_ascii"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.remove_non_ascii">[docs]</a><span class="k">def</span> <span class="nf">remove_non_ascii</span><span class="p">(</span><span class="n">string_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Remove non-ASCII characters from list of tokenized words</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string_list : list</span>
+<span class="sd">        this list contains the words which contains the non-ASCII characters</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        this is modified list after removing the non-ASCII characters</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_words</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">string_list</span><span class="p">:</span>
+        <span class="n">new_word</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;NFKD&#39;</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">new_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_word</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_words</span></div>
+
+
+<div class="viewcode-block" id="split_words_remove_duplicates"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.split_words_remove_duplicates">[docs]</a><span class="k">def</span> <span class="nf">split_words_remove_duplicates</span><span class="p">(</span><span class="n">string_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    this function takes a list of words or sentences and split them to individual words. It also removes any repeating</span>
+<span class="sd">    word in the list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string_list : list</span>
+<span class="sd">        this is the input list which contains words and group of words inside. Example - [&#39;one&#39;, &#39;one two&#39;]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        this is the output list which contains only unique individual words using set(). Example - [&#39;one&#39;, &#39;two&#39;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">temp_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">string_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+            <span class="n">temp_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="n">modified_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">temp_set</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">modified_list</span></div>
+
+
+<div class="viewcode-block" id="preprocess_string"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.preprocess_string">[docs]</a><span class="k">def</span> <span class="nf">preprocess_string</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;replace symbols in string with spaces and Lowercase the given input string. Example - &#39;Df%$df&#39; -&gt; &#39;df  df&#39;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string : str</span>
+<span class="sd">        This is input word string which contains unwanted symbols and might have uppercase characters in it.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This is cleaned string from symbols and contains only alpha characters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">replace_symbols_with_space</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">convert_string_to_lowercase</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+
+
+<div class="viewcode-block" id="preprocess_string_to_space_separated_words"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.preprocess_string_to_space_separated_words">[docs]</a><span class="k">def</span> <span class="nf">preprocess_string_to_space_separated_words</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;replace symbols in string with spaces and Lowercase the given input string. Example - &#39;Df%$df&#39; -&gt; &#39;df  df&#39; and</span>
+<span class="sd">    convert &#39;df  df&#39; to single spaced &#39;df df&#39;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string : str</span>
+<span class="sd">        This can contain string words mixed with spaces and symbols.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        remove the spaces and symbols and arrange the words single spaces.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">preprocess_string</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string_to_space_separated_words</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+
+
+<div class="viewcode-block" id="replace_symbols_with_space"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.replace_symbols_with_space">[docs]</a><span class="k">def</span> <span class="nf">replace_symbols_with_space</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;replace symbols in string with spaces. Example - &#39;df%$df&#39; -&gt; &#39;df  df&#39;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string : str</span>
+<span class="sd">        This is input word string which contains unwanted symbols.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This is cleaned string from symbols and contains only alpha characters and all lowercase character string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">character</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">character</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
+            <span class="n">alpha</span> <span class="o">+=</span> <span class="n">character</span>
+        <span class="k">elif</span> <span class="n">character</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">+=</span> <span class="n">character</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span>
+    <span class="k">return</span> <span class="n">alpha</span></div>
+
+
+<div class="viewcode-block" id="convert_string_to_lowercase"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.convert_string_to_lowercase">[docs]</a><span class="k">def</span> <span class="nf">convert_string_to_lowercase</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Lowercase the given input string.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string : str</span>
+<span class="sd">        The string which might have uppercase characters in it.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This is all lowercase character string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="split_preprocess_string"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.split_preprocess_string">[docs]</a><span class="k">def</span> <span class="nf">split_preprocess_string</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This splits the words into list after applying preprocess function from string_manipulation module.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        This is input word string which contains unwanted symbols and might have uppercase characters in it.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        This is cleaned list of strings from symbols and contains only alpha characters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">clean_text</span> <span class="o">=</span> <span class="n">preprocess_string</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">text_list</span> <span class="o">=</span> <span class="n">clean_text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">text_list</span></div>
+
+
+<div class="viewcode-block" id="pdf_filename_from_filepath"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.pdf_filename_from_filepath">[docs]</a><span class="k">def</span> <span class="nf">pdf_filename_from_filepath</span><span class="p">(</span><span class="n">article_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This takes the pdf path as input and clean the name of pdf by applying preprocess function from</span>
+<span class="sd">    string_manipulation module.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    article_path : str</span>
+<span class="sd">        This is the path of the pdf file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This is the cleaned filename of the pdf.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">article_filename</span> <span class="o">=</span> <span class="n">os_utils</span><span class="o">.</span><span class="n">get_filename_from_path</span><span class="p">(</span><span class="n">article_path</span><span class="p">)</span>
+    <span class="n">article_name</span> <span class="o">=</span> <span class="n">strip_string_from_right_side</span><span class="p">(</span><span class="n">article_filename</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">article_name</span></div>
+
+
+<div class="viewcode-block" id="strip_string_from_right_side"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.strip_string_from_right_side">[docs]</a><span class="k">def</span> <span class="nf">strip_string_from_right_side</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_to_be_stripped</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Function removes the substring from the right of string.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string : str</span>
+<span class="sd">        This is the complete word or string. Example - &#39;monster.pdf&#39;</span>
+<span class="sd">    value_to_be_stripped : str</span>
+<span class="sd">        This is the value which is needed to be removed from right side. Example - &#39;.pdf&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This is the trimmed string that contains the left part after some part removed from the right.</span>
+<span class="sd">        Example - &#39;monster&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stripped_string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">value_to_be_stripped</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">stripped_string</span></div>
+
+
+<div class="viewcode-block" id="text_manipulation_methods"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.string_manipulation.text_manipulation_methods">[docs]</a><span class="k">def</span> <span class="nf">text_manipulation_methods</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text_manipulation_method_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;preprocess_string&quot;</span><span class="p">,</span>
+                              <span class="n">custom_text_manipulation_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This convert text or string using options like preprocess, nlp module function, for more info each respective</span>
+<span class="sd">    methods methods implemented. args and kwargs will go into custom_text_manipulation_function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kwargs : Dict[str, Any]</span>
+<span class="sd">        These key = word or {key: word} arguments are for custom_text_manipulation_function</span>
+<span class="sd">    args : Tuple</span>
+<span class="sd">        These arguments are for custom_text_manipulation_function</span>
+<span class="sd">    custom_text_manipulation_function : Callable[[str, Any, Any], str]</span>
+<span class="sd">        This is optional custom_text_manipulation_function function if you want to implement this yourself. pass as</span>
+<span class="sd">        custom_text_manipulation_function = function_name. it will take text as parameter with no default</span>
+<span class="sd">        preprocess_string operation.</span>
+<span class="sd">    text : str</span>
+<span class="sd">        string type text which is needed to be converted.</span>
+<span class="sd">    text_manipulation_method_name : str</span>
+<span class="sd">        provides the options to use any text manipulation function.</span>
+<span class="sd">        preprocess_string (default and applied before all other implemented functions)</span>
+<span class="sd">        custom_text_manipulation_function - for putting your custom_text_manipulation_function function to preprocess the text</span>
+<span class="sd">        nltk_remove_stopwords, pattern_lemma_or_lemmatize_text, nltk_word_net_lemmatizer, nltk_porter_stemmer,</span>
+<span class="sd">        nltk_lancaster_stemmer, spacy_lemma, nltk_remove_stopwords_spacy_lemma, convert_string_to_lowercase,</span>
+<span class="sd">        preprocess_string_to_space_separated_words</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        this return the converted text</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">preprocessed_text</span> <span class="o">=</span> <span class="n">preprocess_string</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;preprocess_string&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">preprocessed_text</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;convert_string_to_lowercase&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">convert_string_to_lowercase</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;custom_text_manipulation_function&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">custom_text_manipulation_function</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;preprocess_string_to_space_separated_words&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">preprocess_string_to_space_separated_words</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nltk_remove_stopwords&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nlp</span><span class="o">.</span><span class="n">nltk_remove_stopwords</span><span class="p">(</span><span class="n">preprocessed_text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pattern_lemma_or_lemmatize_text&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nlp</span><span class="o">.</span><span class="n">pattern_lemma_or_lemmatize_text</span><span class="p">(</span><span class="n">preprocessed_text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nltk_word_net_lemmatizer&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nlp</span><span class="o">.</span><span class="n">nltk_word_net_lemmatizer</span><span class="p">(</span><span class="n">preprocessed_text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nltk_porter_stemmer&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nlp</span><span class="o">.</span><span class="n">nltk_porter_stemmer</span><span class="p">(</span><span class="n">preprocessed_text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nltk_lancaster_stemmer&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nlp</span><span class="o">.</span><span class="n">nltk_lancaster_stemmer</span><span class="p">(</span><span class="n">preprocessed_text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;spacy_lemma&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nlp</span><span class="o">.</span><span class="n">spacy_lemma</span><span class="p">(</span><span class="n">preprocessed_text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text_manipulation_method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nltk_remove_stopwords_spacy_lemma&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nlp</span><span class="o">.</span><span class="n">nltk_remove_stopwords_spacy_lemma</span><span class="p">(</span><span class="n">preprocessed_text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not implemented yet.&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chandravesh chaudhari.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

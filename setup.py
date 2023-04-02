@@ -138,7 +138,7 @@ setuptools.setup(
     #
     packages=find_packages(where='src'),  # Required
 
-    # packages=find_packages(exclude=('tests', 'docs')),
+    # packages=find_packages(exclude=('tests', 'docsrc')),
     # Specify which Python versions you support. In contrast to the
     # 'Programming Language' classifiers above, 'pip install' will check this
     # and refuse to install the project if the version does not match. See

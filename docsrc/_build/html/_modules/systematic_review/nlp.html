@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>systematic_review.nlp &mdash; systematic-reviewpy 70 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/togglebutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/mystnb.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> systematic-reviewpy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../systematic-reviewpy%20tutorial.html">Quick Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Documentation with code</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">systematic-reviewpy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>systematic_review.nlp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for systematic_review.nlp</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module: nlp (Natural language processing)</span>
+<span class="sd">This module contains functions related to removing stop words, Lemmatization, and stemming  Approaches. Functions will</span>
+<span class="sd">import the supporting AI model only when they are executed.</span>
+<span class="sd">For more Examples and info visit: https://www.machinelearningplus.com/nlp/lemmatization-examples-python/ and</span>
+<span class="sd">https://www.machinelearningplus.com/nlp/lemmatization-examples-python/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+
+<div class="viewcode-block" id="nltk_remove_stopwords"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_remove_stopwords">[docs]</a><span class="k">def</span> <span class="nf">nltk_remove_stopwords</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Remove unnecessary words such as she, are, of, which, and in.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        This may contains all words in dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This contains words other than stop words described in nltk english stop words.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">nltk</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function requires nltk library. Please install it using &#39;pip install nltk&#39; or visit &quot;</span>
+              <span class="s2">&quot;https://pypi.org/project/nltk/ for more lemma_info.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+    <span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="kn">import</span> <span class="n">word_tokenize</span>
+    <span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">))</span>
+    <span class="n">word_tokens</span> <span class="o">=</span> <span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">filtered_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word_tokens</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+    <span class="c1"># normal version of above list comprehension</span>
+    <span class="c1"># for w in word_tokens:</span>
+    <span class="c1">#   if w not in stop_words:</span>
+    <span class="c1">#       filtered_sentence.append(w)</span>
+    <span class="n">filtered_text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filtered_text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filtered_text</span></div>
+
+
+<div class="viewcode-block" id="pattern_lemma_or_lemmatize_text"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.pattern_lemma_or_lemmatize_text">[docs]</a><span class="k">def</span> <span class="nf">pattern_lemma_or_lemmatize_text</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lemma_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This return lemma if lemma_info is True else it returns lemmatize text. Uses pattern.en lemma</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_text : str</span>
+<span class="sd">        This may contains all words in dictionary.</span>
+<span class="sd">    lemma_info : bool</span>
+<span class="sd">        This is the switch variable which define return either to lemma information or lemmatize text.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This output text contains word-forms which are linguistically valid lemmas.</span>
+<span class="sd">        Example - “car” is matched with words like “cars” and “automobile”.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">pattern</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function requires pattern library. Please install it using &#39;pip install Pattern&#39; or visit &quot;</span>
+              <span class="s2">&quot;https://pypi.org/project/Pattern/ for more lemma_info.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">pattern.en</span> <span class="kn">import</span> <span class="n">lemma</span><span class="p">,</span> <span class="n">lexeme</span>
+    <span class="k">if</span> <span class="n">lemma_info</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pattern.en</span> <span class="kn">import</span> <span class="n">parse</span>
+        <span class="k">return</span> <span class="n">parse</span><span class="p">(</span><span class="n">input_text</span><span class="p">,</span> <span class="n">lemmata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">lemma</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span> <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="n">input_text</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">lemma</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span> <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="n">input_text</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="nltk_word_net_lemmatizer"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_word_net_lemmatizer">[docs]</a><span class="k">def</span> <span class="nf">nltk_word_net_lemmatizer</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function returns lemmatize text. Uses nltk.stem WordNetLemmatizer</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_text : str</span>
+<span class="sd">        This may contains all words in dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This output text contains word-forms which are linguistically valid lemmas.</span>
+<span class="sd">        Example - “car” is matched with words like “cars” and “automobile”.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">nltk</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function requires nltk library. Please install it using &#39;pip install nltk&#39; or visit &quot;</span>
+              <span class="s2">&quot;https://pypi.org/project/nltk/ for more lemma_info.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">WordNetLemmatizer</span>
+    <span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">lemmatizer</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="nltk_porter_stemmer"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_porter_stemmer">[docs]</a><span class="k">def</span> <span class="nf">nltk_porter_stemmer</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function returns stemmed text. Uses nltk.stem PorterStemmer</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_text : str</span>
+<span class="sd">        This may contains all words in dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This output text contains stems of a words.</span>
+<span class="sd">        Example - “car” is matched with words like “cars” but not “automobile”.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">nltk</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function requires nltk library. Please install it using &#39;pip install nltk&#39; or visit &quot;</span>
+              <span class="s2">&quot;https://pypi.org/project/nltk/ for more lemma_info.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">PorterStemmer</span>
+    <span class="n">stemmer</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="nltk_lancaster_stemmer"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_lancaster_stemmer">[docs]</a><span class="k">def</span> <span class="nf">nltk_lancaster_stemmer</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function returns stemmed text. Uses nltk.stem LancasterStemmer</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_text : str</span>
+<span class="sd">        This may contains all words in dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This output text contains stems of a words.</span>
+<span class="sd">        Example - “car” is matched with words like “cars” but not “automobile”.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">nltk</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function requires nltk library. Please install it using &#39;pip install nltk&#39; or visit &quot;</span>
+              <span class="s2">&quot;https://pypi.org/project/nltk/ for more lemma_info.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">LancasterStemmer</span>
+    <span class="n">stemmer</span> <span class="o">=</span> <span class="n">LancasterStemmer</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="spacy_lemma"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.spacy_lemma">[docs]</a><span class="k">def</span> <span class="nf">spacy_lemma</span><span class="p">(</span><span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This function returns lemmatize text. Uses spacy en_core_web_sm</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_text : str</span>
+<span class="sd">        This may contains all words in dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        This output text contains word-forms which are linguistically valid lemmas.</span>
+<span class="sd">        Example - “car” is matched with words like “cars” and “automobile”.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">spacy</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function requires spacy library. Please install it using &#39;pip install -U pip setuptools wheel&#39; &quot;</span>
+              <span class="s2">&quot;&#39;pip install -U spacy&#39; &#39;python -m spacy download en_core_web_sm&#39; or &quot;</span>
+              <span class="s2">&quot;visit https://spacy.io/usage for more lemma_info.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span>
+    <span class="n">filtered_text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">token</span><span class="o">.</span><span class="n">lemma_</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">filtered_text</span></div>
+
+
+<div class="viewcode-block" id="nltk_remove_stopwords_spacy_lemma"><a class="viewcode-back" href="../../systematic_review.html#systematic_review.nlp.nltk_remove_stopwords_spacy_lemma">[docs]</a><span class="k">def</span> <span class="nf">nltk_remove_stopwords_spacy_lemma</span><span class="p">(</span><span class="n">string_list_lower</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;This function returns lemmatize text of lowercase input string. Uses spacy en_core_web_sm</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string_list_lower : str</span>
+<span class="sd">        This may contains all lowercase words in dictionary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[str]</span>
+<span class="sd">        This output text contains word-forms which are linguistically valid lemmas.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">string_list_lower_filter_lemma</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">string_list_lower</span><span class="p">:</span>
+        <span class="n">string_lower_filter</span> <span class="o">=</span> <span class="n">nltk_remove_stopwords</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">string_lower_filter_lemma</span> <span class="o">=</span> <span class="n">spacy_lemma</span><span class="p">(</span><span class="n">string_lower_filter</span><span class="p">)</span>
+        <span class="n">string_list_lower_filter_lemma</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">string_lower_filter_lemma</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">string_list_lower_filter_lemma</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chandravesh chaudhari.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
