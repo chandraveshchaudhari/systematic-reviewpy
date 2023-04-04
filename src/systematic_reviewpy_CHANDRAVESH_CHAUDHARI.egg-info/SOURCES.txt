@@ -18,3 +18,4 @@ src/systematic_reviewpy_CHANDRAVESH_CHAUDHARI.egg-info/SOURCES.txt
 src/systematic_reviewpy_CHANDRAVESH_CHAUDHARI.egg-info/dependency_links.txt
 src/systematic_reviewpy_CHANDRAVESH_CHAUDHARI.egg-info/requires.txt
 src/systematic_reviewpy_CHANDRAVESH_CHAUDHARI.egg-info/top_level.txt
+tests/test_simple.py

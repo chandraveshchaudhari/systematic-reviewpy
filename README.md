@@ -1,11 +1,10 @@
 
 <div align="center">
-  <img src="https://github.com/chandraveshchaudhari/personal-information/blob/06f7a94e5addaf5cf4a0fdb03d53236d5ea40f9f/logos/my%20github%20logo%20template-systematic-reviewpy%20small.png" width="640" height="320">
+  <img src="https://raw.githubusercontent.com/chandraveshchaudhari/personal-information/initial_setup/logos/my%20github%20logo%20template-systematic-reviewpy%20small.png" width="640" height="320">
 </div>
 
 # An open-source Python framework for systematic review based on PRISMA : systematic-reviewpy
-
-> Citation
+> Chaudhari, C., Purswani, G. (2023). Stock Market Prediction Techniques Using Artificial Intelligence: A Systematic Review. In: Kumar, S., Sharma, H., Balachandran, K., Kim, J.H., Bansal, J.C. (eds) Third Congress on Intelligent Systems. CIS 2022. Lecture Notes in Networks and Systems, vol 608. Springer, Singapore. https://doi.org/10.1007/978-981-19-9225-4_17
 
 - [Introduction](#introduction)
 - [Features](#features)
@@ -21,7 +20,7 @@ the systematic review workflow and suggests using checklists provided by Preferr
 and Meta-Analyses (PRISMA). 
 
 ### Authors
-<img align="left" width="231.95" height="75" src="https://github.com/chandraveshchaudhari/personal-information/blob/1afa9ad052ab9666e6a1a3854464a77ccab68438/images/christ.png">
+<img align="left" width="231.95" height="75" src="https://raw.githubusercontent.com/chandraveshchaudhari/personal-information/initial_setup/images/christ.png">
 
 The packages [systematic-reviewpy](https://github.com/chandraveshchaudhari/systematic-reviewpy) and 
 [browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Research paper 
@@ -72,15 +71,15 @@ structures designed to make working with "relational" or "labeled" data both eas
 MuPDF, a lightweight PDF, XPS, and E-book viewer, renderer, and toolkit.
 
 ## Important links
-- [Documentation](documentation link)
-- [Quick tour](tutorial file link)
+- [Documentation](https://chandraveshchaudhari.github.io/systematic-reviewpy/)
+- [Quick tour](https://chandraveshchaudhari.github.io/systematic-reviewpy/systematic-reviewpy%20tutorial.html)
 - [Project maintainer (feel free to contact)](mailto:chandraveshchaudhari@gmail.com?subject=[GitHub]%20Source%20sytematic-reviewpy) 
 - [Future Improvements](https://github.com/chandraveshchaudhari/systematic-reviewpy/projects)
 - [License](https://github.com/chandraveshchaudhari/systematic-reviewpy/blob/master/LICENSE.txt)
 
 ## Contribution
 all kinds of contributions are appreciated.
-- [Improving readability of documentation](documentation link)
+- [Improving readability of documentation](https://chandraveshchaudhari.github.io/systematic-reviewpy/)
 - [Feature Request](https://github.com/chandraveshchaudhari/systematic-reviewpy/issues/new/choose)
 - [Reporting bugs](https://github.com/chandraveshchaudhari/systematic-reviewpy/issues/new/choose)
 - [Contribute code](https://github.com/chandraveshchaudhari/systematic-reviewpy/compare)
