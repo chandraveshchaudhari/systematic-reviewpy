@@ -86,9 +86,5 @@ all kinds of contributions are appreciated.
 - [Asking questions in discussions](https://github.com/chandraveshchaudhari/systematic-reviewpy/discussions)
 
 ## Future Improvements
-Graphical User Interface
-- [ ] Linux
-- [ ] Mac Os
-- [ ] Windows
-- [ ] Android
-- [ ] Ios App
+- [ ] Web based GUI
+
