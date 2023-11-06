@@ -23,8 +23,7 @@ and Meta-Analyses (PRISMA).
 <img align="left" width="231.95" height="75" src="https://raw.githubusercontent.com/chandraveshchaudhari/personal-information/initial_setup/images/christ.png">
 
 The packages [systematic-reviewpy](https://github.com/chandraveshchaudhari/systematic-reviewpy) and 
-[browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Research paper 
-`An open-source Python framework for systematic review based on PRISMA` created by [Chandravesh chaudhari][chandravesh linkedin], Doctoral candidate at [CHRIST (Deemed to be University), Bangalore, India][christ university website] under supervision of [Dr. Geetanjali purswani][geetanjali linkedin].
+[browser-automationpy](https://github.com/chandraveshchaudhari/browser-automationpy) are part of Thesis of [Chandravesh chaudhari][chandravesh linkedin], Doctoral candidate at [CHRIST (Deemed to be University), Bangalore, India][christ university website] under supervision of [Dr. Geetanjali purswani][geetanjali linkedin].
 
 <br/>
 
